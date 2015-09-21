@@ -1,12 +1,10 @@
-package checkers;
 
-import java.awt.Color;
 
 public class Piece {
-	private final Color color;
+	private final PieceColor color;
 	boolean king;
 	
-	public Piece(Color color)
+	public Piece(PieceColor color)
 	{
 		this.color = color;
 		this.king = false;
@@ -22,7 +20,7 @@ public class Piece {
 		return this.king;
 	}
 	
-	public Color getColor()
+	public PieceColor getColor()
 	{
 		return this.color;
 	}
