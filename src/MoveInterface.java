@@ -1,9 +1,18 @@
 
 public interface MoveInterface {
 
-    public int getStartingPosition();
+    public Board getBoard();
 
     public int getEndingPosition();
 
+    public Square getEndingSquare();
+
+    public Piece getPiece();
+
+    public int getStartingPosition();
+
+    public Square getStartingSquare();
+
+    @Override
     public String toString();
 }

@@ -1,11 +1,35 @@
 
 public class Move implements MoveInterface {
-    private int startingPosition;
+    private Board board;
     private int endingPosition;
+    private Piece piece;
+    private int startingPosition;
 
-    public Move(int startingPosition, int endingPosition) {
+    public Move(int startingPosition, int endingPosition, Board board) {
         this.startingPosition = startingPosition;
         this.endingPosition = endingPosition;
+        this.board = board;
+        this.piece = board.getPiece(startingPosition);
+    }
+
+    @Override
+    public Board getBoard() {
+        return this.board;
+    }
+
+    @Override
+    public int getEndingPosition() {
+        return this.endingPosition;
+    }
+
+    @Override
+    public Square getEndingSquare() {
+        return this.getBoard().getSquare(this.getEndingPosition());
+    }
+
+    @Override
+    public Piece getPiece() {
+        return this.piece;
     }
 
     @Override
@@ -14,8 +38,8 @@ public class Move implements MoveInterface {
     }
 
     @Override
-    public int getEndingPosition() {
-        return this.endingPosition;
+    public Square getStartingSquare() {
+        return this.getBoard().getSquare(this.getStartingPosition());
     }
 
     @Override

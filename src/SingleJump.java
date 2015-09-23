@@ -2,29 +2,18 @@
 import java.util.ArrayList;
 
 public class SingleJump implements Jump {
-    private int startingPosition;
+    private Board board;
     private int endingPosition;
     private ArrayList<Integer> jumpedPositions;
+    private Piece piece;
+    private int startingPosition;
 
-    public SingleJump(int startingPosition, int endingPosition) {
+    public SingleJump(int startingPosition, int endingPosition, Board board) {
         this.startingPosition = startingPosition;
         this.endingPosition = endingPosition;
-        this.jumpedPositions = determineJumpedPositions();
-    }
-
-    @Override
-    public int getStartingPosition() {
-        return this.startingPosition;
-    }
-
-    @Override
-    public int getEndingPosition() {
-        return this.endingPosition;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("%dx%d", this.getStartingPosition(), this.getEndingPosition());
+        this.jumpedPositions = this.determineJumpedPositions();
+        this.piece = board.getPiece(startingPosition);
+        this.board = board;
     }
 
     private ArrayList<Integer> determineJumpedPositions() {
@@ -45,8 +34,54 @@ public class SingleJump implements Jump {
         return jumpedPositions;
     }
 
+    @Override
+    public Board getBoard() {
+        return this.board;
+    }
+
+    @Override
+    public int getEndingPosition() {
+        return this.endingPosition;
+    }
+
+    @Override
+    public Square getEndingSquare() {
+        return this.getBoard().getSquare(this.getEndingPosition());
+    }
+
+    @Override
+    public ArrayList<Piece> getJumpedPieces() {
+        return this.board.getPieces(this.getJumpedPositions());
+    }
+
+    @Override
     public ArrayList<Integer> getJumpedPositions() {
         return this.jumpedPositions;
+    }
+
+    @Override
+    public ArrayList<Square> getJumpedSquares() {
+        return this.board.getSquares(this.getJumpedPositions());
+    }
+
+    @Override
+    public Piece getPiece() {
+        return this.piece;
+    }
+
+    @Override
+    public int getStartingPosition() {
+        return this.startingPosition;
+    }
+
+    @Override
+    public Square getStartingSquare() {
+        return this.getBoard().getSquare(this.getStartingPosition());
+    }
+
+    @Override
+    public String toString() {
+        return String.format("%dx%d", this.getStartingPosition(), this.getEndingPosition());
     }
 
 }

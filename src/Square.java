@@ -4,9 +4,9 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Square {
-    private final int position;
     private final List<Integer> adjacentSquares;
     private Piece occupyingPiece;
+    private final int position;
 
     public Square(int position, Piece occupyingPiece) {
         this.position = position;
@@ -19,12 +19,16 @@ public class Square {
         List<Integer> adjacentPositions = new ArrayList<>(4);
 
         if (this.isCenterSquare()) {
-            adjacentPositions = getCenterSquareAdjacentPositions(this.position);
+            adjacentPositions = this.getCenterSquareAdjacentPositions(this.position);
         } else {
-            adjacentPositions = getNonCenterSquareAdjacentPositions();
+            adjacentPositions = this.getNonCenterSquareAdjacentPositions();
         }
 
         return adjacentPositions;
+    }
+
+    public List<Integer> getAdjacentSquares() {
+        return this.adjacentSquares;
     }
 
     private List<Integer> getCenterSquareAdjacentPositions(int position) {
@@ -57,7 +61,7 @@ public class Square {
 
         if (this.isOnVerticalEdgeOfBoard()) {
             adjacentPositions.add(this.position - 4);
-            adjacentPositions.add(position + 4);
+            adjacentPositions.add(this.position + 4);
         } else if (this.isInCornerOfBoard()) {
             if (this.position == 4) {
                 adjacentPositions.add(8);
@@ -68,10 +72,10 @@ public class Square {
                 System.out.println("Square.getNonCenterSquareAdjacentPositions()");
                 System.exit(1);
             }
-        } else if (isOnBlackEdgeOfBoard()) {
+        } else if (this.isOnBlackEdgeOfBoard()) {
             adjacentPositions.add(this.position + 5);
             adjacentPositions.add(this.position + 4);
-        } else if (isOnWhiteEdgeOfBoard()) {
+        } else if (this.isOnWhiteEdgeOfBoard()) {
             adjacentPositions.add(this.position - 5);
             adjacentPositions.add(this.position - 4);
         } else {
@@ -83,9 +87,62 @@ public class Square {
         return adjacentPositions;
     }
 
-    private boolean isOnVerticalEdgeOfBoard() {
-        int[] verticalEdgePositions = { 5, 12, 13, 20, 21, 28 };
-        for (int edgePosition : verticalEdgePositions) {
+    public Piece getOccupyingPiece() {
+        return this.occupyingPiece;
+    }
+
+    public int getPosition() {
+        return this.position;
+    }
+
+    private boolean isCenterSquare() {
+        List<Integer> nonCenterSquares = Arrays.asList(1, 2, 3, 4, 5, 12, 13, 20, 21, 28, 29, 30,
+                31, 32);
+
+        if (nonCenterSquares.contains(this.position)) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean isInCornerOfBoard() {
+        if (this.position == 4 || this.position == 29) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isInLeftTwoColumns() {
+        List<Integer> leftTwoColumnPositions = Arrays.asList(1, 5, 9, 13, 17, 21, 25, 29);
+        if (leftTwoColumnPositions.contains(this.getPosition())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isInRightTwoColumns() {
+        List<Integer> rightTwoColumnPositions = Arrays.asList(4, 8, 12, 16, 20, 24, 28, 32);
+        if (rightTwoColumnPositions.contains(this.getPosition())) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public boolean isOccupied() {
+        if (this.occupyingPiece == null) {
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    private boolean isOnBlackEdgeOfBoard() {
+        int[] topEdgePositions = { 1, 2, 3, 4 };
+        for (int edgePosition : topEdgePositions) {
             if (this.position == edgePosition) {
                 return true;
             }
@@ -93,9 +150,9 @@ public class Square {
         return false;
     }
 
-    private boolean isOnBlackEdgeOfBoard() {
-        int[] topEdgePositions = { 1, 2, 3, 4 };
-        for (int edgePosition : topEdgePositions) {
+    private boolean isOnVerticalEdgeOfBoard() {
+        int[] verticalEdgePositions = { 5, 12, 13, 20, 21, 28 };
+        for (int edgePosition : verticalEdgePositions) {
             if (this.position == edgePosition) {
                 return true;
             }
@@ -113,66 +170,27 @@ public class Square {
         return false;
     }
 
-    private boolean isInCornerOfBoard() {
-        if (this.position == 4 || this.position == 29) {
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    private boolean isCenterSquare() {
-        List<Integer> nonCenterSquares = Arrays.asList(1, 2, 3, 4, 5, 12, 13, 20, 21, 28, 29, 30,
-                31, 32);
-
-        if (nonCenterSquares.contains(this.position)) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public int getPosition() {
-        return position;
-    }
-
-    public List<Integer> getAdjacentSquares() {
-        return adjacentSquares;
-    }
-
-    public boolean isOccupied() {
-        if (occupyingPiece == null) {
-            return false;
-        } else {
-            return true;
-        }
-    }
-
-    public Piece getOccupyingPiece() {
-        return occupyingPiece;
-    }
-
-    public void setOccupyingPiece(Piece occupyingPiece) {
-        if (isOccupied()) {
-            System.err.println("Occupied square. Invalid move.");
-            System.out.println("Square.setOccupyingPiece()");
-            System.exit(1);
-        } else {
-            kingPieceIfNecessary();
-            this.occupyingPiece = occupyingPiece;
-        }
-    }
-
     private void kingPieceIfNecessary() {
-        if ((this.isOnBlackEdgeOfBoard() && occupyingPiece.getColor().equals(PieceColor.WHITE))
+        if ((this.isOnBlackEdgeOfBoard() && this.occupyingPiece.getColor().equals(PieceColor.WHITE))
                 || (this.isOnWhiteEdgeOfBoard()
-                        && occupyingPiece.getColor().equals(PieceColor.BLACK))) {
-            occupyingPiece.kingMe();
+                        && this.occupyingPiece.getColor().equals(PieceColor.BLACK))) {
+            this.occupyingPiece.kingMe();
         }
     }
 
     public void removeOccupyingPiece() {
         this.occupyingPiece = null;
+    }
+
+    public void setOccupyingPiece(Piece occupyingPiece) {
+        if (this.isOccupied()) {
+            System.err.println("Occupied square. Invalid move.");
+            System.out.println("Square.setOccupyingPiece()");
+            System.exit(1);
+        } else {
+            this.kingPieceIfNecessary();
+            this.occupyingPiece = occupyingPiece;
+        }
     }
 
 }

@@ -29,8 +29,26 @@ public class Board {
         return this.getSquare(position).getOccupyingPiece();
     }
 
+    public ArrayList<Piece> getPieces(ArrayList<Integer> positions) {
+        ArrayList<Piece> pieces = new ArrayList<>();
+        for (int position : positions) {
+            pieces.add(this.getPiece(position));
+        }
+
+        return pieces;
+    }
+
     public Square getSquare(int position) {
         return this.gameState.get(position - 1);
+    }
+
+    public ArrayList<Square> getSquares(ArrayList<Integer> positions) {
+        ArrayList<Square> squares = new ArrayList<>();
+        for (int position : positions) {
+            squares.add(this.getSquare(position));
+        }
+
+        return squares;
     }
 
     private List<Square> getStartingGameBoardState() {
@@ -50,15 +68,22 @@ public class Board {
     }
 
     public void movePiece(MoveInterface move) {
-        Piece pieceToMove = this.pickUpPiece(move.getStartingPosition());
-        if (move instanceof Jump) {
-            Jump jump = (Jump) move;
+        if (MoveValidator.isValidMove(move)) {
+            Piece pieceToMove = this.pickUpPiece(move.getStartingPosition());
+            if (move instanceof Jump) {
+                Jump jump = (Jump) move;
 
-            for (int position : jump.getJumpedPositions()) {
-                this.removePiece(position);
+                for (int position : jump.getJumpedPositions()) {
+                    this.removePiece(position);
+                }
             }
+            this.getSquare(move.getEndingPosition()).setOccupyingPiece(pieceToMove);
+        } else {
+            System.err.println("Invalid move!");
+            System.out.println("Board.movePiece()");
+            System.exit(1);
         }
-        this.getSquare(move.getEndingPosition()).setOccupyingPiece(pieceToMove);
+
     }
 
     private Piece pickUpPiece(int position) {
