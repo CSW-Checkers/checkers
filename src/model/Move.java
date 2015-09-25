@@ -1,3 +1,4 @@
+package model;
 
 public class Move implements MoveInterface {
     private Board board;

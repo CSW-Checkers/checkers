@@ -1,36 +1,32 @@
+package model;
 
 import java.util.ArrayList;
 
-public class SingleJump implements Jump {
+public class MultiJump implements Jump {
     private Board board;
     private int endingPosition;
     private ArrayList<Integer> jumpedPositions;
     private Piece piece;
     private int startingPosition;
+    private ArrayList<SingleJump> subJumps;
 
-    public SingleJump(int startingPosition, int endingPosition, Board board) {
+    public MultiJump(int startingPosition, int endingPosition, ArrayList<SingleJump> subJumps,
+            Board board) {
         this.startingPosition = startingPosition;
         this.endingPosition = endingPosition;
+        this.subJumps = subJumps;
         this.jumpedPositions = this.determineJumpedPositions();
         this.piece = board.getPiece(startingPosition);
         this.board = board;
     }
 
     private ArrayList<Integer> determineJumpedPositions() {
-        ArrayList<Integer> jumpedPositions = new ArrayList<>(1);
-        int jumpedPosition = -1;
+        ArrayList<Integer> jumpedPositions = new ArrayList<>();
 
-        if (Math.abs((this.startingPosition - this.endingPosition)) == 7) {
-            jumpedPosition = Math.max(this.startingPosition, this.endingPosition) - 3;
-        } else if (Math.abs((this.startingPosition - this.endingPosition)) == 9) {
-            jumpedPosition = Math.max(this.startingPosition, this.endingPosition) - 4;
-        } else {
-            System.err.println("Invalid Single Jump!");
-            System.out.println("SingleJump.determineJumpedPosition()");
-            System.exit(1);
+        for (SingleJump jump : this.subJumps) {
+            jumpedPositions.addAll(jump.getJumpedPositions());
         }
 
-        jumpedPositions.add(jumpedPosition);
         return jumpedPositions;
     }
 
@@ -79,9 +75,25 @@ public class SingleJump implements Jump {
         return this.getBoard().getSquare(this.getStartingPosition());
     }
 
+    public ArrayList<SingleJump> getSubJumps() {
+        return this.subJumps;
+    }
+
     @Override
     public String toString() {
-        return String.format("%dx%d", this.getStartingPosition(), this.getEndingPosition());
+        String moveNotation = "";
+
+        SingleJump lastJump = null;
+
+        for (SingleJump jump : this.subJumps) {
+            moveNotation += jump.getStartingPosition() + "x";
+            lastJump = jump;
+        }
+
+        // Add ending position
+        moveNotation += lastJump.getEndingPosition();
+
+        return moveNotation;
     }
 
 }
