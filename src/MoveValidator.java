@@ -1,8 +1,3 @@
-import java.util.ArrayList;
-
-//TODO Remove sysouts
-//TODO Write method for MultiJump
-
 public class MoveValidator {
     private static boolean isLegalMoveDirection(MoveInterface move) {
         boolean validMove = true;
@@ -22,7 +17,6 @@ public class MoveValidator {
     }
 
     public static boolean isValidMove(MoveInterface move) {
-        System.out.println("MoveInterface isValidMove()");
         if (move.getStartingPosition() > 32 || move.getStartingPosition() < 1
                 || move.getEndingPosition() > 32 || move.getEndingPosition() < 1) {
             // Illegal position
@@ -49,18 +43,16 @@ public class MoveValidator {
     }
 
     private static boolean isValidMultiJump(MultiJump multijump) {
-        System.out.println("MultiJump isValidMove()");
         for (SingleJump subJump : multijump.getSubJumps()) {
             if (!isValidSingleJump(subJump)) {
                 return false;
             }
-
-            // TODO Not finished
+            // TODO Not finished. Check linking of SingleJumps
         }
+        return false;
     }
 
     private static boolean isValidNonJumpMove(Move move) {
-        System.out.println("Move isValidMove()");
         Board board = move.getBoard();
 
         if (!isLegalMoveDirection(move)) {
@@ -78,7 +70,6 @@ public class MoveValidator {
     }
 
     private static boolean isValidSingleJump(SingleJump jump) {
-        System.out.println("SingleJump isValidMove()");
         if (!isLegalMoveDirection(jump)) {
             return false;
         } else if (!isValidSingleJumpHelper(jump)) {
@@ -117,13 +108,5 @@ public class MoveValidator {
         }
 
         return true;
-    }
-
-    public static void main(String[] args) {
-        ArrayList<SingleJump> jumpList = new ArrayList<SingleJump>();
-        jumpList.add(new SingleJump(10, 19, new Board()));
-        jumpList.add(new SingleJump(19, 26, new Board()));
-        boolean temp = MoveValidator.isValidMove(new MultiJump(10, 26, jumpList, new Board()));
-        System.out.println(temp);
     }
 }
