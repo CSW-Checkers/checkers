@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+
 public class MoveValidator {
     private static boolean isLegalMoveDirection(MoveInterface move) {
         boolean validMove = true;
@@ -43,13 +45,28 @@ public class MoveValidator {
     }
 
     private static boolean isValidMultiJump(MultiJump multijump) {
-        for (SingleJump subJump : multijump.getSubJumps()) {
+        ArrayList<SingleJump> subJumps = multijump.getSubJumps();
+
+        // Check that each subJump is valid
+        for (SingleJump subJump : subJumps) {
             if (!isValidSingleJump(subJump)) {
                 return false;
             }
-            // TODO Not finished. Check linking of SingleJumps
         }
-        return false;
+
+        // Check that subJumps are linked legally
+        int endingPosition = subJumps.get(0).getEndingPosition();
+        int startingPosition;
+        for (int i = 1; i < subJumps.size(); i++) {
+            startingPosition = subJumps.get(i).getStartingPosition();
+
+            if (startingPosition != endingPosition) {
+                return false;
+            } else {
+                endingPosition = subJumps.get(i).getEndingPosition();
+            }
+        }
+        return true;
     }
 
     private static boolean isValidNonJumpMove(Move move) {
