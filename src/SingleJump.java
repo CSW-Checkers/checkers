@@ -16,6 +16,14 @@ public class SingleJump implements Jump {
         this.board = board;
     }
 
+    public SingleJump(SingleJump otherJump) {
+        this.board = new Board(otherJump.board);
+        this.endingPosition = otherJump.endingPosition;
+        this.piece = new Piece(otherJump.piece);
+        this.startingPosition = otherJump.startingPosition;
+        this.jumpedPositions.addAll(otherJump.jumpedPositions);
+    }
+
     private ArrayList<Integer> determineJumpedPositions() {
         ArrayList<Integer> jumpedPositions = new ArrayList<>(1);
         int jumpedPosition = -1;
@@ -84,4 +92,11 @@ public class SingleJump implements Jump {
         return String.format("%dx%d", this.getStartingPosition(), this.getEndingPosition());
     }
 
+    public static ArrayList<SingleJump> singleJumpListCopier(ArrayList<SingleJump> otherList) {
+        ArrayList<SingleJump> newList = new ArrayList<SingleJump>();
+        for (SingleJump jump : otherList) {
+            newList.add(new SingleJump(jump));
+        }
+        return newList;
+    }
 }

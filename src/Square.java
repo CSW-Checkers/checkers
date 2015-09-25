@@ -15,6 +15,13 @@ public class Square {
 
     }
 
+    public Square(Square otherSquare) {
+        this.position = otherSquare.position;
+        this.occupyingPiece = new Piece(otherSquare.occupyingPiece);
+        this.adjacentSquares = new ArrayList<Integer>();
+        this.adjacentSquares.addAll(otherSquare.adjacentSquares);
+    }
+
     private List<Integer> determineAdjacentSquares() {
         List<Integer> adjacentPositions = new ArrayList<>(4);
 
@@ -193,4 +200,39 @@ public class Square {
         }
     }
 
+    public boolean isInSameRow(Square otherSquare) {
+        return otherSquare.getRowNumber() == this.getRowNumber();
+    }
+    
+    public boolean isInSameColumn(Square otherSquare) {
+        return otherSquare.getColumnNumber() == this.getColumnNumber();
+    }
+    
+    public int getRowNumber() {
+        return (int) Math.ceil(position / 4.0);
+    }
+    
+    public int getColumnNumber() {
+        int remainder = this.position % 8;
+        switch (remainder) {
+            case 5: return 1;
+            case 1: return 2;
+            case 6: return 3;
+            case 2: return 4;
+            case 7: return 5;
+            case 3: return 6;
+            case 0: return 7;
+            case 4: return 8;
+            default: 
+                return -1;
+        }
+    }
+    
+    public String toString() {
+        return "Square: " + this.position;
+    }
+    
+    public static void main(String[] args) {
+        System.out.println();
+    }
 }

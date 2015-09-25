@@ -13,6 +13,15 @@ public class Board {
         this.numberOfWhitePieces = 12;
     }
 
+    public Board(Board otherBoard) {
+        this.gameState = new ArrayList<Square>();
+        for (Square square : otherBoard.getGameState()) {
+            this.gameState.add(new Square(square));
+        }
+        this.numberOfBlackPieces = otherBoard.numberOfBlackPieces;
+        this.numberOfWhitePieces = otherBoard.numberOfWhitePieces;
+    }
+    
     public List<Square> getGameState() {
         return this.gameState;
     }
@@ -96,5 +105,41 @@ public class Board {
         } else {
             this.numberOfBlackPieces--;
         }
+    }
+    
+    public boolean isEndState() {
+        return (numberOfBlackPieces == 0 || numberOfWhitePieces == 0);
+    }
+
+    public List<Square> getAdjacentSquares(Square square) {
+        List<Integer> squareNumbers = square.getAdjacentSquares();
+        return getSquares((ArrayList<Integer>) squareNumbers);
+    }
+
+    public List<Square> getSquaresTwoMovesAway(Square square) {
+        List<Square> squaresTwoHopsAway = new ArrayList<Square>();
+        for (Square adjacentSquare : getAdjacentSquares(square)) {
+            for (Square twoAway : getAdjacentSquares(adjacentSquare)) {
+                if (!square.isInSameRow(twoAway) && square.isInSameColumn(twoAway)) {
+                    squaresTwoHopsAway.add(twoAway);
+                }
+            }
+        }
+        return squaresTwoHopsAway;
+    }
+
+    public void printBoard() {
+        printSquares(gameState);
+    }
+
+    public void printSquares(List<Square> gameState) {
+        for (int i = 1; i < gameState.size(); i++) {
+            System.out.println(gameState.get(i) + ", " + gameState.get(i).getOccupyingPiece());
+        }
+    }
+
+    public static void main(String[] args) {
+        Board gameBoard = new Board();
+        gameBoard.printBoard();
     }
 }

@@ -8,6 +8,11 @@ public class Piece {
         this.king = false;
     }
 
+    public Piece(Piece otherPiece) {
+        this.color = otherPiece.color;
+        this.king = otherPiece.king;
+    }
+    
     public PieceColor getColor() {
         return this.color;
     }
