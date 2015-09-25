@@ -69,22 +69,15 @@ public class Board {
     }
 
     public void movePiece(MoveInterface move) {
-        if (MoveValidator.isValidMove(move)) {
-            Piece pieceToMove = this.pickUpPiece(move.getStartingPosition());
-            if (move instanceof Jump) {
-                Jump jump = (Jump) move;
+        Piece pieceToMove = this.pickUpPiece(move.getStartingPosition());
+        if (move instanceof Jump) {
+            Jump jump = (Jump) move;
 
-                for (int position : jump.getJumpedPositions()) {
-                    this.removePiece(position);
-                }
+            for (int position : jump.getJumpedPositions()) {
+                this.removePiece(position);
             }
-            this.getSquare(move.getEndingPosition()).setOccupyingPiece(pieceToMove);
-        } else {
-            System.err.println("Invalid move!");
-            System.out.println("Board.movePiece()");
-            System.exit(1);
         }
-
+        this.getSquare(move.getEndingPosition()).setOccupyingPiece(pieceToMove);
     }
 
     private Piece pickUpPiece(int position) {
