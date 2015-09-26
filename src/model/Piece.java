@@ -1,3 +1,4 @@
+package model;
 
 public class Piece {
     private final PieceColor color;
