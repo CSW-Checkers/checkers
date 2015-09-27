@@ -2,6 +2,7 @@ package model.ai;
 
 import model.Board;
 import model.Move;
+import model.MoveGenerator;
 import model.MoveInterface;
 import model.PieceColor;
 

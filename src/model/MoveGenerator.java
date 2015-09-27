@@ -1,13 +1,4 @@
-package model.ai;
-
-import model.Board;
-import model.Move;
-import model.MoveInterface;
-import model.MoveValidator;
-import model.MultiJump;
-import model.PieceColor;
-import model.SingleJump;
-import model.Square;
+package model;
 
 import java.util.ArrayList;
 import java.util.List;
