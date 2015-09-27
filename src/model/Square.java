@@ -1,3 +1,4 @@
+package model;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -5,10 +6,10 @@ import java.util.List;
 
 public class Square {
     private final List<Integer> adjacentSquares;
-    private Piece occupyingPiece;
+    private PieceInterface occupyingPiece;
     private final int position;
 
-    public Square(int position, Piece occupyingPiece) {
+    public Square(int position, PieceInterface occupyingPiece) {
         this.position = position;
         this.occupyingPiece = occupyingPiece;
         this.adjacentSquares = this.determineAdjacentSquares();
@@ -94,7 +95,7 @@ public class Square {
         return adjacentPositions;
     }
 
-    public Piece getOccupyingPiece() {
+    public PieceInterface getOccupyingPiece() {
         return this.occupyingPiece;
     }
 
@@ -140,11 +141,7 @@ public class Square {
     }
 
     public boolean isOccupied() {
-        if (this.occupyingPiece == null) {
-            return false;
-        } else {
-            return true;
-        }
+        return !this.occupyingPiece.isNull();
     }
 
     private boolean isOnBlackEdgeOfBoard() {
@@ -178,18 +175,17 @@ public class Square {
     }
 
     private void kingPieceIfNecessary() {
-        if ((this.isOnBlackEdgeOfBoard() && this.occupyingPiece.getColor().equals(PieceColor.WHITE))
-                || (this.isOnWhiteEdgeOfBoard()
-                        && this.occupyingPiece.getColor().equals(PieceColor.BLACK))) {
+        if ((this.isOnBlackEdgeOfBoard() && this.occupyingPiece.isWhite())
+                || (this.isOnWhiteEdgeOfBoard() && this.occupyingPiece.isBlack())) {
             this.occupyingPiece.kingMe();
         }
     }
 
     public void removeOccupyingPiece() {
-        this.occupyingPiece = null;
+        this.occupyingPiece = NullPiece.getInstance();
     }
 
-    public void setOccupyingPiece(Piece occupyingPiece) {
+    public void setOccupyingPiece(PieceInterface occupyingPiece) {
         if (this.isOccupied()) {
             System.err.println("Occupied square. Invalid move.");
             System.out.println("Square.setOccupyingPiece()");

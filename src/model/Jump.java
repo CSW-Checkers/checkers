@@ -1,8 +1,9 @@
+package model;
 
 import java.util.ArrayList;
 
 public interface Jump extends MoveInterface {
-    public ArrayList<Piece> getJumpedPieces();
+    public ArrayList<PieceInterface> getJumpedPieces();
 
     public ArrayList<Integer> getJumpedPositions();
 

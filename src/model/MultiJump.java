@@ -1,3 +1,4 @@
+package model;
 
 import java.util.ArrayList;
 
@@ -5,7 +6,7 @@ public class MultiJump implements Jump {
     private Board board;
     private int endingPosition;
     private ArrayList<Integer> jumpedPositions;
-    private Piece piece;
+    private PieceInterface piece;
     private int startingPosition;
     private ArrayList<SingleJump> subJumps;
 
@@ -45,7 +46,7 @@ public class MultiJump implements Jump {
     }
 
     @Override
-    public ArrayList<Piece> getJumpedPieces() {
+    public ArrayList<PieceInterface> getJumpedPieces() {
         return this.board.getPieces(this.getJumpedPositions());
     }
 
@@ -60,7 +61,7 @@ public class MultiJump implements Jump {
     }
 
     @Override
-    public Piece getPiece() {
+    public PieceInterface getPiece() {
         return this.piece;
     }
 

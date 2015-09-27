@@ -1,3 +1,4 @@
+package model;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,14 @@ public class Board {
         this.numberOfWhitePieces = otherBoard.getNumberOfWhitePieces();
     }
 
+    private void decrementPieceCount(int position) {
+        if (this.getPiece(position).isWhite()) {
+            this.numberOfWhitePieces--;
+        } else if (this.getPiece(position).isBlack()) {
+            this.numberOfBlackPieces--;
+        }
+    }
+
     public List<Square> getGameState() {
         return this.gameState;
     }
@@ -34,12 +43,12 @@ public class Board {
         return this.numberOfWhitePieces;
     }
 
-    public Piece getPiece(int position) {
+    public PieceInterface getPiece(int position) {
         return this.getSquare(position).getOccupyingPiece();
     }
 
-    public ArrayList<Piece> getPieces(ArrayList<Integer> positions) {
-        ArrayList<Piece> pieces = new ArrayList<>();
+    public ArrayList<PieceInterface> getPieces(ArrayList<Integer> positions) {
+        ArrayList<PieceInterface> pieces = new ArrayList<>();
         for (int position : positions) {
             pieces.add(this.getPiece(position));
         }
@@ -63,11 +72,11 @@ public class Board {
     private List<Square> getStartingGameBoardState() {
         List<Square> startingGameBoard = new ArrayList<>(32);
 
-        for (int i = 0; i < 32; i++) {
+        for (int i = 1; i <= 32; i++) {
             if (i < 12) {
                 startingGameBoard.add(new Square(i, new Piece(PieceColor.BLACK)));
             } else if (i >= 12 && i < 21) {
-                startingGameBoard.add(new Square(i, null));
+                startingGameBoard.add(new Square(i, NullPiece.getInstance()));
             } else {
                 startingGameBoard.add(new Square(i, new Piece(PieceColor.WHITE)));
             }
@@ -77,7 +86,7 @@ public class Board {
     }
 
     public void movePiece(MoveInterface move) {
-        Piece pieceToMove = this.pickUpPiece(move.getStartingPosition());
+        PieceInterface pieceToMove = this.pickUpPiece(move.getStartingPosition());
         if (move instanceof Jump) {
             Jump jump = (Jump) move;
 
@@ -88,23 +97,15 @@ public class Board {
         this.getSquare(move.getEndingPosition()).setOccupyingPiece(pieceToMove);
     }
 
-    private Piece pickUpPiece(int position) {
-        Piece pieceToPickUp = this.getPiece(position);
+    private PieceInterface pickUpPiece(int position) {
+        PieceInterface pieceToPickUp = this.getPiece(position);
         this.removePiece(position);
         return pieceToPickUp;
     }
 
     public void removePiece(int position) {
-        this.updatePieceCount(position);
+        this.decrementPieceCount(position);
         this.getSquare(position).removeOccupyingPiece();
-    }
-
-    private void updatePieceCount(int position) {
-        if (this.getPiece(position).getColor().equals(PieceColor.WHITE)) {
-            this.numberOfWhitePieces--;
-        } else {
-            this.numberOfBlackPieces--;
-        }
     }
 
     public boolean isEndState() {
