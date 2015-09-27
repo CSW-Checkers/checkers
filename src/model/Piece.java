@@ -9,7 +9,7 @@ public class Piece implements PieceInterface {
         this.king = false;
     }
 
-    public Piece(Piece otherPiece) {
+    public Piece(PieceInterface otherPiece) {
         this.color = otherPiece.getColor();
         this.king = otherPiece.isKing();
     }

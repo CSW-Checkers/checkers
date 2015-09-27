@@ -223,8 +223,4 @@ public class Square {
                 return -1;
         }
     }
-    
-    public String toString() {
-        return "Square: " + this.position;
-    }
 }

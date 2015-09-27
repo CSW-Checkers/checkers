@@ -140,14 +140,4 @@ public class Board {
         }
         return squaresPossiblyOneJumpAway;
     }
-
-    public void printBoard() {
-        printSquares(this.gameState);
-    }
-
-    public void printSquares(List<Square> gameState) {
-        for (int i = 0; i < gameState.size(); i++) {
-            System.out.println(gameState.get(i) + ", " + gameState.get(i).getOccupyingPiece());
-        }
-    }
 }
