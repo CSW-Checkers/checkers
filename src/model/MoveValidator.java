@@ -21,8 +21,7 @@ public class MoveValidator {
     }
 
     public static boolean isValidMove(MoveInterface move) {
-        if (move.getStartingPosition() > 32 || move.getStartingPosition() < 1
-                || move.getEndingPosition() > 32 || move.getEndingPosition() < 1) {
+        if (!isOnBoard(move.getStartingPosition()) || !isOnBoard(move.getEndingPosition())) {
             // Illegal position
             return false;
         } else if (move.getPiece().isNull()) {
@@ -129,5 +128,9 @@ public class MoveValidator {
         }
 
         return true;
+    }
+
+    public static boolean isOnBoard(int position) {
+        return position >= 1 && position <= 32;
     }
 }

@@ -1,3 +1,10 @@
+package ai;
+
+import model.Board;
+import model.Move;
+import model.MoveInterface;
+import model.PieceColor;
+
 import java.util.ArrayList;
 import java.util.List;
 

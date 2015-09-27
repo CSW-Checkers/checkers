@@ -118,23 +118,23 @@ public class Board {
     }
 
     /**
-     * Returns squares with locations +9, -9, +7, -7 Returns only those squares 
-     * on the board, i.e. with a checkers number of 1-32 (array index of 0-31).
-     * The method returns squares that may be on the other side of the board.
+     * Returns squares with locations +9, -9, +7, -7 Returns only those squares on the board, i.e.
+     * with a checkers number of 1-32 (array index of 0-31). The method returns squares that may be
+     * on the other side of the board.
      * 
      * @param startingSquare
      *            the square in question
      * @return squares one possibly one jump away, they may try to wrap around the board
      */
-    public List<Square> getSquaresPossiblyOneJumpAway(Square startingSquare) {
+    public List<Square> getSquaresThatMightBeOneJumpAway(Square startingSquare) {
         List<Square> squaresPossiblyOneJumpAway = new ArrayList<Square>();
-        
+
         int startingPosition = startingSquare.getPosition();
         int[] possibleJumpPositions = { startingPosition + 9, startingPosition - 9,
                                         startingPosition + 7, startingPosition - 7 };
 
         for (int i = 0; i < possibleJumpPositions.length; i++) {
-            if (possibleJumpPositions[i] >= 1 && possibleJumpPositions[i] <= 32) {
+            if (MoveValidator.isOnBoard(possibleJumpPositions[i])) {
                 squaresPossiblyOneJumpAway.add(getSquare(possibleJumpPositions[i]));
             }
         }

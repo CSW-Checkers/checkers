@@ -1,3 +1,14 @@
+package ai;
+
+import model.Board;
+import model.Move;
+import model.MoveInterface;
+import model.MoveValidator;
+import model.MultiJump;
+import model.PieceColor;
+import model.SingleJump;
+import model.Square;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -44,7 +55,7 @@ public class MoveGenerator {
 
     private void determineJumpMoves() {
         for (Square startingSquare : this.currentPlayersOccupiedSquares) {
-            for (Square twoAway : this.board.getSquaresPossiblyOneJumpAway(startingSquare)) {
+            for (Square twoAway : this.board.getSquaresThatMightBeOneJumpAway(startingSquare)) {
                 SingleJump jump = new SingleJump(startingSquare.getPosition(),
                         twoAway.getPosition(), this.board);
                 if (MoveValidator.isValidMove(jump)) {
@@ -66,7 +77,7 @@ public class MoveGenerator {
 
         boolean noMoreJumps = true;
 
-        for (Square twoAway : newBoard.getSquaresPossiblyOneJumpAway(lastSquare)) {
+        for (Square twoAway : newBoard.getSquaresThatMightBeOneJumpAway(lastSquare)) {
             SingleJump jump = new SingleJump(lastSquare.getPosition(), twoAway.getPosition(),
                     newBoard);
             if (MoveValidator.isValidMove(jump)) {

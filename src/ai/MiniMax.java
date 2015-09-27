@@ -1,3 +1,8 @@
+package ai;
+
+import model.Board;
+import model.MoveInterface;
+import model.PieceColor;
 
 public class MiniMax {
     private MiniMaxNode root;
