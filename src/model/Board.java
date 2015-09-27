@@ -14,6 +14,21 @@ public class Board {
         this.numberOfWhitePieces = 12;
     }
 
+    public Board(List<Integer> blackPositions, List<Integer> whitePositions) {
+        this.numberOfBlackPieces = blackPositions.size();
+        this.numberOfWhitePieces = whitePositions.size();
+        this.gameState = new ArrayList<Square>(32);
+
+        for (int position = 1; position <= 32; position++) {
+            this.gameState.add(new Square(position, NullPiece.getInstance()));
+            if (blackPositions.contains(position)) {
+                this.setOccupyingPiece(position, new Piece(PieceColor.BLACK));
+            } else if (whitePositions.contains(position)) {
+                this.setOccupyingPiece(position, new Piece(PieceColor.WHITE));
+            }
+        }
+    }
+
     private void decrementPieceCount(int position) {
         if (this.getPiece(position).isWhite()) {
             this.numberOfWhitePieces--;
@@ -38,7 +53,7 @@ public class Board {
         return this.getSquare(position).getOccupyingPiece();
     }
 
-    public ArrayList<PieceInterface> getPieces(ArrayList<Integer> positions) {
+    public ArrayList<PieceInterface> getPieces(List<Integer> positions) {
         ArrayList<PieceInterface> pieces = new ArrayList<>();
         for (int position : positions) {
             pieces.add(this.getPiece(position));
@@ -64,9 +79,9 @@ public class Board {
         List<Square> startingGameBoard = new ArrayList<>(32);
 
         for (int i = 1; i <= 32; i++) {
-            if (i < 12) {
+            if (i <= 12) {
                 startingGameBoard.add(new Square(i, new Piece(PieceColor.BLACK)));
-            } else if (i >= 12 && i < 21) {
+            } else if (i > 12 && i < 21) {
                 startingGameBoard.add(new Square(i, NullPiece.getInstance()));
             } else {
                 startingGameBoard.add(new Square(i, new Piece(PieceColor.WHITE)));
@@ -85,7 +100,7 @@ public class Board {
                 this.removePiece(position);
             }
         }
-        this.getSquare(move.getEndingPosition()).setOccupyingPiece(pieceToMove);
+        this.setOccupyingPiece(move.getEndingPosition(), pieceToMove);
     }
 
     private PieceInterface pickUpPiece(int position) {
@@ -97,5 +112,9 @@ public class Board {
     public void removePiece(int position) {
         this.decrementPieceCount(position);
         this.getSquare(position).removeOccupyingPiece();
+    }
+
+    public void setOccupyingPiece(int position, PieceInterface pieceToSet) {
+        this.getSquare(position).setOccupyingPiece(pieceToSet);
     }
 }

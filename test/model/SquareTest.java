@@ -16,7 +16,7 @@ public class SquareTest {
         List<Integer> leftTwoColumnPositions = Arrays.asList(1, 5, 9, 13, 17, 21, 25, 29);
         Square square;
         for (int i = 1; i <= 32; i++) {
-            square = new Square(i, null);
+            square = new Square(i, NullPiece.getInstance());
             if (leftTwoColumnPositions.contains(i)) {
                 assertTrue("Position " + i + " should be in the left two columns.",
                         square.isInLeftTwoColumns());
@@ -32,7 +32,7 @@ public class SquareTest {
         List<Integer> rightTwoColumnPositions = Arrays.asList(4, 8, 12, 16, 20, 24, 28, 32);
         Square square;
         for (int i = 1; i <= 32; i++) {
-            square = new Square(i, null);
+            square = new Square(i, NullPiece.getInstance());
             if (rightTwoColumnPositions.contains(i)) {
                 assertTrue("Position " + i + " should be in the right two columns.",
                         square.isInRightTwoColumns());
@@ -45,7 +45,7 @@ public class SquareTest {
 
     @Test
     public void testIsOccupied() {
-        Square square = new Square(12, null);
+        Square square = new Square(12, NullPiece.getInstance());
         assertFalse(square.isOccupied());
 
         square.setOccupyingPiece(new Piece(PieceColor.BLACK));
@@ -62,7 +62,7 @@ public class SquareTest {
 
     @Test
     public void testSetOccupyingPiece() {
-        Square square = new Square(19, null);
+        Square square = new Square(19, NullPiece.getInstance());
         assertFalse(square.isOccupied());
         square.setOccupyingPiece(new Piece(PieceColor.BLACK));
         assertTrue(square.isOccupied());

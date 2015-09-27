@@ -184,8 +184,8 @@ public class Square {
             System.out.println("Square.setOccupyingPiece()");
             System.exit(1);
         } else {
-            this.kingPieceIfNecessary();
             this.occupyingPiece = occupyingPiece;
+            this.kingPieceIfNecessary();
         }
     }
 

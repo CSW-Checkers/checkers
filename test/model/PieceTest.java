@@ -7,44 +7,43 @@ import org.junit.Test;
 
 public class PieceTest {
 
+    private Piece blackPiece = new Piece(PieceColor.BLACK);
+    private Piece whitePiece = new Piece(PieceColor.WHITE);
+
     @Test
     public void testIsBlack() {
-        Piece piece = new Piece(PieceColor.BLACK);
-        assertTrue(piece.isBlack());
+        assertTrue(this.blackPiece.isBlack());
+        assertFalse(this.whitePiece.isBlack());
+    }
 
-        piece = new Piece(PieceColor.WHITE);
-        assertFalse(piece.isBlack());
+    @Test
+    public void testIsNull() throws Exception {
+        assertFalse(this.blackPiece.isNull());
     }
 
     @Test
     public void testIsSameColorAs() {
-        Piece blackPiece1 = new Piece(PieceColor.BLACK);
         Piece blackPiece2 = new Piece(PieceColor.BLACK);
-        Piece whitePiece1 = new Piece(PieceColor.WHITE);
         Piece whitePiece2 = new Piece(PieceColor.WHITE);
 
-        assertTrue(blackPiece1.isSameColorAs(blackPiece2));
-        assertTrue(whitePiece1.isSameColorAs(whitePiece2));
-        assertFalse(blackPiece2.isSameColorAs(whitePiece1));
-        assertFalse(whitePiece2.isSameColorAs(blackPiece1));
+        assertTrue(this.blackPiece.isSameColorAs(blackPiece2));
+        assertTrue(this.whitePiece.isSameColorAs(whitePiece2));
+        assertFalse(blackPiece2.isSameColorAs(this.whitePiece));
+        assertFalse(whitePiece2.isSameColorAs(this.blackPiece));
     }
 
     @Test
     public void testIsWhite() {
-        Piece piece = new Piece(PieceColor.WHITE);
-        assertTrue(piece.isWhite());
-
-        piece = new Piece(PieceColor.BLACK);
-        assertFalse(piece.isWhite());
+        assertTrue(this.whitePiece.isWhite());
+        assertFalse(this.blackPiece.isWhite());
     }
 
     @Test
     public void testKingMe() {
-        Piece piece = new Piece(PieceColor.BLACK);
-        assertFalse(piece.isKing());
+        assertFalse(this.blackPiece.isKing());
 
-        piece.kingMe();
+        this.blackPiece.kingMe();
 
-        assertTrue(piece.isKing());
+        assertTrue(this.blackPiece.isKing());
     }
 }
