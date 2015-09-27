@@ -14,6 +14,15 @@ public class Board {
         this.numberOfWhitePieces = 12;
     }
 
+    public Board(Board otherBoard) {
+        this.gameState = new ArrayList<Square>();
+        for (Square square : otherBoard.getGameState()) {
+            this.gameState.add(new Square(square));
+        }
+        this.numberOfBlackPieces = otherBoard.getNumberOfBlackPieces();
+        this.numberOfWhitePieces = otherBoard.getNumberOfWhitePieces();
+    }
+
     private void decrementPieceCount(int position) {
         if (this.getPiece(position).isWhite()) {
             this.numberOfWhitePieces--;
@@ -97,5 +106,38 @@ public class Board {
     public void removePiece(int position) {
         this.decrementPieceCount(position);
         this.getSquare(position).removeOccupyingPiece();
+    }
+
+    public boolean isEndState() {
+        return (numberOfBlackPieces == 0 || numberOfWhitePieces == 0);
+    }
+
+    public List<Square> getAdjacentSquares(Square square) {
+        List<Integer> squareNumbers = square.getAdjacentSquares();
+        return getSquares((ArrayList<Integer>) squareNumbers);
+    }
+
+    /**
+     * Returns squares with locations +9, -9, +7, -7 Returns only those squares on the board, i.e.
+     * with a checkers number of 1-32 (array index of 0-31). The method returns squares that may be
+     * on the other side of the board.
+     * 
+     * @param startingSquare
+     *            the square in question
+     * @return squares one possibly one jump away, they may try to wrap around the board
+     */
+    public List<Square> getSquaresThatMightBeOneJumpAway(Square startingSquare) {
+        List<Square> squaresPossiblyOneJumpAway = new ArrayList<Square>();
+
+        int startingPosition = startingSquare.getPosition();
+        int[] possibleJumpPositions = { startingPosition + 9, startingPosition - 9,
+                                        startingPosition + 7, startingPosition - 7 };
+
+        for (int i = 0; i < possibleJumpPositions.length; i++) {
+            if (MoveValidator.isOnBoard(possibleJumpPositions[i])) {
+                squaresPossiblyOneJumpAway.add(getSquare(possibleJumpPositions[i]));
+            }
+        }
+        return squaresPossiblyOneJumpAway;
     }
 }
