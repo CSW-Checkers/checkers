@@ -14,6 +14,15 @@ public class Board {
         this.numberOfWhitePieces = 12;
     }
 
+    public Board(Board otherBoard) {
+        this.gameState = new ArrayList<Square>();
+        for (Square square : otherBoard.getGameState()) {
+            this.gameState.add(new Square(square));
+        }
+        this.numberOfBlackPieces = otherBoard.getNumberOfBlackPieces();
+        this.numberOfWhitePieces = otherBoard.getNumberOfWhitePieces();
+    }
+
     public Board(List<Integer> blackPositions, List<Integer> whitePositions) {
         this.numberOfBlackPieces = blackPositions.size();
         this.numberOfWhitePieces = whitePositions.size();
@@ -35,6 +44,11 @@ public class Board {
         } else if (this.getPiece(position).isBlack()) {
             this.numberOfBlackPieces--;
         }
+    }
+
+    public List<Square> getAdjacentSquares(Square square) {
+        List<Integer> squareNumbers = square.getAdjacentSquares();
+        return this.getSquares((ArrayList<Integer>) squareNumbers);
     }
 
     public List<Square> getGameState() {
@@ -75,6 +89,30 @@ public class Board {
         return squares;
     }
 
+    /**
+     * Returns squares with locations +9, -9, +7, -7 Returns only those squares on the board, i.e.
+     * with a checkers number of 1-32 (array index of 0-31). The method returns squares that may be
+     * on the other side of the board.
+     *
+     * @param startingSquare
+     *            the square in question
+     * @return squares one possibly one jump away, they may try to wrap around the board
+     */
+    public List<Square> getSquaresThatMightBeOneJumpAway(Square startingSquare) {
+        List<Square> squaresPossiblyOneJumpAway = new ArrayList<Square>();
+
+        int startingPosition = startingSquare.getPosition();
+        int[] possibleJumpPositions = { startingPosition + 9, startingPosition - 9,
+                startingPosition + 7, startingPosition - 7 };
+
+        for (int i = 0; i < possibleJumpPositions.length; i++) {
+            if (MoveValidator.isOnBoard(possibleJumpPositions[i])) {
+                squaresPossiblyOneJumpAway.add(this.getSquare(possibleJumpPositions[i]));
+            }
+        }
+        return squaresPossiblyOneJumpAway;
+    }
+
     private List<Square> getStartingGameBoardState() {
         List<Square> startingGameBoard = new ArrayList<>(32);
 
@@ -89,6 +127,10 @@ public class Board {
         }
 
         return startingGameBoard;
+    }
+
+    public boolean isEndState() {
+        return (this.numberOfBlackPieces == 0 || this.numberOfWhitePieces == 0);
     }
 
     public void movePiece(MoveInterface move) {

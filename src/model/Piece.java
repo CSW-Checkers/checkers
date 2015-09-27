@@ -9,6 +9,11 @@ public class Piece implements PieceInterface {
         this.king = false;
     }
 
+    public Piece(PieceInterface otherPiece) {
+        this.color = otherPiece.getColor();
+        this.king = otherPiece.isKing();
+    }
+
     @Override
     public PieceColor getColor() {
         return this.color;

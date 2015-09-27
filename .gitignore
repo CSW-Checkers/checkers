@@ -27,6 +27,7 @@ local.properties
 /src/main/resources/rebel.xml
 # External tool builders
 .externalToolBuilders/
+.settings/org.eclipse.jdt.ui.prefs
  
 # Locally stored "Eclipse launch configurations"
 *.launch
