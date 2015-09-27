@@ -6,7 +6,7 @@ public class SingleJump implements Jump {
     private Board board;
     private int endingPosition;
     private ArrayList<Integer> jumpedPositions;
-    private Piece piece;
+    private PieceInterface piece;
     private int startingPosition;
 
     public SingleJump(int startingPosition, int endingPosition, Board board) {
@@ -51,7 +51,7 @@ public class SingleJump implements Jump {
     }
 
     @Override
-    public ArrayList<Piece> getJumpedPieces() {
+    public ArrayList<PieceInterface> getJumpedPieces() {
         return this.board.getPieces(this.getJumpedPositions());
     }
 
@@ -66,7 +66,7 @@ public class SingleJump implements Jump {
     }
 
     @Override
-    public Piece getPiece() {
+    public PieceInterface getPiece() {
         return this.piece;
     }
 

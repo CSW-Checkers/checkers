@@ -1,6 +1,6 @@
 package model;
 
-public class Piece {
+public class Piece implements PieceInterface {
     private final PieceColor color;
     boolean king;
 
@@ -9,26 +9,37 @@ public class Piece {
         this.king = false;
     }
 
+    @Override
     public PieceColor getColor() {
         return this.color;
     }
 
+    @Override
     public boolean isBlack() {
         return this.getColor().equals(PieceColor.BLACK);
     }
 
+    @Override
     public boolean isKing() {
         return this.king;
     }
 
-    public boolean isSameColorAs(Piece otherPiece) {
+    @Override
+    public boolean isNull() {
+        return false;
+    }
+
+    @Override
+    public boolean isSameColorAs(PieceInterface otherPiece) {
         return this.color.equals(otherPiece.getColor());
     }
 
+    @Override
     public boolean isWhite() {
         return this.getColor().equals(PieceColor.WHITE);
     }
 
+    @Override
     public void kingMe() {
         this.king = true;
     }
