@@ -1,4 +1,4 @@
-package ai;
+package model.ai;
 
 import model.Board;
 

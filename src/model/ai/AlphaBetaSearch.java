@@ -1,16 +1,16 @@
-package ai;
+package model.ai;
 
 import model.Board;
 import model.MoveInterface;
 import model.PieceColor;
 
-public class MiniMax {
-    private MiniMaxNode root;
+public class AlphaBetaSearch {
+    private AlphaBetaSearchNode root;
     private BoardEvaluator evaluator;
 
-    public MiniMax(Board startingState, PieceColor playerMakingMove, BoardEvaluator evaluator,
-            int depthLimit) {
-        root = new MiniMaxNode(startingState, depthLimit, playerMakingMove);
+    public AlphaBetaSearch(Board startingState, PieceColor playerMakingMove,
+            BoardEvaluator evaluator, int depthLimit) {
+        root = new AlphaBetaSearchNode(startingState, depthLimit, playerMakingMove);
         this.evaluator = evaluator;
     }
 
@@ -19,12 +19,12 @@ public class MiniMax {
         return getBestMove(bestValue);
     }
 
-    public double maxValue(MiniMaxNode node, double alpha, double beta) {
+    public double maxValue(AlphaBetaSearchNode node, double alpha, double beta) {
         if (node.isLeaf()) {
             return evaluate(node.getBoard());
         }
         node.setValue(Double.NEGATIVE_INFINITY);
-        for (MiniMaxNode childNode : node.getChildren()) {
+        for (AlphaBetaSearchNode childNode : node.getChildren()) {
             node.setValue(Math.max(node.getValue(), minValue(childNode, alpha, beta)));
             if (node.getValue() >= beta) {
                 return node.getValue();
@@ -34,12 +34,12 @@ public class MiniMax {
         return node.getValue();
     }
 
-    private double minValue(MiniMaxNode node, double alpha, double beta) {
+    private double minValue(AlphaBetaSearchNode node, double alpha, double beta) {
         if (node.isLeaf()) {
             return evaluate(node.getBoard());
         }
         node.setValue(Double.POSITIVE_INFINITY);
-        for (MiniMaxNode childNode : node.getChildren()) {
+        for (AlphaBetaSearchNode childNode : node.getChildren()) {
             node.setValue(Math.min(node.getValue(), maxValue(childNode, alpha, beta)));
             if (node.getValue() <= alpha) {
                 return node.getValue();
@@ -55,7 +55,7 @@ public class MiniMax {
 
     private MoveInterface getBestMove(double bestValue) {
         MoveInterface bestMove = null;
-        for (MiniMaxNode node : this.root.getChildren()) {
+        for (AlphaBetaSearchNode node : this.root.getChildren()) {
             if (node != null && node.getValue() == bestValue) {
                 bestMove = node.getMoveThatGotToThisState();
                 break;

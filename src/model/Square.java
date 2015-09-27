@@ -13,7 +13,6 @@ public class Square {
         this.position = position;
         this.occupyingPiece = occupyingPiece;
         this.adjacentSquares = this.determineAdjacentSquares();
-
     }
 
     public Square(Square otherSquare) {
