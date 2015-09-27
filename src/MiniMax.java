@@ -10,7 +10,7 @@ public class MiniMax {
     }
 
     public MoveInterface alphaBetaSearch() {
-        double bestValue = maxValue(root, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
+        double bestValue = maxValue(this.root, Double.NEGATIVE_INFINITY, Double.POSITIVE_INFINITY);
         return getBestMove(bestValue);
     }
 
@@ -45,12 +45,12 @@ public class MiniMax {
     }
 
     private double evaluate(Board theBoard) {
-        return evaluator.evaluateBoard(theBoard);
+        return this.evaluator.evaluateBoard(theBoard);
     }
 
     private MoveInterface getBestMove(double bestValue) {
         MoveInterface bestMove = null;
-        for (MiniMaxNode node : root.getChildren()) {
+        for (MiniMaxNode node : this.root.getChildren()) {
             if (node != null && node.getValue() == bestValue) {
                 bestMove = node.getMoveThatGotToThisState();
                 break;

@@ -16,26 +16,26 @@ class MiniMaxNode {
     }
 
     public List<MiniMaxNode> getChildren() {
-        if (children == null) {
-            children = new ArrayList<MiniMaxNode>();
-            MoveGenerator moveGen = new MoveGenerator(board, currentPlayersColor);
+        if (this.children == null) {
+            this.children = new ArrayList<MiniMaxNode>();
+            MoveGenerator moveGen = new MoveGenerator(this.board, this.currentPlayersColor);
             for (MoveInterface move : moveGen.getPossibleMoves()) {
                 Board childBoard = new Board(this.board);
                 childBoard.movePiece(move);
                 MiniMaxNode childNode = new MiniMaxNode(childBoard, this.depthLevel - 1,
                         this.currentPlayersColor.getOppositeColor());
-                children.add(childNode);
+                this.children.add(childNode);
             }
         }
-        return children;
+        return this.children;
     }
 
     public Board getBoard() {
-        return board;
+        return this.board;
     }
 
     public Move getMoveThatGotToThisState() {
-        return moveThatGotToThisState;
+        return this.moveThatGotToThisState;
     }
 
     public boolean isLeaf() {
@@ -43,7 +43,7 @@ class MiniMaxNode {
     }
 
     public double getValue() {
-        return value;
+        return this.value;
     }
 
     public void setValue(double value) {

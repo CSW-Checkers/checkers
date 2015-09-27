@@ -18,10 +18,10 @@ public class Board {
         for (Square square : otherBoard.getGameState()) {
             this.gameState.add(new Square(square));
         }
-        this.numberOfBlackPieces = otherBoard.numberOfBlackPieces;
-        this.numberOfWhitePieces = otherBoard.numberOfWhitePieces;
+        this.numberOfBlackPieces = otherBoard.getNumberOfBlackPieces();
+        this.numberOfWhitePieces = otherBoard.getNumberOfWhitePieces();
     }
-    
+
     public List<Square> getGameState() {
         return this.gameState;
     }
@@ -106,7 +106,7 @@ public class Board {
             this.numberOfBlackPieces--;
         }
     }
-    
+
     public boolean isEndState() {
         return (numberOfBlackPieces == 0 || numberOfWhitePieces == 0);
     }
@@ -116,30 +116,37 @@ public class Board {
         return getSquares((ArrayList<Integer>) squareNumbers);
     }
 
-    public List<Square> getSquaresTwoMovesAway(Square square) {
-        List<Square> squaresTwoHopsAway = new ArrayList<Square>();
-        for (Square adjacentSquare : getAdjacentSquares(square)) {
-            for (Square twoAway : getAdjacentSquares(adjacentSquare)) {
-                if (!square.isInSameRow(twoAway) && square.isInSameColumn(twoAway)) {
-                    squaresTwoHopsAway.add(twoAway);
-                }
+    /**
+     * Returns squares with locations +9, -9, +7, -7 Returns only those squares 
+     * on the board, i.e. with a checkers number of 1-32 (array index of 0-31).
+     * The method returns squares that may be on the other side of the board.
+     * 
+     * @param startingSquare
+     *            the square in question
+     * @return squares one possibly one jump away, they may try to wrap around the board
+     */
+    public List<Square> getSquaresPossiblyOneJumpAway(Square startingSquare) {
+        List<Square> squaresPossiblyOneJumpAway = new ArrayList<Square>();
+        
+        int startingPosition = startingSquare.getPosition();
+        int[] possibleJumpPositions = { startingPosition + 9, startingPosition - 9,
+                                        startingPosition + 7, startingPosition - 7 };
+
+        for (int i = 0; i < possibleJumpPositions.length; i++) {
+            if (possibleJumpPositions[i] >= 1 && possibleJumpPositions[i] <= 32) {
+                squaresPossiblyOneJumpAway.add(getSquare(possibleJumpPositions[i]));
             }
         }
-        return squaresTwoHopsAway;
+        return squaresPossiblyOneJumpAway;
     }
 
     public void printBoard() {
-        printSquares(gameState);
+        printSquares(this.gameState);
     }
 
     public void printSquares(List<Square> gameState) {
-        for (int i = 1; i < gameState.size(); i++) {
+        for (int i = 0; i < gameState.size(); i++) {
             System.out.println(gameState.get(i) + ", " + gameState.get(i).getOccupyingPiece());
         }
-    }
-
-    public static void main(String[] args) {
-        Board gameBoard = new Board();
-        gameBoard.printBoard();
     }
 }

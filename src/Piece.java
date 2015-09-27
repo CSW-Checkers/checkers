@@ -9,8 +9,8 @@ public class Piece {
     }
 
     public Piece(Piece otherPiece) {
-        this.color = otherPiece.color;
-        this.king = otherPiece.king;
+        this.color = otherPiece.getColor();
+        this.king = otherPiece.isKing();
     }
     
     public PieceColor getColor() {

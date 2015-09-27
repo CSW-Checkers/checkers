@@ -16,10 +16,10 @@ public class Square {
     }
 
     public Square(Square otherSquare) {
-        this.position = otherSquare.position;
-        this.occupyingPiece = new Piece(otherSquare.occupyingPiece);
+        this.position = otherSquare.getPosition();
+        this.occupyingPiece = new Piece(otherSquare.getOccupyingPiece());
         this.adjacentSquares = new ArrayList<Integer>();
-        this.adjacentSquares.addAll(otherSquare.adjacentSquares);
+        this.adjacentSquares.addAll(otherSquare.getAdjacentSquares());
     }
 
     private List<Integer> determineAdjacentSquares() {
@@ -215,14 +215,14 @@ public class Square {
     public int getColumnNumber() {
         int remainder = this.position % 8;
         switch (remainder) {
-            case 5: return 1;
-            case 1: return 2;
-            case 6: return 3;
-            case 2: return 4;
-            case 7: return 5;
-            case 3: return 6;
             case 0: return 7;
+            case 1: return 2;
+            case 2: return 4;
+            case 3: return 6;
             case 4: return 8;
+            case 5: return 1;
+            case 6: return 3;
+            case 7: return 5;
             default: 
                 return -1;
         }
@@ -230,9 +230,5 @@ public class Square {
     
     public String toString() {
         return "Square: " + this.position;
-    }
-    
-    public static void main(String[] args) {
-        System.out.println();
     }
 }

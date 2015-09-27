@@ -44,7 +44,7 @@ public class MoveGenerator {
 
     private void determineJumpMoves() {
         for (Square startingSquare : this.currentPlayersOccupiedSquares) {
-            for (Square twoAway : this.board.getSquaresTwoMovesAway(startingSquare)) {
+            for (Square twoAway : this.board.getSquaresPossiblyOneJumpAway(startingSquare)) {
                 SingleJump jump = new SingleJump(startingSquare.getPosition(),
                         twoAway.getPosition(), this.board);
                 if (MoveValidator.isValidMove(jump)) {
@@ -66,7 +66,7 @@ public class MoveGenerator {
 
         boolean noMoreJumps = true;
 
-        for (Square twoAway : newBoard.getSquaresTwoMovesAway(lastSquare)) {
+        for (Square twoAway : newBoard.getSquaresPossiblyOneJumpAway(lastSquare)) {
             SingleJump jump = new SingleJump(lastSquare.getPosition(), twoAway.getPosition(),
                     newBoard);
             if (MoveValidator.isValidMove(jump)) {
