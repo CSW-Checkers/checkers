@@ -63,7 +63,7 @@ public class Board {
     private List<Square> getStartingGameBoardState() {
         List<Square> startingGameBoard = new ArrayList<>(32);
 
-        for (int i = 0; i < 32; i++) {
+        for (int i = 1; i <= 32; i++) {
             if (i < 12) {
                 startingGameBoard.add(new Square(i, new Piece(PieceColor.BLACK)));
             } else if (i >= 12 && i < 21) {
