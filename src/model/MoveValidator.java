@@ -1,9 +1,11 @@
+package model;
+
 import java.util.ArrayList;
 
 public class MoveValidator {
     private static boolean isLegalMoveDirection(MoveInterface move) {
         boolean validMove = true;
-        Piece piece = move.getPiece();
+        PieceInterface piece = move.getPiece();
         if (!piece.isKing()) {
             if (piece.isBlack()) {
                 if (move.getStartingPosition() > move.getEndingPosition()) {
@@ -22,6 +24,8 @@ public class MoveValidator {
         if (move.getStartingPosition() > 32 || move.getStartingPosition() < 1
                 || move.getEndingPosition() > 32 || move.getEndingPosition() < 1) {
             // Illegal position
+            return false;
+        } else if (move.getPiece().isNull()) {
             return false;
         } else if (move.getEndingSquare().isOccupied()) {
             return false;
@@ -100,7 +104,7 @@ public class MoveValidator {
     private static boolean isValidSingleJumpHelper(SingleJump jump) {
         Square jumpedSquare = jump.getJumpedSquares().get(0);
         int positionDifference = Math.abs(jump.getStartingPosition() - jump.getEndingPosition());
-        Piece jumpedPiece = jump.getJumpedPieces().get(0);
+        PieceInterface jumpedPiece = jump.getJumpedPieces().get(0);
 
         if (!jumpedSquare.isOccupied() || jump.getPiece().isSameColorAs(jumpedPiece)) {
             return false;

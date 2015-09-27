@@ -1,8 +1,9 @@
+package model;
 
 public class Move implements MoveInterface {
     private Board board;
     private int endingPosition;
-    private Piece piece;
+    private PieceInterface piece;
     private int startingPosition;
 
     public Move(int startingPosition, int endingPosition, Board board) {
@@ -28,7 +29,7 @@ public class Move implements MoveInterface {
     }
 
     @Override
-    public Piece getPiece() {
+    public PieceInterface getPiece() {
         return this.piece;
     }
 

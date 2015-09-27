@@ -1,3 +1,4 @@
+package model;
 
 public interface MoveInterface {
 
@@ -7,7 +8,7 @@ public interface MoveInterface {
 
     public Square getEndingSquare();
 
-    public Piece getPiece();
+    public PieceInterface getPiece();
 
     public int getStartingPosition();
 

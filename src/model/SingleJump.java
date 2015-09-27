@@ -1,31 +1,37 @@
+package model;
 
 import java.util.ArrayList;
 
-public class MultiJump implements Jump {
+public class SingleJump implements Jump {
     private Board board;
     private int endingPosition;
     private ArrayList<Integer> jumpedPositions;
-    private Piece piece;
+    private PieceInterface piece;
     private int startingPosition;
-    private ArrayList<SingleJump> subJumps;
 
-    public MultiJump(int startingPosition, int endingPosition, ArrayList<SingleJump> subJumps,
-            Board board) {
+    public SingleJump(int startingPosition, int endingPosition, Board board) {
         this.startingPosition = startingPosition;
         this.endingPosition = endingPosition;
-        this.subJumps = subJumps;
         this.jumpedPositions = this.determineJumpedPositions();
         this.piece = board.getPiece(startingPosition);
         this.board = board;
     }
 
     private ArrayList<Integer> determineJumpedPositions() {
-        ArrayList<Integer> jumpedPositions = new ArrayList<>();
+        ArrayList<Integer> jumpedPositions = new ArrayList<>(1);
+        int jumpedPosition = -1;
 
-        for (SingleJump jump : this.subJumps) {
-            jumpedPositions.addAll(jump.getJumpedPositions());
+        if (Math.abs((this.startingPosition - this.endingPosition)) == 7) {
+            jumpedPosition = Math.max(this.startingPosition, this.endingPosition) - 3;
+        } else if (Math.abs((this.startingPosition - this.endingPosition)) == 9) {
+            jumpedPosition = Math.max(this.startingPosition, this.endingPosition) - 4;
+        } else {
+            System.err.println("Invalid Single Jump!");
+            System.out.println("SingleJump.determineJumpedPosition()");
+            System.exit(1);
         }
 
+        jumpedPositions.add(jumpedPosition);
         return jumpedPositions;
     }
 
@@ -45,7 +51,7 @@ public class MultiJump implements Jump {
     }
 
     @Override
-    public ArrayList<Piece> getJumpedPieces() {
+    public ArrayList<PieceInterface> getJumpedPieces() {
         return this.board.getPieces(this.getJumpedPositions());
     }
 
@@ -60,7 +66,7 @@ public class MultiJump implements Jump {
     }
 
     @Override
-    public Piece getPiece() {
+    public PieceInterface getPiece() {
         return this.piece;
     }
 
@@ -74,22 +80,9 @@ public class MultiJump implements Jump {
         return this.getBoard().getSquare(this.getStartingPosition());
     }
 
-    public ArrayList<SingleJump> getSubJumps() {
-        return this.subJumps;
-    }
-
     @Override
     public String toString() {
-        String moveNotation = "";
-
-        for (SingleJump jump : this.subJumps) {
-            moveNotation += jump.getStartingPosition() + "x";
-        }
-
-        // Strip off trailing 'x'
-        moveNotation = moveNotation.substring(0, moveNotation.length() - 1);
-
-        return moveNotation;
+        return String.format("%dx%d", this.getStartingPosition(), this.getEndingPosition());
     }
 
 }
