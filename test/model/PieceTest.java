@@ -17,7 +17,7 @@ public class PieceTest {
     }
 
     @Test
-    public void testIsNull() throws Exception {
+    public void testIsNull() {
         assertFalse(this.blackPiece.isNull());
     }
 

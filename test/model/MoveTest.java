@@ -1,10 +1,17 @@
 package model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
 
 public class MoveTest {
+
+    @Test(expected = IllegalArgumentException.class)
+    public void testCreateBadMove() throws Exception {
+        Move badMove = new Move(-1, 27, null);
+        assertNull(badMove);
+    }
 
     @Test
     public void testGetEndingSquare() {

@@ -47,7 +47,7 @@ public class Board {
     }
 
     public List<Square> getAdjacentSquares(Square square) {
-        List<Integer> squareNumbers = square.getAdjacentSquares();
+        List<Integer> squareNumbers = square.getAdjacentPositions();
         return this.getSquares((ArrayList<Integer>) squareNumbers);
     }
 

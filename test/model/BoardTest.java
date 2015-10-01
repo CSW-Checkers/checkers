@@ -40,7 +40,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testCustomBoard() throws Exception {
+    public void testCustomBoard() {
         List<Integer> blackPositions = new ArrayList<>(Arrays.asList(1, 6, 31));
         List<Integer> whitePositions = new ArrayList<>(Arrays.asList(3, 4, 12, 19, 21));
 
@@ -126,12 +126,8 @@ public class BoardTest {
             assertTrue(intermediatePiece.isNull());
         }
 
-        ArrayList<SingleJump> subJumps = new ArrayList<>(3);
-        subJumps.add(new SingleJump(jumpStartingPosition, intermediatePosition1, customBoard));
-        subJumps.add(new SingleJump(intermediatePosition1, intermediatePosition2, customBoard));
-        subJumps.add(new SingleJump(intermediatePosition2, jumpEndingPosition, customBoard));
-        MultiJump testMultiJump = new MultiJump(jumpStartingPosition, jumpEndingPosition, subJumps,
-                customBoard);
+        MultiJump testMultiJump = new MultiJump(jumpStartingPosition, jumpEndingPosition,
+                intermediatePositions, customBoard);
         customBoard.movePiece(testMultiJump);
 
         startingPositionPiece = customBoard.getPiece(jumpStartingPosition);
@@ -190,7 +186,7 @@ public class BoardTest {
     }
 
     @Test
-    public void testSetOccupyingPiece() throws Exception {
+    public void testSetOccupyingPiece() {
         int positionToSet = 13;
 
         assertTrue(this.board.getPiece(positionToSet).isNull());

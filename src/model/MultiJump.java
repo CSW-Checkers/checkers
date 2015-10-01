@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MultiJump implements Jump {
     private Board board;
@@ -10,14 +11,41 @@ public class MultiJump implements Jump {
     private int startingPosition;
     private ArrayList<SingleJump> subJumps;
 
-    public MultiJump(int startingPosition, int endingPosition, ArrayList<SingleJump> subJumps,
+    public MultiJump(int startingPosition, int endingPosition, List<Integer> intermediatePositions,
             Board board) {
+        MoveValidator.verifyStartAndEndPositions(startingPosition, endingPosition);
         this.startingPosition = startingPosition;
         this.endingPosition = endingPosition;
-        this.subJumps = subJumps;
+        this.subJumps = this.constructSubJumpsFromPositions(startingPosition, endingPosition,
+                intermediatePositions, board);
         this.jumpedPositions = this.determineJumpedPositions();
         this.piece = board.getPiece(startingPosition);
         this.board = board;
+    }
+
+    private ArrayList<SingleJump> constructSubJumpsFromPositions(int startingPosition,
+            int endingPosition, List<Integer> intermediatePositions, Board board) {
+        if (intermediatePositions.size() < 1) {
+            throw new IllegalArgumentException(
+                    "Multijump must have at least one intermediate position");
+        }
+        Board tempBoard = new Board(board);
+        ArrayList<SingleJump> subJumps = new ArrayList<SingleJump>();
+        int lastEndPosition = startingPosition;
+        SingleJump currentJump;
+
+        for (int intermediatePosition : intermediatePositions) {
+            currentJump = new SingleJump(lastEndPosition, intermediatePosition, tempBoard);
+            subJumps.add(currentJump);
+            tempBoard = new Board(tempBoard);
+            tempBoard.movePiece(currentJump);
+            lastEndPosition = intermediatePosition;
+        }
+
+        currentJump = new SingleJump(lastEndPosition, endingPosition, tempBoard);
+        subJumps.add(currentJump);
+
+        return subJumps;
     }
 
     private ArrayList<Integer> determineJumpedPositions() {

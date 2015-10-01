@@ -1,26 +1,30 @@
 package model.ai;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import model.Board;
 import model.Move;
 import model.MoveGenerator;
 import model.MoveInterface;
 import model.PieceColor;
 
-import java.util.ArrayList;
-import java.util.List;
-
 class AlphaBetaSearchNode {
     private Board board;
-    private Move moveThatGotToThisState;
-    private int depthLevel; // 0 is bottom depth
-    private PieceColor currentPlayersColor;
     private List<AlphaBetaSearchNode> children;
+    private PieceColor currentPlayersColor;
+    private int depthLevel; // 0 is bottom depth
+    private Move moveThatGotToThisState;
     private double value;
 
     public AlphaBetaSearchNode(Board board, int depthLevel, PieceColor currentPlayersColor) {
         this.board = board;
         this.depthLevel = depthLevel;
         this.currentPlayersColor = currentPlayersColor;
+    }
+
+    public Board getBoard() {
+        return this.board;
     }
 
     public List<AlphaBetaSearchNode> getChildren() {
@@ -38,20 +42,16 @@ class AlphaBetaSearchNode {
         return this.children;
     }
 
-    public Board getBoard() {
-        return this.board;
-    }
-
     public Move getMoveThatGotToThisState() {
         return this.moveThatGotToThisState;
     }
 
-    public boolean isLeaf() {
-        return (this.depthLevel == 0 || this.board.isEndState());
-    }
-
     public double getValue() {
         return this.value;
+    }
+
+    public boolean isLeaf() {
+        return (this.depthLevel == 0 || this.board.isEndState());
     }
 
     public void setValue(double value) {

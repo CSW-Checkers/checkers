@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -52,6 +53,12 @@ public class SquareTest {
         assertTrue(square.isOccupied());
     }
 
+    @Test(expected = IllegalArgumentException.class)
+    public void testMakeIllegalSquare() throws Exception {
+        Square badSquare = new Square(-1, NullPiece.getInstance());
+        assertNull(badSquare);
+    }
+
     @Test
     public void testRemoveOccupyingPiece() {
         Square square = new Square(14, new Piece(PieceColor.WHITE));
@@ -81,12 +88,19 @@ public class SquareTest {
         for (int i = 1; i <= 32; i++) {
             if (expectedAdjacentPositions.contains(i)) {
                 assertTrue(i + " should be an adjacent square position.",
-                        square.getAdjacentSquares().contains(i));
+                        square.getAdjacentPositions().contains(i));
             } else {
                 assertFalse(i + " should NOT be an adjacent square position.",
-                        square.getAdjacentSquares().contains(i));
+                        square.getAdjacentPositions().contains(i));
             }
         }
+    }
+
+    @Test
+    public void testSquareWithNullPiece() throws Exception {
+        Square square1 = new Square(12, NullPiece.getInstance());
+        Square square2 = new Square(square1);
+        assertTrue(square2.getOccupyingPiece().isNull());
     }
 
 }

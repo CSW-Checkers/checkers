@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class MoveValidator {
     private static boolean isLegalMoveDirection(MoveInterface move) {
@@ -20,11 +21,12 @@ public class MoveValidator {
         return validMove;
     }
 
+    public static boolean isOnBoard(int position) {
+        return position >= 1 && position <= 32;
+    }
+
     public static boolean isValidMove(MoveInterface move) {
-        if (!isOnBoard(move.getStartingPosition()) || !isOnBoard(move.getEndingPosition())) {
-            // Illegal position
-            return false;
-        } else if (move.getPiece().isNull()) {
+        if (move.getPiece().isNull()) {
             return false;
         } else if (move.getEndingSquare().isOccupied()) {
             return false;
@@ -43,7 +45,6 @@ public class MoveValidator {
                 }
             }
         }
-
         return true;
     }
 
@@ -79,10 +80,11 @@ public class MoveValidator {
             return false;
         }
 
-        Square startingSquare = board.getSquare(move.getStartingPosition());
-        Square endingSquare = board.getSquare(move.getEndingPosition());
+        List<Integer> startingSquareAdjacentPositions = board.getSquare(move.getStartingPosition())
+                .getAdjacentPositions();
+        int endingSquarePosition = board.getSquare(move.getEndingPosition()).getPosition();
 
-        if (!startingSquare.getAdjacentSquares().contains(endingSquare)) {
+        if (!startingSquareAdjacentPositions.contains(endingSquarePosition)) {
             return false;
         } else {
             return true;
@@ -105,9 +107,9 @@ public class MoveValidator {
         int positionDifference = Math.abs(jump.getStartingPosition() - jump.getEndingPosition());
         PieceInterface jumpedPiece = jump.getJumpedPieces().get(0);
 
-        if (!jumpedSquare.isOccupied() || jump.getPiece().isSameColorAs(jumpedPiece)) {
+        if (!jumpedSquare.isOccupied()) {
             return false;
-        } else if (positionDifference != 7 || positionDifference != 9) {
+        } else if (jump.getPiece().isSameColorAs(jumpedPiece)) {
             return false;
         } else if (jump.getStartingSquare().isInLeftTwoColumns()) {
             // Handle jumping off the left edge of the board
@@ -130,7 +132,14 @@ public class MoveValidator {
         return true;
     }
 
-    public static boolean isOnBoard(int position) {
-        return position >= 1 && position <= 32;
+    public static void verifyStartAndEndPositions(int startingPosition, int endingPosition) {
+        if (startingPosition == endingPosition) {
+            throw new IllegalArgumentException(
+                    "Starting position cannot be equal to the ending position.");
+        } else if (!MoveValidator.isOnBoard(startingPosition)) {
+            throw new IllegalArgumentException("Starting position is invalid: " + startingPosition);
+        } else if (!MoveValidator.isOnBoard(endingPosition)) {
+            throw new IllegalArgumentException("Ending position is invalid: " + startingPosition);
+        }
     }
 }
