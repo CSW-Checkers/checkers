@@ -13,10 +13,11 @@ public class MoveGenerator {
         this.possibleMoves = new ArrayList<MoveInterface>();
         this.board = board;
         this.currentPlayersOccupiedSquares = new ArrayList<Square>();
-        this.determineThisPlayersOccupiedSquares(color);
+        // this.determineThisPlayersOccupiedSquares(color);
     }
 
-    private void determineJumpMoves() {
+    public void determineJumpMoves() {
+
         for (Square startingSquare : this.currentPlayersOccupiedSquares) {
             for (Square squareOneJumpAway : this.board
                     .getSquaresThatMightBeOneJumpAway(startingSquare)) {
@@ -33,7 +34,7 @@ public class MoveGenerator {
         }
     }
 
-    private void determineMultiJumpMoves(ArrayList<SingleJump> jumps,
+    public void determineMultiJumpMoves(ArrayList<SingleJump> jumps,
             ArrayList<Integer> intermediatePositions) {
         SingleJump lastJump = jumps.get(jumps.size() - 1);
 
@@ -69,26 +70,33 @@ public class MoveGenerator {
         }
     }
 
-    private void determineNonJumpMoves() {
+    public List<MoveInterface> determineNonJumpMoves() {
+        List<MoveInterface> possibleNonJumpMoves = new ArrayList<MoveInterface>();
         for (Square startingSquare : this.currentPlayersOccupiedSquares) {
+            System.out.println("hello");
             for (Square adjacentSquare : this.board.getAdjacentSquares(startingSquare)) {
+                System.out.println(adjacentSquare.getPosition());
                 Move normalMove = new Move(startingSquare.getPosition(),
                         adjacentSquare.getPosition(), this.board);
                 if (MoveValidator.isValidMove(normalMove)) {
-                    this.possibleMoves.add(normalMove);
+                    possibleNonJumpMoves.add(normalMove);
                 }
             }
         }
+        return possibleNonJumpMoves;
     }
 
-    private void determineThisPlayersOccupiedSquares(PieceColor color) {
+    public List<Square> determineThisPlayersOccupiedSquares(PieceColor color) {
+        List<Square> thisPlayersOccupiedSquares = new ArrayList<Square>();
         for (Square square : this.board.getGameState()) {
             if (square.isOccupied()) {
                 if (square.getOccupyingPiece().getColor() == color) {
+                    thisPlayersOccupiedSquares.add(square);
                     this.currentPlayersOccupiedSquares.add(square);
                 }
             }
         }
+        return thisPlayersOccupiedSquares;
     }
 
     public List<MoveInterface> getPossibleMoves() {
