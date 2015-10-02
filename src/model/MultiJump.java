@@ -124,4 +124,66 @@ public class MultiJump implements Jump {
         return moveNotation;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((board == null) ? 0 : board.hashCode());
+        result = prime * result + endingPosition;
+        result = prime * result + ((jumpedPositions == null) ? 0 : jumpedPositions.hashCode());
+        result = prime * result + ((piece == null) ? 0 : piece.hashCode());
+        result = prime * result + startingPosition;
+        result = prime * result + ((subJumps == null) ? 0 : subJumps.hashCode());
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        MultiJump other = (MultiJump) obj;
+        if (board == null) {
+            if (other.board != null) {
+                return false;
+            }
+        } else if (!board.equals(other.board)) {
+            return false;
+        }
+        if (endingPosition != other.endingPosition) {
+            return false;
+        }
+        if (jumpedPositions == null) {
+            if (other.jumpedPositions != null) {
+                return false;
+            }
+        } else if (!jumpedPositions.equals(other.jumpedPositions)) {
+            return false;
+        }
+        if (piece == null) {
+            if (other.piece != null) {
+                return false;
+            }
+        } else if (!piece.equals(other.piece)) {
+            return false;
+        }
+        if (startingPosition != other.startingPosition) {
+            return false;
+        }
+        if (subJumps == null) {
+            if (other.subJumps != null) {
+                return false;
+            }
+        } else if (!subJumps.equals(other.subJumps)) {
+            return false;
+        }
+        return true;
+    }
+
 }

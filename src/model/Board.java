@@ -159,4 +159,42 @@ public class Board {
     public void setOccupyingPiece(int position, PieceInterface pieceToSet) {
         this.getSquare(position).setOccupyingPiece(pieceToSet);
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((gameState == null) ? 0 : gameState.hashCode());
+        result = prime * result + numberOfBlackPieces;
+        result = prime * result + numberOfWhitePieces;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Board other = (Board) obj;
+        if (gameState == null) {
+            if (other.gameState != null) {
+                return false;
+            }
+        } else if (!gameState.equals(other.gameState)) {
+            return false;
+        }
+        if (numberOfBlackPieces != other.numberOfBlackPieces) {
+            return false;
+        }
+        if (numberOfWhitePieces != other.numberOfWhitePieces) {
+            return false;
+        }
+        return true;
+    }
 }

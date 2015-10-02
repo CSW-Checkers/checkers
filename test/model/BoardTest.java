@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
@@ -208,6 +209,57 @@ public class BoardTest {
 
         assertTrue(this.board.getPiece(positionToSet).isWhite());
         assertTrue(this.board.getPiece(positionToSet).isKing());
+    }
+
+    @Test
+    public void testHashCode() {
+        Board board1 = new Board();
+        Board board2 = new Board();
+        assertEquals(board1.hashCode(), board1.hashCode());
+        assertEquals(board1.hashCode(), board2.hashCode());
+
+        board2.setOccupyingPiece(15, new Piece(PieceColor.BLACK));
+        assertNotEquals(board1.hashCode(), board2.hashCode());
+
+        List<Integer> blackPositions = Arrays.asList(1, 2, 7, 5, 9, 23, 30);
+        List<Integer> whitePositions = Arrays.asList(31, 32, 13, 15, 4, 6);
+        board1 = new Board(blackPositions, whitePositions);
+        board2 = new Board(blackPositions, whitePositions);
+        assertEquals(board1.hashCode(), board2.hashCode());
+        assertEquals(board1.hashCode(), board2.hashCode());
+
+        board2.removePiece(31);
+        assertNotEquals(board1.hashCode(), board2.hashCode());
+
+        board1.removePiece(31);
+        assertEquals(board1.hashCode(), board2.hashCode());
+    }
+
+    @Test
+    public void testEquals() {
+        Board board1 = new Board();
+        Board board2 = new Board();
+        assertEquals(board1, board1);
+        assertEquals(board1, board2);
+
+        board2.setOccupyingPiece(15, new Piece(PieceColor.BLACK));
+        assertNotEquals(board1, board2);
+
+        List<Integer> blackPositions = Arrays.asList(1, 2, 7, 5, 9, 23, 30);
+        List<Integer> whitePositions = Arrays.asList(31, 32, 13, 15, 4, 6);
+        board1 = new Board(blackPositions, whitePositions);
+        board2 = new Board(blackPositions, whitePositions);
+        assertEquals(board1, board2);
+        assertEquals(board1, board2);
+
+        board2.removePiece(31);
+        assertNotEquals(board1, board2);
+
+        board1.removePiece(31);
+        assertEquals(board1, board2);
+
+        board2 = null;
+        assertNotEquals(board1, board2);
     }
 
 }
