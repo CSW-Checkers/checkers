@@ -23,12 +23,32 @@ public class Board {
         this.numberOfWhitePieces = otherBoard.getNumberOfWhitePieces();
     }
 
+    public Board(List<Integer> blackPositions, List<Integer> whitePositions) {
+        this.numberOfBlackPieces = blackPositions.size();
+        this.numberOfWhitePieces = whitePositions.size();
+        this.gameState = new ArrayList<Square>(32);
+
+        for (int position = 1; position <= 32; position++) {
+            this.gameState.add(new Square(position, NullPiece.getInstance()));
+            if (blackPositions.contains(position)) {
+                this.setOccupyingPiece(position, new Piece(PieceColor.BLACK));
+            } else if (whitePositions.contains(position)) {
+                this.setOccupyingPiece(position, new Piece(PieceColor.WHITE));
+            }
+        }
+    }
+
     private void decrementPieceCount(int position) {
         if (this.getPiece(position).isWhite()) {
             this.numberOfWhitePieces--;
         } else if (this.getPiece(position).isBlack()) {
             this.numberOfBlackPieces--;
         }
+    }
+
+    public List<Square> getAdjacentSquares(Square square) {
+        List<Integer> squareNumbers = square.getAdjacentPositions();
+        return this.getSquares((ArrayList<Integer>) squareNumbers);
     }
 
     public List<Square> getGameState() {
@@ -47,7 +67,7 @@ public class Board {
         return this.getSquare(position).getOccupyingPiece();
     }
 
-    public ArrayList<PieceInterface> getPieces(ArrayList<Integer> positions) {
+    public ArrayList<PieceInterface> getPieces(List<Integer> positions) {
         ArrayList<PieceInterface> pieces = new ArrayList<>();
         for (int position : positions) {
             pieces.add(this.getPiece(position));
@@ -69,13 +89,37 @@ public class Board {
         return squares;
     }
 
+    /**
+     * Returns squares with locations +9, -9, +7, -7 Returns only those squares on the board, i.e.
+     * with a checkers number of 1-32 (array index of 0-31). The method returns squares that may be
+     * on the other side of the board.
+     *
+     * @param startingSquare
+     *            the square in question
+     * @return squares one possibly one jump away, they may try to wrap around the board
+     */
+    public List<Square> getSquaresThatMightBeOneJumpAway(Square startingSquare) {
+        List<Square> squaresPossiblyOneJumpAway = new ArrayList<Square>();
+
+        int startingPosition = startingSquare.getPosition();
+        int[] possibleJumpPositions = { startingPosition + 9, startingPosition - 9,
+                startingPosition + 7, startingPosition - 7 };
+
+        for (int i = 0; i < possibleJumpPositions.length; i++) {
+            if (MoveValidator.isOnBoard(possibleJumpPositions[i])) {
+                squaresPossiblyOneJumpAway.add(this.getSquare(possibleJumpPositions[i]));
+            }
+        }
+        return squaresPossiblyOneJumpAway;
+    }
+
     private List<Square> getStartingGameBoardState() {
         List<Square> startingGameBoard = new ArrayList<>(32);
 
         for (int i = 1; i <= 32; i++) {
-            if (i < 12) {
+            if (i <= 12) {
                 startingGameBoard.add(new Square(i, new Piece(PieceColor.BLACK)));
-            } else if (i >= 12 && i < 21) {
+            } else if (i > 12 && i < 21) {
                 startingGameBoard.add(new Square(i, NullPiece.getInstance()));
             } else {
                 startingGameBoard.add(new Square(i, new Piece(PieceColor.WHITE)));
@@ -83,6 +127,10 @@ public class Board {
         }
 
         return startingGameBoard;
+    }
+
+    public boolean isEndState() {
+        return (this.numberOfBlackPieces == 0 || this.numberOfWhitePieces == 0);
     }
 
     public void movePiece(MoveInterface move) {
@@ -94,7 +142,7 @@ public class Board {
                 this.removePiece(position);
             }
         }
-        this.getSquare(move.getEndingPosition()).setOccupyingPiece(pieceToMove);
+        this.setOccupyingPiece(move.getEndingPosition(), pieceToMove);
     }
 
     private PieceInterface pickUpPiece(int position) {
@@ -108,36 +156,7 @@ public class Board {
         this.getSquare(position).removeOccupyingPiece();
     }
 
-    public boolean isEndState() {
-        return (numberOfBlackPieces == 0 || numberOfWhitePieces == 0);
-    }
-
-    public List<Square> getAdjacentSquares(Square square) {
-        List<Integer> squareNumbers = square.getAdjacentSquares();
-        return getSquares((ArrayList<Integer>) squareNumbers);
-    }
-
-    /**
-     * Returns squares with locations +9, -9, +7, -7 Returns only those squares on the board, i.e.
-     * with a checkers number of 1-32 (array index of 0-31). The method returns squares that may be
-     * on the other side of the board.
-     * 
-     * @param startingSquare
-     *            the square in question
-     * @return squares one possibly one jump away, they may try to wrap around the board
-     */
-    public List<Square> getSquaresThatMightBeOneJumpAway(Square startingSquare) {
-        List<Square> squaresPossiblyOneJumpAway = new ArrayList<Square>();
-
-        int startingPosition = startingSquare.getPosition();
-        int[] possibleJumpPositions = { startingPosition + 9, startingPosition - 9,
-                                        startingPosition + 7, startingPosition - 7 };
-
-        for (int i = 0; i < possibleJumpPositions.length; i++) {
-            if (MoveValidator.isOnBoard(possibleJumpPositions[i])) {
-                squaresPossiblyOneJumpAway.add(getSquare(possibleJumpPositions[i]));
-            }
-        }
-        return squaresPossiblyOneJumpAway;
+    public void setOccupyingPiece(int position, PieceInterface pieceToSet) {
+        this.getSquare(position).setOccupyingPiece(pieceToSet);
     }
 }

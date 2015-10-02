@@ -5,21 +5,29 @@ import java.util.Arrays;
 import java.util.List;
 
 public class Square {
-    private final List<Integer> adjacentSquares;
+    private final List<Integer> adjacentPositions;
     private PieceInterface occupyingPiece;
     private final int position;
 
     public Square(int position, PieceInterface occupyingPiece) {
-        this.position = position;
-        this.occupyingPiece = occupyingPiece;
-        this.adjacentSquares = this.determineAdjacentSquares();
+        if (!MoveValidator.isOnBoard(position)) {
+            throw new IllegalArgumentException("Invalid position for square: " + position);
+        } else {
+            this.position = position;
+            this.occupyingPiece = occupyingPiece;
+            this.adjacentPositions = this.determineAdjacentSquares();
+        }
     }
 
     public Square(Square otherSquare) {
         this.position = otherSquare.getPosition();
-        this.occupyingPiece = new Piece(otherSquare.getOccupyingPiece());
-        this.adjacentSquares = new ArrayList<Integer>();
-        this.adjacentSquares.addAll(otherSquare.getAdjacentSquares());
+        if (otherSquare.getOccupyingPiece().isNull()) {
+            this.occupyingPiece = NullPiece.getInstance();
+        } else {
+            this.occupyingPiece = new Piece(otherSquare.getOccupyingPiece());
+        }
+        this.adjacentPositions = new ArrayList<Integer>();
+        this.adjacentPositions.addAll(otherSquare.getAdjacentPositions());
     }
 
     private List<Integer> determineAdjacentSquares() {
@@ -34,8 +42,8 @@ public class Square {
         return adjacentPositions;
     }
 
-    public List<Integer> getAdjacentSquares() {
-        return this.adjacentSquares;
+    public List<Integer> getAdjacentPositions() {
+        return this.adjacentPositions;
     }
 
     private List<Integer> getCenterSquareAdjacentPositions(int position) {
@@ -61,6 +69,30 @@ public class Square {
         }
 
         return adjacentPositions;
+    }
+
+    public int getColumnNumber() {
+        int remainder = this.position % 8;
+        switch (remainder) {
+            case 0:
+                return 7;
+            case 1:
+                return 2;
+            case 2:
+                return 4;
+            case 3:
+                return 6;
+            case 4:
+                return 8;
+            case 5:
+                return 1;
+            case 6:
+                return 3;
+            case 7:
+                return 5;
+            default:
+                return -1;
+        }
     }
 
     private List<Integer> getNonCenterSquareAdjacentPositions() {
@@ -102,6 +134,10 @@ public class Square {
         return this.position;
     }
 
+    public int getRowNumber() {
+        return (int) Math.ceil(this.position / 4.0);
+    }
+
     private boolean isCenterSquare() {
         List<Integer> nonCenterSquares = Arrays.asList(1, 2, 3, 4, 5, 12, 13, 20, 21, 28, 29, 30,
                 31, 32);
@@ -137,6 +173,14 @@ public class Square {
         } else {
             return false;
         }
+    }
+
+    public boolean isInSameColumn(Square otherSquare) {
+        return otherSquare.getColumnNumber() == this.getColumnNumber();
+    }
+
+    public boolean isInSameRow(Square otherSquare) {
+        return otherSquare.getRowNumber() == this.getRowNumber();
     }
 
     public boolean isOccupied() {
@@ -186,40 +230,12 @@ public class Square {
 
     public void setOccupyingPiece(PieceInterface occupyingPiece) {
         if (this.isOccupied()) {
-            System.err.println("Occupied square. Invalid move.");
+            System.err.println("Occupied square: " + this.position);
             System.out.println("Square.setOccupyingPiece()");
             System.exit(1);
         } else {
-            this.kingPieceIfNecessary();
             this.occupyingPiece = occupyingPiece;
-        }
-    }
-
-    public boolean isInSameRow(Square otherSquare) {
-        return otherSquare.getRowNumber() == this.getRowNumber();
-    }
-    
-    public boolean isInSameColumn(Square otherSquare) {
-        return otherSquare.getColumnNumber() == this.getColumnNumber();
-    }
-    
-    public int getRowNumber() {
-        return (int) Math.ceil(position / 4.0);
-    }
-    
-    public int getColumnNumber() {
-        int remainder = this.position % 8;
-        switch (remainder) {
-            case 0: return 7;
-            case 1: return 2;
-            case 2: return 4;
-            case 3: return 6;
-            case 4: return 8;
-            case 5: return 1;
-            case 6: return 3;
-            case 7: return 5;
-            default: 
-                return -1;
+            this.kingPieceIfNecessary();
         }
     }
 }

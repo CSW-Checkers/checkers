@@ -3,18 +3,38 @@ package model;
 import java.util.ArrayList;
 
 public class SingleJump implements Jump {
+
+    public static ArrayList<SingleJump> singleJumpListCopier(ArrayList<SingleJump> otherList) {
+        ArrayList<SingleJump> newList = new ArrayList<SingleJump>();
+        for (SingleJump jump : otherList) {
+            newList.add(new SingleJump(jump));
+        }
+        return newList;
+    }
+
     private Board board;
     private int endingPosition;
     private ArrayList<Integer> jumpedPositions;
+
     private PieceInterface piece;
+
     private int startingPosition;
 
     public SingleJump(int startingPosition, int endingPosition, Board board) {
-        this.startingPosition = startingPosition;
-        this.endingPosition = endingPosition;
-        this.jumpedPositions = this.determineJumpedPositions();
-        this.piece = board.getPiece(startingPosition);
-        this.board = board;
+        MoveValidator.verifyStartAndEndPositions(startingPosition, endingPosition);
+        int positionDifference = Math.abs(startingPosition - endingPosition);
+        boolean invalidPositionDifference = !(positionDifference == 7 || positionDifference == 9);
+        if (invalidPositionDifference) {
+            throw new IllegalArgumentException(
+                    "Position difference must be 7 or 9! Position difference is: "
+                            + positionDifference);
+        } else {
+            this.startingPosition = startingPosition;
+            this.endingPosition = endingPosition;
+            this.board = board;
+            this.piece = this.board.getPiece(startingPosition);
+            this.jumpedPositions = this.determineJumpedPositions();
+        }
     }
 
     public SingleJump(SingleJump otherJump) {
@@ -29,14 +49,23 @@ public class SingleJump implements Jump {
         ArrayList<Integer> jumpedPositions = new ArrayList<>(1);
         int jumpedPosition = -1;
 
-        if (Math.abs((this.startingPosition - this.endingPosition)) == 7) {
-            jumpedPosition = Math.max(this.startingPosition, this.endingPosition) - 3;
-        } else if (Math.abs((this.startingPosition - this.endingPosition)) == 9) {
-            jumpedPosition = Math.max(this.startingPosition, this.endingPosition) - 4;
-        } else {
-            System.err.println("Invalid Single Jump!");
-            System.out.println("SingleJump.determineJumpedPosition()");
-            System.exit(1);
+        final int positionDifference = Math.abs((this.startingPosition - this.endingPosition));
+        final int startingPositionRowNumber = this.board.getSquare(this.startingPosition)
+                .getRowNumber();
+        final boolean startingPositionIsOnEvenRow = startingPositionRowNumber % 2 == 0;
+
+        if (positionDifference == 7) {
+            if (startingPositionIsOnEvenRow) {
+                jumpedPosition = Math.max(this.startingPosition, this.endingPosition) - 4;
+            } else {
+                jumpedPosition = Math.max(this.startingPosition, this.endingPosition) - 3;
+            }
+        } else if (positionDifference == 9) {
+            if (startingPositionIsOnEvenRow) {
+                jumpedPosition = Math.max(this.startingPosition, this.endingPosition) - 5;
+            } else {
+                jumpedPosition = Math.max(this.startingPosition, this.endingPosition) - 4;
+            }
         }
 
         jumpedPositions.add(jumpedPosition);
@@ -91,13 +120,5 @@ public class SingleJump implements Jump {
     @Override
     public String toString() {
         return String.format("%dx%d", this.getStartingPosition(), this.getEndingPosition());
-    }
-
-    public static ArrayList<SingleJump> singleJumpListCopier(ArrayList<SingleJump> otherList) {
-        ArrayList<SingleJump> newList = new ArrayList<SingleJump>();
-        for (SingleJump jump : otherList) {
-            newList.add(new SingleJump(jump));
-        }
-        return newList;
     }
 }

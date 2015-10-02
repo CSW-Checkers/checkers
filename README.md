@@ -24,3 +24,10 @@
 4. Only when both of the other team members have reviewed your code should it be merged in to the group repository. If they are taking a while, feel free to prod them on Slack.
 5. Merge in the code.
 6. Move your card on Trello to the Done column. 
+
+## Unit Tests
+### Setting up the project
+1. Download the two JARs on [this page](https://github.com/junit-team/junit/wiki/Download-and-Install)
+2. Place the two JAR files in a location they can stay. I placed mine in a folder called "junit" that I made inside the eclipse folder.
+3. Open Eclipse, right click on the Project, and go to Properties. From here, go to Java Build Path, and then select "Add External JARs..." and add each JAR.
+4. You should now be able to run the unit tests by going into a test file, right clicking in the file, and select Run As... JUnit Test.
