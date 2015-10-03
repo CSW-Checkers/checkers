@@ -280,4 +280,9 @@ public class Square {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Square [occupyingPiece=" + occupyingPiece + ", position=" + position + "]";
+    }
 }

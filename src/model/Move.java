@@ -7,7 +7,7 @@ public class Move implements MoveInterface {
     private int startingPosition;
 
     public Move(int startingPosition, int endingPosition, Board board) {
-        MoveValidator.verifyStartAndEndPositions(startingPosition, endingPosition);
+        MoveValidator.verifyStartAndEndPositionsAreOnBoard(startingPosition, endingPosition);
         this.startingPosition = startingPosition;
         this.endingPosition = endingPosition;
         this.board = board;

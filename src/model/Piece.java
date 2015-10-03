@@ -83,4 +83,9 @@ public class Piece implements PieceInterface {
         }
         return true;
     }
+
+    @Override
+    public String toString() {
+        return "Piece [color=" + color + ", king=" + king + "]";
+    }
 }

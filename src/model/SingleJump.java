@@ -21,7 +21,8 @@ public class SingleJump implements Jump {
     private int startingPosition;
 
     public SingleJump(int startingPosition, int endingPosition, Board board) {
-        MoveValidator.verifyStartAndEndPositions(startingPosition, endingPosition);
+        MoveValidator.verifyStartAndEndPositionsAreOnBoard(startingPosition, endingPosition);
+        MoveValidator.verifyStartAndEndPositionAreNotTheSame(startingPosition, endingPosition);
         int positionDifference = Math.abs(startingPosition - endingPosition);
         boolean invalidPositionDifference = !(positionDifference == 7 || positionDifference == 9);
         if (invalidPositionDifference) {
@@ -42,7 +43,7 @@ public class SingleJump implements Jump {
         this.endingPosition = otherJump.getEndingPosition();
         this.piece = new Piece(otherJump.getPiece());
         this.startingPosition = otherJump.getStartingPosition();
-        this.jumpedPositions.addAll(otherJump.getJumpedPositions());
+        this.jumpedPositions = otherJump.determineJumpedPositions();
     }
 
     private ArrayList<Integer> determineJumpedPositions() {

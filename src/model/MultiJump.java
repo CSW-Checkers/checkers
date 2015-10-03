@@ -13,7 +13,7 @@ public class MultiJump implements Jump {
 
     public MultiJump(int startingPosition, int endingPosition, List<Integer> intermediatePositions,
             Board board) {
-        MoveValidator.verifyStartAndEndPositions(startingPosition, endingPosition);
+        MoveValidator.verifyStartAndEndPositionsAreOnBoard(startingPosition, endingPosition);
         this.startingPosition = startingPosition;
         this.endingPosition = endingPosition;
         this.subJumps = this.constructSubJumpsFromPositions(startingPosition, endingPosition,
