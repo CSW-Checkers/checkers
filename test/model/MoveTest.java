@@ -1,9 +1,12 @@
 package model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+
+import java.util.Arrays;
 
 public class MoveTest {
 
@@ -52,6 +55,42 @@ public class MoveTest {
     public void testToString() {
         Move move = new Move(10, 15, new Board());
         assertEquals("10-15", move.toString());
+    }
+
+    @Test
+    public void testHashCode() {
+        Board board1 = new Board();
+        Move move1 = new Move(10, 15, board1);
+        Move move2 = new Move(10, 15, board1);
+        assertEquals(move1.hashCode(), move2.hashCode());
+        assertEquals(move1.hashCode(), move1.hashCode());
+
+        move2 = new Move(10, 15, new Board());
+        assertEquals(move1.hashCode(), move2.hashCode());
+
+        move2 = new Move(10, 15, new Board(Arrays.asList(1, 2, 3, 10), Arrays.asList(30, 31, 32)));
+        assertNotEquals(move1.hashCode(), move2.hashCode());
+
+        move2 = new Move(10, 14, board1);
+        assertNotEquals(move1.hashCode(), move2.hashCode());
+    }
+
+    @Test
+    public void testEquals() {
+        Board board1 = new Board();
+        Move move1 = new Move(10, 15, board1);
+        Move move2 = new Move(10, 15, board1);
+        assertEquals(move1, move2);
+        assertEquals(move1, move1);
+
+        move2 = new Move(10, 15, new Board());
+        assertEquals(move1, move2);
+
+        move2 = new Move(10, 15, new Board(Arrays.asList(1, 2, 3, 10), Arrays.asList(30, 31, 32)));
+        assertNotEquals(move1, move2);
+
+        move2 = new Move(10, 14, board1);
+        assertNotEquals(move1, move2);
     }
 
 }
