@@ -24,15 +24,11 @@ public class MoveGeneratorTest {
 
         MoveGenerator mg = new MoveGenerator(board);
 
-        List<MoveInterface> actualNonJumpMovesList = mg.getNonJumpMoves(currentPlayersColor);
+        Set<MoveInterface> actualNonJumpMovesSet = mg.getNonJumpMoves(currentPlayersColor);
 
         Set<MoveInterface> expectedNonJumpMovesSet = new HashSet<>();
         expectedNonJumpMovesSet.add(new Move(1, 5, board));
         expectedNonJumpMovesSet.add(new Move(1, 6, board));
-        assertEquals(expectedNonJumpMovesSet.size(), actualNonJumpMovesList.size());
-
-        Set<MoveInterface> actualNonJumpMovesSet = new HashSet<>();
-        actualNonJumpMovesSet.addAll(actualNonJumpMovesList);
 
         assertEquals(expectedNonJumpMovesSet, actualNonJumpMovesSet);
 
@@ -50,8 +46,7 @@ public class MoveGeneratorTest {
         expectedNonJumpMovesSet.add(new Move(18, 22, board));
         expectedNonJumpMovesSet.add(new Move(18, 23, board));
 
-        actualNonJumpMovesSet = new HashSet<>();
-        actualNonJumpMovesSet.addAll(mg.getNonJumpMoves(currentPlayersColor));
+        actualNonJumpMovesSet = mg.getNonJumpMoves(currentPlayersColor);
         assertEquals(expectedNonJumpMovesSet, actualNonJumpMovesSet);
 
         currentPlayersColor = PieceColor.WHITE;
@@ -62,9 +57,7 @@ public class MoveGeneratorTest {
         expectedNonJumpMovesSet.add(new Move(15, 11, board));
         expectedNonJumpMovesSet.add(new Move(29, 25, board));
 
-        actualNonJumpMovesSet = new HashSet<>();
-        actualNonJumpMovesSet.addAll(mg.getNonJumpMoves(currentPlayersColor));
-
+        actualNonJumpMovesSet = mg.getNonJumpMoves(currentPlayersColor);
         assertEquals(expectedNonJumpMovesSet, actualNonJumpMovesSet);
     }
 
@@ -86,8 +79,7 @@ public class MoveGeneratorTest {
         PieceColor currentPlayersColor = PieceColor.BLACK;
         MoveGenerator mg = new MoveGenerator(board);
 
-        Set<MoveInterface> actualJumpMoves = new HashSet<>();
-        actualJumpMoves.addAll(mg.getJumpMoves(currentPlayersColor));
+        Set<MoveInterface> actualJumpMoves = mg.getJumpMoves(currentPlayersColor);
         assertEquals(expectedJumpMoves, actualJumpMoves);
 
         currentPlayersColor = PieceColor.WHITE;
@@ -100,10 +92,8 @@ public class MoveGeneratorTest {
         expectedJumpMoves.add(new SingleJump(15, 8, board));
         expectedJumpMoves.add(new SingleJump(16, 7, board));
 
-        actualJumpMoves = new HashSet<>();
-        actualJumpMoves.addAll(mg.getJumpMoves(currentPlayersColor));
+        actualJumpMoves = mg.getJumpMoves(currentPlayersColor);
         assertEquals(expectedJumpMoves, actualJumpMoves);
-
     }
 
     @Test
@@ -125,11 +115,8 @@ public class MoveGeneratorTest {
         PieceColor currenetPlayersColor = PieceColor.WHITE;
         MoveGenerator mg = new MoveGenerator(board);
 
-        Set<MoveInterface> actualJumpMoves = new HashSet<>();
-        actualJumpMoves.addAll(mg.getJumpMoves(currenetPlayersColor));
+        Set<MoveInterface> actualJumpMoves = mg.getJumpMoves(currenetPlayersColor);
 
         assertEquals(expectedJumpMoves, actualJumpMoves);
-
     }
-
 }
