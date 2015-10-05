@@ -6,19 +6,22 @@ import java.util.List;
 public class MoveGenerator {
 
     private Board board;
-    private List<Square> currentPlayersOccupiedSquares;
-    private List<MoveInterface> possibleMoves;
 
-    public MoveGenerator(Board board, PieceColor color) {
-        this.possibleMoves = new ArrayList<MoveInterface>();
+    public MoveGenerator(Board board) {
         this.board = board;
-        this.currentPlayersOccupiedSquares = new ArrayList<Square>();
-        // this.determineThisPlayersOccupiedSquares(color);
     }
 
-    public void determineJumpMoves() {
+    public List<MoveInterface> getJumpMoves(PieceColor currentPlayersColor) {
+        List<Square> currentPlayersOccupiedSquares = determineThisPlayersOccupiedSquares(
+                currentPlayersColor);
+        return determineJumpMoves(currentPlayersOccupiedSquares);
+    }
 
-        for (Square startingSquare : this.currentPlayersOccupiedSquares) {
+    private List<MoveInterface> determineJumpMoves(List<Square> currentPlayersOccupiedSquares) {
+
+        List<MoveInterface> possibleMoves = new ArrayList<>();
+
+        for (Square startingSquare : currentPlayersOccupiedSquares) {
             for (Square squareOneJumpAway : this.board
                     .getSquaresThatMightBeOneJumpAway(startingSquare)) {
 
@@ -27,15 +30,15 @@ public class MoveGenerator {
                 if (MoveValidator.isValidMove(jump)) {
                     ArrayList<SingleJump> jumps = new ArrayList<SingleJump>();
                     jumps.add(jump);
-                    this.determineMultiJumpMoves(jumps);
-
+                    this.determineMultiJumpMoves(jumps, possibleMoves);
                 }
-
             }
         }
+        return possibleMoves;
     }
 
-    private void determineMultiJumpMoves(ArrayList<SingleJump> jumps) {
+    private void determineMultiJumpMoves(ArrayList<SingleJump> jumps,
+            List<MoveInterface> possibleMoves) {
         SingleJump lastJump = jumps.get(jumps.size() - 1);
 
         Board newBoard = new Board(lastJump.getBoard());
@@ -55,7 +58,7 @@ public class MoveGenerator {
                 ArrayList<SingleJump> jumpsCopy = SingleJump.singleJumpListCopier(jumps);
                 jumpsCopy.add(jump);
 
-                this.determineMultiJumpMoves(jumpsCopy);
+                this.determineMultiJumpMoves(jumpsCopy, possibleMoves);
             }
         }
 
@@ -69,8 +72,7 @@ public class MoveGenerator {
             int endingPosition = jumps.get(jumps.size() - 1).getEndingPosition();
 
             if (jumps.size() == 1) {
-                this.possibleMoves
-                        .add(new SingleJump(startingPosition, endingPosition, startingBoard));
+                possibleMoves.add(new SingleJump(startingPosition, endingPosition, startingBoard));
             } else {
                 List<Integer> intermediates = new ArrayList<>();
                 for (int i = 0; i < jumps.size(); i++) {
@@ -78,47 +80,49 @@ public class MoveGenerator {
                         intermediates.add(jumps.get(i).getStartingPosition());
                     }
                 }
-                this.possibleMoves.add(new MultiJump(startingPosition, endingPosition,
-                        intermediates, startingBoard));
+                possibleMoves.add(new MultiJump(startingPosition, endingPosition, intermediates,
+                        startingBoard));
             }
         }
     }
 
-    public List<MoveInterface> determineNonJumpMoves() {
+    public List<MoveInterface> getNonJumpMoves(PieceColor currentPlayersColor) {
+        List<Square> currentPlayersOccupiedSquares = determineThisPlayersOccupiedSquares(
+                currentPlayersColor);
+        return determineNonJumpMoves(currentPlayersOccupiedSquares);
+    }
+
+    private List<MoveInterface> determineNonJumpMoves(List<Square> currentPlayersOccupiedSquares) {
         List<MoveInterface> possibleNonJumpMoves = new ArrayList<MoveInterface>();
-        for (Square startingSquare : this.currentPlayersOccupiedSquares) {
+        for (Square startingSquare : currentPlayersOccupiedSquares) {
             for (Square adjacentSquare : this.board.getAdjacentSquares(startingSquare)) {
                 Move normalMove = new Move(startingSquare.getPosition(),
                         adjacentSquare.getPosition(), this.board);
                 if (MoveValidator.isValidMove(normalMove)) {
                     possibleNonJumpMoves.add(normalMove);
-                    this.possibleMoves.add(normalMove);
                 }
             }
         }
         return possibleNonJumpMoves;
     }
 
-    public List<Square> determineThisPlayersOccupiedSquares(PieceColor color) {
+    private List<Square> determineThisPlayersOccupiedSquares(PieceColor color) {
         List<Square> thisPlayersOccupiedSquares = new ArrayList<Square>();
         for (Square square : this.board.getGameState()) {
             if (square.isOccupied()) {
                 if (square.getOccupyingPiece().getColor() == color) {
                     thisPlayersOccupiedSquares.add(square);
-                    this.currentPlayersOccupiedSquares.add(square);
                 }
             }
         }
         return thisPlayersOccupiedSquares;
     }
 
-    public List<MoveInterface> getPossibleMoves() {
-        this.determineNonJumpMoves();
-        this.determineJumpMoves();
-        return this.possibleMoves;
-    }
-
-    public List<MoveInterface> getMoves() {
+    public List<MoveInterface> getAllPossibleMoves(PieceColor playersColor) {
+        List<Square> currentPlayersOccupiedSquares = this
+                .determineThisPlayersOccupiedSquares(playersColor);
+        List<MoveInterface> possibleMoves = determineNonJumpMoves(currentPlayersOccupiedSquares);
+        possibleMoves.addAll(determineJumpMoves(currentPlayersOccupiedSquares));
         return possibleMoves;
     }
 }
