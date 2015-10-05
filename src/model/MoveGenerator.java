@@ -13,11 +13,6 @@ public class MoveGenerator {
         this.board = board;
     }
 
-    public Set<MoveInterface> getJumpMoves(PieceColor color) {
-        Set<Square> playersSquares = determineOccupiedSquares(color);
-        return determineJumpMoves(playersSquares);
-    }
-
     private Set<MoveInterface> determineJumpMoves(Set<Square> currentPlayersOccupiedSquares) {
 
         Set<MoveInterface> possibleMoves = new HashSet<>();
@@ -56,7 +51,9 @@ public class MoveGenerator {
 
             if (MoveValidator.isValidMove(jump)) {
                 noMoreJumps = false;
-                ArrayList<SingleJump> jumpsCopy = SingleJump.singleJumpListCopier(jumps);
+                // ArrayList<SingleJump> jumpsCopy = SingleJump.singleJumpListCopier(jumps);
+                ArrayList<SingleJump> jumpsCopy = new ArrayList<>();
+                jumpsCopy.addAll(jumps);
                 jumpsCopy.add(jump);
 
                 this.determineMultiJumpMoves(jumpsCopy, possibleMoves);
@@ -87,14 +84,9 @@ public class MoveGenerator {
         }
     }
 
-    public Set<MoveInterface> getNonJumpMoves(PieceColor currentPlayersColor) {
-        Set<Square> playersSquares = determineOccupiedSquares(currentPlayersColor);
-        return determineNonJumpMoves(playersSquares);
-    }
-
-    private Set<MoveInterface> determineNonJumpMoves(Set<Square> playersSquares) {
+    private Set<MoveInterface> determineNonJumpMoves(Set<Square> currentPlayersOccupiedSquares) {
         Set<MoveInterface> possibleNonJumpMoves = new HashSet<>();
-        for (Square startingSquare : playersSquares) {
+        for (Square startingSquare : currentPlayersOccupiedSquares) {
             for (Square adjacentSquare : this.board.getAdjacentSquares(startingSquare)) {
                 Move normalMove = new Move(startingSquare.getPosition(),
                         adjacentSquare.getPosition(), this.board);
@@ -120,8 +112,19 @@ public class MoveGenerator {
 
     public Set<MoveInterface> getAllPossibleMoves(PieceColor playersColor) {
         Set<Square> playersSquares = this.determineOccupiedSquares(playersColor);
-        Set<MoveInterface> possibleMoves = determineNonJumpMoves(playersSquares);
-        possibleMoves.addAll(determineJumpMoves(playersSquares));
+        Set<MoveInterface> possibleMoves = this.determineNonJumpMoves(playersSquares);
+        possibleMoves.addAll(this.determineJumpMoves(playersSquares));
         return possibleMoves;
+    }
+
+    public Set<MoveInterface> getJumpMoves(PieceColor color) {
+        Set<Square> playersSquares = this.determineOccupiedSquares(color);
+        return this.determineJumpMoves(playersSquares);
+    }
+
+    public Set<MoveInterface> getNonJumpMoves(PieceColor currentPlayersColor) {
+        Set<Square> currentPlayersOccupiedSquares = this
+                .determineOccupiedSquares(currentPlayersColor);
+        return this.determineNonJumpMoves(currentPlayersOccupiedSquares);
     }
 }

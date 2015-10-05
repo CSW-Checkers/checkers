@@ -4,14 +4,6 @@ import java.util.ArrayList;
 
 public class SingleJump implements Jump {
 
-    public static ArrayList<SingleJump> singleJumpListCopier(ArrayList<SingleJump> otherList) {
-        ArrayList<SingleJump> newList = new ArrayList<SingleJump>();
-        for (SingleJump jump : otherList) {
-            newList.add(new SingleJump(jump));
-        }
-        return newList;
-    }
-
     private Board board;
     private int endingPosition;
     private ArrayList<Integer> jumpedPositions;
@@ -74,6 +66,48 @@ public class SingleJump implements Jump {
     }
 
     @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        SingleJump other = (SingleJump) obj;
+        if (this.board == null) {
+            if (other.board != null) {
+                return false;
+            }
+        } else if (!this.board.equals(other.board)) {
+            return false;
+        }
+        if (this.endingPosition != other.endingPosition) {
+            return false;
+        }
+        if (this.jumpedPositions == null) {
+            if (other.jumpedPositions != null) {
+                return false;
+            }
+        } else if (!this.jumpedPositions.equals(other.jumpedPositions)) {
+            return false;
+        }
+        if (this.piece == null) {
+            if (other.piece != null) {
+                return false;
+            }
+        } else if (!this.piece.equals(other.piece)) {
+            return false;
+        }
+        if (this.startingPosition != other.startingPosition) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
     public Board getBoard() {
         return this.board;
     }
@@ -119,61 +153,20 @@ public class SingleJump implements Jump {
     }
 
     @Override
-    public String toString() {
-        return String.format("%dx%d", this.getStartingPosition(), this.getEndingPosition());
-    }
-
-    @Override
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((board == null) ? 0 : board.hashCode());
-        result = prime * result + endingPosition;
-        result = prime * result + ((jumpedPositions == null) ? 0 : jumpedPositions.hashCode());
-        result = prime * result + ((piece == null) ? 0 : piece.hashCode());
-        result = prime * result + startingPosition;
+        result = prime * result + ((this.board == null) ? 0 : this.board.hashCode());
+        result = prime * result + this.endingPosition;
+        result = prime * result
+                + ((this.jumpedPositions == null) ? 0 : this.jumpedPositions.hashCode());
+        result = prime * result + ((this.piece == null) ? 0 : this.piece.hashCode());
+        result = prime * result + this.startingPosition;
         return result;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        SingleJump other = (SingleJump) obj;
-        if (board == null) {
-            if (other.board != null) {
-                return false;
-            }
-        } else if (!board.equals(other.board)) {
-            return false;
-        }
-        if (endingPosition != other.endingPosition) {
-            return false;
-        }
-        if (jumpedPositions == null) {
-            if (other.jumpedPositions != null) {
-                return false;
-            }
-        } else if (!jumpedPositions.equals(other.jumpedPositions)) {
-            return false;
-        }
-        if (piece == null) {
-            if (other.piece != null) {
-                return false;
-            }
-        } else if (!piece.equals(other.piece)) {
-            return false;
-        }
-        if (startingPosition != other.startingPosition) {
-            return false;
-        }
-        return true;
+    public String toString() {
+        return String.format("%dx%d", this.getStartingPosition(), this.getEndingPosition());
     }
 }
