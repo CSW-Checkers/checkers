@@ -13,11 +13,11 @@ public class MoveGenerator {
         this.board = board;
     }
 
-    private Set<MoveInterface> calculateJumpMoves(Set<Square> currentPlayersOccupiedSquares) {
+    private Set<MoveInterface> calculateJumpMoves(Set<Square> playersSquares) {
 
         Set<MoveInterface> possibleMoves = new HashSet<>();
 
-        for (Square startingSquare : currentPlayersOccupiedSquares) {
+        for (Square startingSquare : playersSquares) {
             for (Square squareOneJumpAway : this.board
                     .getSquaresThatMightBeOneJumpAway(startingSquare)) {
 
@@ -35,12 +35,12 @@ public class MoveGenerator {
 
     private void calculateMultiJumpMoves(ArrayList<SingleJump> jumps,
             Set<MoveInterface> possibleMoves) {
+
         SingleJump lastJump = jumps.get(jumps.size() - 1);
+        Square lastSquare = lastJump.getEndingSquare();
 
         Board newBoard = new Board(lastJump.getBoard());
         newBoard.movePiece(lastJump);
-
-        Square lastSquare = lastJump.getEndingSquare();
 
         boolean noMoreJumps = true;
 
@@ -51,7 +51,7 @@ public class MoveGenerator {
 
             if (MoveValidator.isValidMove(jump)) {
                 noMoreJumps = false;
-                // ArrayList<SingleJump> jumpsCopy = SingleJump.singleJumpListCopier(jumps);
+
                 ArrayList<SingleJump> jumpsCopy = new ArrayList<>();
                 jumpsCopy.addAll(jumps);
                 jumpsCopy.add(jump);
@@ -72,21 +72,21 @@ public class MoveGenerator {
             if (jumps.size() == 1) {
                 possibleMoves.add(new SingleJump(startingPosition, endingPosition, startingBoard));
             } else {
-                List<Integer> intermediates = new ArrayList<>();
+                List<Integer> intermediatePositions = new ArrayList<>();
                 for (int i = 0; i < jumps.size(); i++) {
                     if (i != 0 && i != jumps.size()) {
-                        intermediates.add(jumps.get(i).getStartingPosition());
+                        intermediatePositions.add(jumps.get(i).getStartingPosition());
                     }
                 }
-                possibleMoves.add(new MultiJump(startingPosition, endingPosition, intermediates,
-                        startingBoard));
+                possibleMoves.add(new MultiJump(startingPosition, endingPosition,
+                        intermediatePositions, startingBoard));
             }
         }
     }
 
-    private Set<MoveInterface> calculateNonJumpMoves(Set<Square> currentPlayersOccupiedSquares) {
+    private Set<MoveInterface> calculateNonJumpMoves(Set<Square> playersSquares) {
         Set<MoveInterface> possibleNonJumpMoves = new HashSet<>();
-        for (Square startingSquare : currentPlayersOccupiedSquares) {
+        for (Square startingSquare : playersSquares) {
             for (Square adjacentSquare : this.board.getAdjacentSquares(startingSquare)) {
                 Move normalMove = new Move(startingSquare.getPosition(),
                         adjacentSquare.getPosition(), this.board);
