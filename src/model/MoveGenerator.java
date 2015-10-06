@@ -43,30 +43,28 @@ public class MoveGenerator {
 
         boolean oldKingStatus = lastJump.getPiece().isKing();
         boolean newKingStatus = newBoard.getPiece(lastJump.getEndingPosition()).isKing();
-        boolean wasKingingJump = oldKingStatus && newKingStatus;
-
-        System.out.print("cur jump train" + jumps);
-        System.out.println("\n\t was king? " + oldKingStatus);
-        System.out.println("\t isKingNow? " + newKingStatus);
+        boolean wasKingingJump = oldKingStatus == false && newKingStatus == true;
 
         boolean noMoreJumps = true;
 
-        Square lastSquare = lastJump.getEndingSquare();
+        if (!wasKingingJump) { // must stop when kinged
+            Square lastSquare = lastJump.getEndingSquare();
 
-        for (Square squareOneJumpAway : newBoard.getSquaresThatMightBeOneJumpAway(lastSquare)) {
+            for (Square squareOneJumpAway : newBoard.getSquaresThatMightBeOneJumpAway(lastSquare)) {
 
-            SingleJump jump = new SingleJump(lastSquare.getPosition(),
-                    squareOneJumpAway.getPosition(), newBoard);
+                SingleJump jump = new SingleJump(lastSquare.getPosition(),
+                        squareOneJumpAway.getPosition(), newBoard);
 
-            if (MoveValidator.isValidMove(jump) && !wasKingingJump) {
+                if (MoveValidator.isValidMove(jump)) {
 
-                noMoreJumps = false;
+                    noMoreJumps = false;
 
-                ArrayList<SingleJump> jumpsCopy = new ArrayList<>();
-                jumpsCopy.addAll(jumps);
-                jumpsCopy.add(jump);
+                    ArrayList<SingleJump> jumpsCopy = new ArrayList<>();
+                    jumpsCopy.addAll(jumps);
+                    jumpsCopy.add(jump);
 
-                this.calculateMultiJumpMoves(jumpsCopy, possibleMoves);
+                    this.calculateMultiJumpMoves(jumpsCopy, possibleMoves);
+                }
             }
         }
 
@@ -74,7 +72,6 @@ public class MoveGenerator {
         // then this jump chain has terminated and needs to be
         // added to the possible moves
         if (noMoreJumps) {
-
             int startingPosition = jumps.get(0).getStartingPosition();
             Board startingBoard = jumps.get(0).getBoard();
             int endingPosition = jumps.get(jumps.size() - 1).getEndingPosition();
