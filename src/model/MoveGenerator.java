@@ -24,7 +24,7 @@ public class MoveGenerator {
                 SingleJump jump = new SingleJump(startingSquare.getPosition(),
                         squareOneJumpAway.getPosition(), this.board);
                 if (MoveValidator.isValidMove(jump)) {
-                    ArrayList<SingleJump> jumps = new ArrayList<SingleJump>();
+                    ArrayList<SingleJump> jumps = new ArrayList<>();
                     jumps.add(jump);
                     this.calculateMultiJumpMoves(jumps, possibleMoves);
                 }
@@ -37,19 +37,29 @@ public class MoveGenerator {
             Set<MoveInterface> possibleMoves) {
 
         SingleJump lastJump = jumps.get(jumps.size() - 1);
-        Square lastSquare = lastJump.getEndingSquare();
 
         Board newBoard = new Board(lastJump.getBoard());
         newBoard.movePiece(lastJump);
 
+        boolean oldKingStatus = lastJump.getPiece().isKing();
+        boolean newKingStatus = newBoard.getPiece(lastJump.getEndingPosition()).isKing();
+        boolean wasKingingJump = oldKingStatus && newKingStatus;
+
+        System.out.print("cur jump train" + jumps);
+        System.out.println("\n\t was king? " + oldKingStatus);
+        System.out.println("\t isKingNow? " + newKingStatus);
+
         boolean noMoreJumps = true;
+
+        Square lastSquare = lastJump.getEndingSquare();
 
         for (Square squareOneJumpAway : newBoard.getSquaresThatMightBeOneJumpAway(lastSquare)) {
 
             SingleJump jump = new SingleJump(lastSquare.getPosition(),
                     squareOneJumpAway.getPosition(), newBoard);
 
-            if (MoveValidator.isValidMove(jump)) {
+            if (MoveValidator.isValidMove(jump) && !wasKingingJump) {
+
                 noMoreJumps = false;
 
                 ArrayList<SingleJump> jumpsCopy = new ArrayList<>();
