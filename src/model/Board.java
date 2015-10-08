@@ -1,7 +1,9 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class Board {
     private List<Square> gameState;
@@ -44,6 +46,34 @@ public class Board {
         } else if (this.getPiece(position).isBlack()) {
             this.numberOfBlackPieces--;
         }
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Board other = (Board) obj;
+        if (this.gameState == null) {
+            if (other.gameState != null) {
+                return false;
+            }
+        } else if (!this.gameState.equals(other.gameState)) {
+            return false;
+        }
+        if (this.numberOfBlackPieces != other.numberOfBlackPieces) {
+            return false;
+        }
+        if (this.numberOfWhitePieces != other.numberOfWhitePieces) {
+            return false;
+        }
+        return true;
     }
 
     public List<Square> getAdjacentSquares(Square square) {
@@ -89,6 +119,18 @@ public class Board {
         return squares;
     }
 
+    public Set<Square> getSquaresForPlayer(PieceColor color) {
+        Set<Square> playersSquares = new HashSet<>();
+        for (Square square : this.getGameState()) {
+            if (square.isOccupied()) {
+                if (square.getOccupyingPiece().getColor() == color) {
+                    playersSquares.add(square);
+                }
+            }
+        }
+        return playersSquares;
+    }
+
     /**
      * Returns squares with locations +9, -9, +7, -7 Returns only those squares on the board, i.e.
      * with a checkers number of 1-32 (array index of 0-31). The method returns squares that may be
@@ -129,6 +171,16 @@ public class Board {
         return startingGameBoard;
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.gameState == null) ? 0 : this.gameState.hashCode());
+        result = prime * result + this.numberOfBlackPieces;
+        result = prime * result + this.numberOfWhitePieces;
+        return result;
+    }
+
     public boolean isEndState() {
         return (this.numberOfBlackPieces == 0 || this.numberOfWhitePieces == 0);
     }
@@ -159,4 +211,5 @@ public class Board {
     public void setOccupyingPiece(int position, PieceInterface pieceToSet) {
         this.getSquare(position).setOccupyingPiece(pieceToSet);
     }
+
 }

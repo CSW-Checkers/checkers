@@ -1,6 +1,7 @@
 package model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
@@ -57,6 +58,36 @@ public class MultiJumpTest {
 
         assertEquals(String.format("%dx%dx%d", expectedStartingPosition, expectedMiddlePosition,
                 expectedEndingPosition), multiJump.toString());
+    }
+
+    @Test
+    public void testHashCode() {
+        Board board1 = new Board(Arrays.asList(6, 7), Arrays.asList(10, 18, 19, 26));
+        MultiJump multiJump1 = new MultiJump(6, 31, Arrays.asList(15, 22), board1);
+        MultiJump multiJump2 = new MultiJump(6, 31, Arrays.asList(15, 22), board1);
+        assertEquals(multiJump1.hashCode(), multiJump1.hashCode());
+        assertEquals(multiJump1.hashCode(), multiJump2.hashCode());
+
+        multiJump2 = new MultiJump(6, 31, Arrays.asList(15, 22), new Board(board1));
+
+        multiJump2 = new MultiJump(6, 31, Arrays.asList(15, 24), board1);
+        assertNotEquals(multiJump1.hashCode(), multiJump2.hashCode());
+    }
+
+    @Test
+    public void testEquals() {
+        Board board1 = new Board(Arrays.asList(6, 7), Arrays.asList(10, 18, 19, 26));
+        MultiJump multiJump1 = new MultiJump(6, 31, Arrays.asList(15, 22), board1);
+        MultiJump multiJump2 = new MultiJump(6, 31, Arrays.asList(15, 22), board1);
+        assertEquals(multiJump1, multiJump1);
+        assertEquals(multiJump1, multiJump2);
+        assertEquals(multiJump2, multiJump1);
+
+        multiJump2 = new MultiJump(6, 31, Arrays.asList(15, 22), new Board(board1));
+
+        multiJump2 = new MultiJump(6, 31, Arrays.asList(15, 24), board1);
+        assertNotEquals(multiJump1, multiJump2);
+
     }
 
 }

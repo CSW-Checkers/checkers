@@ -215,16 +215,16 @@ public class MoveValidatorTest {
 
     @Test(expected = IllegalArgumentException.class)
     public void testVerifyEndPositionsIsOnBoard() throws Exception {
-        MoveValidator.verifyStartAndEndPositions(20, 33);
+        MoveValidator.verifyStartAndEndPositionsAreOnBoard(20, 33);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testVerifyMovePositionsAreNotEqual() throws Exception {
-        MoveValidator.verifyStartAndEndPositions(20, 20);
+        MoveValidator.verifyStartAndEndPositionAreNotTheSame(20, 20);
     }
 
     @Test(expected = IllegalArgumentException.class)
     public void testVerifyStartPositionIsOnBoard() throws Exception {
-        MoveValidator.verifyStartAndEndPositions(-1, 20);
+        MoveValidator.verifyStartAndEndPositionsAreOnBoard(-1, 20);
     }
 }

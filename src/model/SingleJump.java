@@ -4,14 +4,6 @@ import java.util.ArrayList;
 
 public class SingleJump implements Jump {
 
-    public static ArrayList<SingleJump> singleJumpListCopier(ArrayList<SingleJump> otherList) {
-        ArrayList<SingleJump> newList = new ArrayList<SingleJump>();
-        for (SingleJump jump : otherList) {
-            newList.add(new SingleJump(jump));
-        }
-        return newList;
-    }
-
     private Board board;
     private int endingPosition;
     private ArrayList<Integer> jumpedPositions;
@@ -21,7 +13,8 @@ public class SingleJump implements Jump {
     private int startingPosition;
 
     public SingleJump(int startingPosition, int endingPosition, Board board) {
-        MoveValidator.verifyStartAndEndPositions(startingPosition, endingPosition);
+        MoveValidator.verifyStartAndEndPositionsAreOnBoard(startingPosition, endingPosition);
+        MoveValidator.verifyStartAndEndPositionAreNotTheSame(startingPosition, endingPosition);
         int positionDifference = Math.abs(startingPosition - endingPosition);
         boolean invalidPositionDifference = !(positionDifference == 7 || positionDifference == 9);
         if (invalidPositionDifference) {
@@ -42,7 +35,7 @@ public class SingleJump implements Jump {
         this.endingPosition = otherJump.getEndingPosition();
         this.piece = new Piece(otherJump.getPiece());
         this.startingPosition = otherJump.getStartingPosition();
-        this.jumpedPositions.addAll(otherJump.getJumpedPositions());
+        this.jumpedPositions = otherJump.determineJumpedPositions();
     }
 
     private ArrayList<Integer> determineJumpedPositions() {
@@ -70,6 +63,48 @@ public class SingleJump implements Jump {
 
         jumpedPositions.add(jumpedPosition);
         return jumpedPositions;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        SingleJump other = (SingleJump) obj;
+        if (this.board == null) {
+            if (other.board != null) {
+                return false;
+            }
+        } else if (!this.board.equals(other.board)) {
+            return false;
+        }
+        if (this.endingPosition != other.endingPosition) {
+            return false;
+        }
+        if (this.jumpedPositions == null) {
+            if (other.jumpedPositions != null) {
+                return false;
+            }
+        } else if (!this.jumpedPositions.equals(other.jumpedPositions)) {
+            return false;
+        }
+        if (this.piece == null) {
+            if (other.piece != null) {
+                return false;
+            }
+        } else if (!this.piece.equals(other.piece)) {
+            return false;
+        }
+        if (this.startingPosition != other.startingPosition) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -115,6 +150,19 @@ public class SingleJump implements Jump {
     @Override
     public Square getStartingSquare() {
         return this.getBoard().getSquare(this.getStartingPosition());
+    }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.board == null) ? 0 : this.board.hashCode());
+        result = prime * result + this.endingPosition;
+        result = prime * result
+                + ((this.jumpedPositions == null) ? 0 : this.jumpedPositions.hashCode());
+        result = prime * result + ((this.piece == null) ? 0 : this.piece.hashCode());
+        result = prime * result + this.startingPosition;
+        return result;
     }
 
     @Override

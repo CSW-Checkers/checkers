@@ -238,4 +238,51 @@ public class Square {
             this.kingPieceIfNecessary();
         }
     }
+
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((adjacentPositions == null) ? 0 : adjacentPositions.hashCode());
+        result = prime * result + ((occupyingPiece == null) ? 0 : occupyingPiece.hashCode());
+        result = prime * result + position;
+        return result;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        Square other = (Square) obj;
+        if (adjacentPositions == null) {
+            if (other.adjacentPositions != null) {
+                return false;
+            }
+        } else if (!adjacentPositions.equals(other.adjacentPositions)) {
+            return false;
+        }
+        if (occupyingPiece == null) {
+            if (other.occupyingPiece != null) {
+                return false;
+            }
+        } else if (!occupyingPiece.equals(other.occupyingPiece)) {
+            return false;
+        }
+        if (position != other.position) {
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public String toString() {
+        return "Square [occupyingPiece=" + occupyingPiece + ", position=" + position + "]";
+    }
 }
