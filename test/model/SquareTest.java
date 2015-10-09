@@ -2,6 +2,7 @@ package model;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -101,6 +102,52 @@ public class SquareTest {
         Square square1 = new Square(12, NullPiece.getInstance());
         Square square2 = new Square(square1);
         assertTrue(square2.getOccupyingPiece().isNull());
+    }
+
+    @Test
+    public void testHashCode() {
+        Square square1 = new Square(1, new Piece(PieceColor.BLACK));
+        Square square2 = new Square(1, new Piece(PieceColor.BLACK));
+        assertEquals(square1.hashCode(), square1.hashCode());
+        assertEquals(square1.hashCode(), square2.hashCode());
+
+        square2 = new Square(1, new Piece(PieceColor.WHITE));
+        assertNotEquals(square1.hashCode(), square2.hashCode());
+
+        square2 = new Square(2, new Piece(PieceColor.BLACK));
+        assertNotEquals(square1.hashCode(), square2.hashCode());
+
+        square2 = new Square(1, NullPiece.getInstance());
+        assertNotEquals(square1.hashCode(), square2.hashCode());
+
+        square1 = new Square(1, NullPiece.getInstance());
+        assertEquals(square1.hashCode(), square2.hashCode());
+
+        square2 = new Square(17, NullPiece.getInstance());
+        assertNotEquals(square1.hashCode(), square2.hashCode());
+    }
+
+    @Test
+    public void testEquals() {
+        Square square1 = new Square(1, new Piece(PieceColor.BLACK));
+        Square square2 = new Square(1, new Piece(PieceColor.BLACK));
+        assertEquals(square1, square1);
+        assertEquals(square1, square2);
+
+        square2 = new Square(1, new Piece(PieceColor.WHITE));
+        assertNotEquals(square1, square2);
+
+        square2 = new Square(2, new Piece(PieceColor.BLACK));
+        assertNotEquals(square1, square2);
+
+        square2 = new Square(1, NullPiece.getInstance());
+        assertNotEquals(square1, square2);
+
+        square1 = new Square(1, NullPiece.getInstance());
+        assertEquals(square1, square2);
+
+        square2 = new Square(17, NullPiece.getInstance());
+        assertNotEquals(square1, square2);
     }
 
 }

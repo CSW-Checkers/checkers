@@ -1,6 +1,8 @@
 package model;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
@@ -45,5 +47,29 @@ public class PieceTest {
         this.blackPiece.kingMe();
 
         assertTrue(this.blackPiece.isKing());
+    }
+
+    @Test
+    public void testHashCode() {
+        assertEquals(this.blackPiece.hashCode(), new Piece(PieceColor.BLACK).hashCode());
+        assertNotEquals(this.blackPiece.hashCode(), new Piece(PieceColor.WHITE).hashCode());
+
+        assertEquals(this.whitePiece.hashCode(), new Piece(PieceColor.WHITE).hashCode());
+        assertNotEquals(this.whitePiece.hashCode(), new Piece(PieceColor.BLACK).hashCode());
+
+        assertEquals(this.blackPiece.hashCode(), this.blackPiece.hashCode());
+        assertEquals(this.whitePiece.hashCode(), this.whitePiece.hashCode());
+    }
+
+    @Test
+    public void testEquals() {
+        assertTrue(this.blackPiece.equals(new Piece(PieceColor.BLACK)));
+        assertFalse(this.blackPiece.equals(new Piece(PieceColor.WHITE)));
+
+        assertTrue(this.whitePiece.equals(new Piece(PieceColor.WHITE)));
+        assertFalse(this.whitePiece.equals(new Piece(PieceColor.BLACK)));
+
+        assertTrue(this.blackPiece.equals(this.blackPiece));
+        assertTrue(this.whitePiece.equals(this.whitePiece));
     }
 }

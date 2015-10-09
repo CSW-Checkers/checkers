@@ -30,8 +30,8 @@ class AlphaBetaSearchNode {
     public List<AlphaBetaSearchNode> getChildren() {
         if (this.children == null) {
             this.children = new ArrayList<AlphaBetaSearchNode>();
-            MoveGenerator moveGen = new MoveGenerator(this.board, this.currentPlayersColor);
-            for (MoveInterface move : moveGen.getPossibleMoves()) {
+            MoveGenerator moveGen = new MoveGenerator(this.board);
+            for (MoveInterface move : moveGen.getAllPossibleMoves(this.currentPlayersColor)) {
                 Board childBoard = new Board(this.board);
                 childBoard.movePiece(move);
                 AlphaBetaSearchNode childNode = new AlphaBetaSearchNode(childBoard,

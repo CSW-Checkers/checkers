@@ -1,6 +1,7 @@
 package model;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
@@ -77,5 +78,40 @@ public class SingleJumpTest {
         final Board testBoard = new Board();
         SingleJump invalidJump = new SingleJump(33, 26, testBoard);
         assertNull(invalidJump);
+    }
+
+    @Test
+    public void testHashCode() {
+        Board board1 = new Board(Arrays.asList(14, 15), Arrays.asList(18, 19));
+
+        SingleJump jump1 = new SingleJump(14, 23, board1);
+        SingleJump jump2 = new SingleJump(14, 23, board1);
+        assertEquals(jump1.hashCode(), jump2.hashCode());
+        assertEquals(jump1.hashCode(), jump2.hashCode());
+
+        Board board2 = new Board(Arrays.asList(14, 15), Arrays.asList(18, 19));
+        jump2 = new SingleJump(14, 23, board2);
+        assertEquals(jump1.hashCode(), jump2.hashCode());
+
+        jump2 = new SingleJump(15, 24, board1);
+        assertNotEquals(jump1.hashCode(), jump2.hashCode());
+    }
+
+    @Test
+    public void testEquals() {
+        Board board1 = new Board(Arrays.asList(14, 15), Arrays.asList(18, 19));
+
+        SingleJump jump1 = new SingleJump(14, 23, board1);
+        SingleJump jump2 = new SingleJump(14, 23, board1);
+        assertEquals(jump1, jump2);
+        assertEquals(jump1, jump2);
+        assertEquals(jump2, jump1);
+
+        Board board2 = new Board(Arrays.asList(14, 15), Arrays.asList(18, 19));
+        jump2 = new SingleJump(14, 23, board2);
+        assertEquals(jump1, jump2);
+
+        jump2 = new SingleJump(15, 24, board1);
+        assertNotEquals(jump1, jump2);
     }
 }
