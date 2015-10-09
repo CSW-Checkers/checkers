@@ -1,8 +1,9 @@
 package controller;
 
 import java.util.ArrayList;
-import model.Board;
+import java.util.Arrays;
 
+import model.Board;
 import view.CheckersPane;
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -29,7 +30,7 @@ public class CheckersController extends Application implements HumanFinishedMove
 		 */
 		primaryStage.setTitle("checkers");
 		//root = new CheckersPane();
-		Board board = new Board();
+		Board board = new Board(Arrays.asList(1, 2, 3, 4), Arrays.asList(32, 31, 30, 29));
 		root = new CheckersPane(board);
 		Scene checkersScene = new Scene(root);
 		primaryStage.setScene(checkersScene);
