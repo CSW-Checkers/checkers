@@ -1,6 +1,8 @@
 package model.ai;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -188,11 +190,28 @@ public class AlphaBetaSearchNodeTest {
         Set<AlphaBetaSearchNode> actualSearchNodes = new HashSet<>();
         actualSearchNodes.addAll(children);
 
-        System.out.println(expectedNodes);
-        System.out.println(actualSearchNodes);
-
         // check that expected equals actual
         assertEquals(expectedNodes, actualSearchNodes);
+    }
+
+    @Test
+    public void testIsLeaf() {
+        Board board = new Board();
+        int startingDepth = 0;
+        PieceColor startingColor = PieceColor.BLACK;
+        AlphaBetaSearchNode searchNode = new AlphaBetaSearchNode(board, startingDepth,
+                startingColor);
+        assertTrue(searchNode.isLeaf());
+
+        startingDepth = 1;
+        searchNode = new AlphaBetaSearchNode(board, startingDepth, startingColor);
+        assertFalse(searchNode.isLeaf());
+
+        startingDepth = 4;
+        board = new Board(Arrays.asList(1, 2, 3, 4, 5, 6), Arrays.asList());
+        searchNode = new AlphaBetaSearchNode(board, startingDepth, startingColor);
+        assertTrue(searchNode.isLeaf());
+
     }
 
 }

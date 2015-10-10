@@ -39,11 +39,15 @@ public class AlphaBetaSearch {
 
     public double maxValue(AlphaBetaSearchNode node, double alpha, double beta) {
         if (node.isLeaf()) {
-            return this.evaluate(node.getBoard(), this.playerMakingMove);
+            double value = this.evaluate(node.getBoard(), this.playerMakingMove);
+            node.setValue(value);
+            return value;
         }
         node.setValue(Double.NEGATIVE_INFINITY);
         for (AlphaBetaSearchNode childNode : node.getChildren()) {
+
             node.setValue(Math.max(node.getValue(), this.minValue(childNode, alpha, beta)));
+            System.out.println(node.getValue());
             if (node.getValue() >= beta) {
                 return node.getValue();
             }
@@ -54,7 +58,9 @@ public class AlphaBetaSearch {
 
     private double minValue(AlphaBetaSearchNode node, double alpha, double beta) {
         if (node.isLeaf()) {
-            return this.evaluate(node.getBoard(), this.playerMakingMove);
+            double value = this.evaluate(node.getBoard(), this.playerMakingMove);
+            node.setValue(value);
+            return value;
         }
         node.setValue(Double.POSITIVE_INFINITY);
         for (AlphaBetaSearchNode childNode : node.getChildren()) {
