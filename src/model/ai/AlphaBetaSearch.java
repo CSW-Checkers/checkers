@@ -45,9 +45,7 @@ public class AlphaBetaSearch {
         }
         node.setValue(Double.NEGATIVE_INFINITY);
         for (AlphaBetaSearchNode childNode : node.getChildren()) {
-
             node.setValue(Math.max(node.getValue(), this.minValue(childNode, alpha, beta)));
-            System.out.println(node.getValue());
             if (node.getValue() >= beta) {
                 return node.getValue();
             }
