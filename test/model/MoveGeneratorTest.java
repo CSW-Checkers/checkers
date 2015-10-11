@@ -62,6 +62,7 @@ public class MoveGeneratorTest {
         expectedMoves.add(new MultiJump(22, 6, Arrays.asList(15), board));
 
         actualMoves = mg.getAllPossibleMoves(PieceColor.WHITE);
+
         assertEquals(expectedMoves, actualMoves);
     }
 
@@ -85,6 +86,7 @@ public class MoveGeneratorTest {
 
         MoveGenerator mg = new MoveGenerator(board);
         Set<MoveInterface> actualMoves = mg.getAllPossibleMoves(PieceColor.BLACK);
+
         assertEquals(expectedMoves, actualMoves);
 
         // expected white moves

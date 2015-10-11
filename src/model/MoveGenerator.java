@@ -8,6 +8,8 @@ import java.util.Set;
 public class MoveGenerator {
 
     private Board board;
+    public int boardsGenerated = 0;
+    public int movesGenerated = 0;
 
     public MoveGenerator(Board board) {
         this.board = board;
@@ -23,6 +25,7 @@ public class MoveGenerator {
 
                 SingleJump jump = new SingleJump(startingSquare.getPosition(),
                         squareOneJumpAway.getPosition(), this.board);
+                this.movesGenerated++;
                 if (MoveValidator.isValidMove(jump)) {
                     ArrayList<SingleJump> jumps = new ArrayList<>();
                     jumps.add(jump);
@@ -37,7 +40,7 @@ public class MoveGenerator {
             Set<MoveInterface> possibleMoves) {
 
         SingleJump lastJump = jumps.get(jumps.size() - 1);
-
+        this.boardsGenerated++;
         Board newBoard = new Board(lastJump.getBoard());
         newBoard.movePiece(lastJump);
 
@@ -54,7 +57,7 @@ public class MoveGenerator {
 
                 SingleJump jump = new SingleJump(lastSquare.getPosition(),
                         squareOneJumpAway.getPosition(), newBoard);
-
+                this.movesGenerated++;
                 if (MoveValidator.isValidMove(jump)) {
 
                     noMoreJumps = false;
@@ -75,6 +78,8 @@ public class MoveGenerator {
             int startingPosition = jumps.get(0).getStartingPosition();
             Board startingBoard = jumps.get(0).getBoard();
             int endingPosition = jumps.get(jumps.size() - 1).getEndingPosition();
+
+            this.movesGenerated++;
 
             if (jumps.size() == 1) {
                 possibleMoves.add(new SingleJump(startingPosition, endingPosition, startingBoard));
