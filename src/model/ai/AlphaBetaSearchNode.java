@@ -12,7 +12,7 @@ class AlphaBetaSearchNode {
     private Board board;
     private List<AlphaBetaSearchNode> children;
     private PieceColor currentPlayersColor;
-    private int depthLevel; // 0 is bottom depth
+    private int depthLevel; // 0 is root
     private MoveInterface moveThatGotToThisState;
     private double value;
 
@@ -81,18 +81,29 @@ class AlphaBetaSearchNode {
 
     public List<AlphaBetaSearchNode> getChildren() {
         if (this.children == null) {
-            this.children = new ArrayList<AlphaBetaSearchNode>();
+
+            ArrayList<AlphaBetaSearchNode> childNodes = new ArrayList<AlphaBetaSearchNode>();
+
+            if (this.depthLevel == 0) {
+                this.children = childNodes;
+            }
+
             MoveGenerator moveGen = new MoveGenerator(this.board);
             for (MoveInterface move : moveGen.getAllPossibleMoves(this.currentPlayersColor)) {
                 Board childBoard = new Board(this.board);
                 childBoard.movePiece(move);
                 AlphaBetaSearchNode childNode = new AlphaBetaSearchNode(childBoard,
-                        this.depthLevel - 1, this.currentPlayersColor.getOppositeColor());
-                childNode.setMoveThatGotToThisState(move);
-                this.children.add(childNode);
+                        this.depthLevel + 1, this.currentPlayersColor.getOppositeColor());
+                if (this.depthLevel == 0) {
+                    childNode.setMoveThatGotToThisState(move);
+                }
+                childNodes.add(childNode);
             }
+            return childNodes;
+        } else {
+            return this.children;
         }
-        return this.children;
+
     }
 
     public PieceColor getCurrentPlayersColor() {
@@ -126,10 +137,6 @@ class AlphaBetaSearchNode {
         temp = Double.doubleToLongBits(this.value);
         result = prime * result + (int) (temp ^ (temp >>> 32));
         return result;
-    }
-
-    public boolean isLeaf() {
-        return (this.depthLevel == 0 || this.board.isEndState());
     }
 
     public void setMoveThatGotToThisState(MoveInterface moveThatGotToThisState) {
