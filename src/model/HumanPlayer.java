@@ -27,6 +27,7 @@ public class HumanPlayer implements Player {
                 currentBoard.movePiece(moveToMake);
                 this.printMove(moveToMake);
             } else {
+                System.err.println("Move not found in list of possible legal moves.");
                 throw new Exception();
             }
         } catch (final Exception e) {
