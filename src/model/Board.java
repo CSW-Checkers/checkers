@@ -26,8 +26,8 @@ public class Board {
     }
 
     public Board(List<Integer> blackPositions, List<Integer> whitePositions) {
-        this.numberOfBlackPieces = blackPositions.size();
-        this.numberOfWhitePieces = whitePositions.size();
+        this.numberOfBlackPieces = 0;
+        this.numberOfWhitePieces = 0;
         this.gameState = new ArrayList<Square>(32);
 
         for (int position = 1; position <= 32; position++) {
