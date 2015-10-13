@@ -181,6 +181,14 @@ public class Board {
         return result;
     }
 
+    private void incrementPieceCount(int position) {
+        if (this.getPiece(position).isWhite()) {
+            this.numberOfWhitePieces++;
+        } else if (this.getPiece(position).isBlack()) {
+            this.numberOfBlackPieces++;
+        }
+    }
+
     public boolean isEndState() {
         return (this.numberOfBlackPieces == 0 || this.numberOfWhitePieces == 0);
     }
@@ -210,6 +218,7 @@ public class Board {
 
     public void setOccupyingPiece(int position, PieceInterface pieceToSet) {
         this.getSquare(position).setOccupyingPiece(pieceToSet);
+        this.incrementPieceCount(position);
     }
 
 }
