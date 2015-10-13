@@ -1,10 +1,15 @@
 package model;
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNull;
 
 import org.junit.Test;
+
+import model.Board;
+import model.MultiJump;
+import model.SingleJump;
 
 import java.util.ArrayList;
 import java.util.Arrays;

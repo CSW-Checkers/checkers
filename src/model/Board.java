@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Set;
 
 public class Board {
-    private List<Square> gameState;
+    private final List<Square> gameState;
     private int numberOfBlackPieces;
     private int numberOfWhitePieces;
 
@@ -18,7 +18,7 @@ public class Board {
 
     public Board(Board otherBoard) {
         this.gameState = new ArrayList<Square>();
-        for (Square square : otherBoard.getGameState()) {
+        for (final Square square : otherBoard.getGameState()) {
             this.gameState.add(new Square(square));
         }
         this.numberOfBlackPieces = otherBoard.getNumberOfBlackPieces();
@@ -59,7 +59,7 @@ public class Board {
         if (this.getClass() != obj.getClass()) {
             return false;
         }
-        Board other = (Board) obj;
+        final Board other = (Board) obj;
         if (this.gameState == null) {
             if (other.gameState != null) {
                 return false;
@@ -77,7 +77,7 @@ public class Board {
     }
 
     public List<Square> getAdjacentSquares(Square square) {
-        List<Integer> squareNumbers = square.getAdjacentPositions();
+        final List<Integer> squareNumbers = square.getAdjacentPositions();
         return this.getSquares((ArrayList<Integer>) squareNumbers);
     }
 
@@ -98,8 +98,8 @@ public class Board {
     }
 
     public ArrayList<PieceInterface> getPieces(List<Integer> positions) {
-        ArrayList<PieceInterface> pieces = new ArrayList<>();
-        for (int position : positions) {
+        final ArrayList<PieceInterface> pieces = new ArrayList<>();
+        for (final int position : positions) {
             pieces.add(this.getPiece(position));
         }
 
@@ -111,8 +111,8 @@ public class Board {
     }
 
     public ArrayList<Square> getSquares(ArrayList<Integer> positions) {
-        ArrayList<Square> squares = new ArrayList<>();
-        for (int position : positions) {
+        final ArrayList<Square> squares = new ArrayList<>();
+        for (final int position : positions) {
             squares.add(this.getSquare(position));
         }
 
@@ -120,8 +120,8 @@ public class Board {
     }
 
     public Set<Square> getSquaresForPlayer(PieceColor color) {
-        Set<Square> playersSquares = new HashSet<>();
-        for (Square square : this.getGameState()) {
+        final Set<Square> playersSquares = new HashSet<>();
+        for (final Square square : this.getGameState()) {
             if (square.isOccupied()) {
                 if (square.getOccupyingPiece().getColor() == color) {
                     playersSquares.add(square);
@@ -141,10 +141,10 @@ public class Board {
      * @return squares one possibly one jump away, they may try to wrap around the board
      */
     public List<Square> getSquaresThatMightBeOneJumpAway(Square startingSquare) {
-        List<Square> squaresPossiblyOneJumpAway = new ArrayList<Square>();
+        final List<Square> squaresPossiblyOneJumpAway = new ArrayList<Square>();
 
-        int startingPosition = startingSquare.getPosition();
-        int[] possibleJumpPositions = { startingPosition + 9, startingPosition - 9,
+        final int startingPosition = startingSquare.getPosition();
+        final int[] possibleJumpPositions = { startingPosition + 9, startingPosition - 9,
                 startingPosition + 7, startingPosition - 7 };
 
         for (int i = 0; i < possibleJumpPositions.length; i++) {
@@ -156,12 +156,12 @@ public class Board {
     }
 
     private List<Square> getStartingGameBoardState() {
-        List<Square> startingGameBoard = new ArrayList<>(32);
+        final List<Square> startingGameBoard = new ArrayList<>(32);
 
         for (int i = 1; i <= 32; i++) {
             if (i <= 12) {
                 startingGameBoard.add(new Square(i, new Piece(PieceColor.BLACK)));
-            } else if (i > 12 && i < 21) {
+            } else if ((i > 12) && (i < 21)) {
                 startingGameBoard.add(new Square(i, NullPiece.getInstance()));
             } else {
                 startingGameBoard.add(new Square(i, new Piece(PieceColor.WHITE)));
@@ -175,9 +175,9 @@ public class Board {
     public int hashCode() {
         final int prime = 31;
         int result = 1;
-        result = prime * result + ((this.gameState == null) ? 0 : this.gameState.hashCode());
-        result = prime * result + this.numberOfBlackPieces;
-        result = prime * result + this.numberOfWhitePieces;
+        result = (prime * result) + ((this.gameState == null) ? 0 : this.gameState.hashCode());
+        result = (prime * result) + this.numberOfBlackPieces;
+        result = (prime * result) + this.numberOfWhitePieces;
         return result;
     }
 
@@ -189,16 +189,28 @@ public class Board {
         }
     }
 
-    public boolean isEndState() {
-        return (this.numberOfBlackPieces == 0 || this.numberOfWhitePieces == 0);
+    public boolean isEndState(PieceColor color) {
+        final boolean outOfPieces = (this.numberOfBlackPieces == 0)
+                || (this.numberOfWhitePieces == 0);
+
+        if (outOfPieces) {
+            return true;
+        }
+
+        final boolean noAvailableMoves = MoveGenerator.getAllPossibleMoves(this, color).isEmpty();
+        if (noAvailableMoves) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void movePiece(MoveInterface move) {
-        PieceInterface pieceToMove = this.pickUpPiece(move.getStartingPosition());
+        final PieceInterface pieceToMove = this.pickUpPiece(move.getStartingPosition());
         if (move instanceof Jump) {
-            Jump jump = (Jump) move;
+            final Jump jump = (Jump) move;
 
-            for (int position : jump.getJumpedPositions()) {
+            for (final int position : jump.getJumpedPositions()) {
                 this.removePiece(position);
             }
         }
@@ -206,7 +218,7 @@ public class Board {
     }
 
     private PieceInterface pickUpPiece(int position) {
-        PieceInterface pieceToPickUp = this.getPiece(position);
+        final PieceInterface pieceToPickUp = this.getPiece(position);
         this.removePiece(position);
         return pieceToPickUp;
     }
