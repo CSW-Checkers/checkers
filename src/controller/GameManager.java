@@ -6,6 +6,7 @@ import model.HumanPlayer;
 import model.MoveGenerator;
 import model.PieceColor;
 import model.Player;
+import view.cli.CommandLineHelper;
 
 public class GameManager {
     public static void main(String[] args) {
@@ -53,14 +54,15 @@ public class GameManager {
         Player currentPlayer = this.blackPlayer;
 
         System.out.println("Game start");
+        CommandLineHelper.printBoard(this.gameBoard);
         while (!this.gameBoard.isEndState(currentColor)) {
             currentPlayer.makeMove(this.gameBoard);
-            // Show board here
+            CommandLineHelper.printBoard(this.gameBoard);
             currentColor = currentColor.getOppositeColor();
             currentPlayer = this.getOtherPlayer(currentPlayer);
 
             try {
-                Thread.sleep(125);
+                Thread.sleep(500);
             } catch (final InterruptedException e) {
                 e.printStackTrace();
             }

@@ -30,8 +30,8 @@ class AlphaBetaSearchNode {
     public List<AlphaBetaSearchNode> getChildren() {
         if (this.children == null) {
             this.children = new ArrayList<AlphaBetaSearchNode>();
-            MoveGenerator moveGen = new MoveGenerator(this.board);
-            for (MoveInterface move : moveGen.getAllPossibleMoves(this.currentPlayersColor)) {
+            for (MoveInterface move : MoveGenerator.getAllPossibleMoves(this.board,
+                    this.currentPlayersColor)) {
                 Board childBoard = new Board(this.board);
                 childBoard.movePiece(move);
                 AlphaBetaSearchNode childNode = new AlphaBetaSearchNode(childBoard,
@@ -51,7 +51,8 @@ class AlphaBetaSearchNode {
     }
 
     public boolean isLeaf() {
-        return (this.depthLevel == 0 || this.board.isEndState());
+        return (this.depthLevel == 0 || this.board.isEndState(PieceColor.BLACK)
+                || this.board.isEndState(PieceColor.WHITE));
     }
 
     public void setValue(double value) {
