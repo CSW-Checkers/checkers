@@ -102,8 +102,10 @@ public final class MoveGenerator {
 
     public static Set<MoveInterface> getAllPossibleMoves(Board board, PieceColor playersColor) {
         final Set<Square> playersSquares = board.getSquaresForPlayer(playersColor);
-        final Set<MoveInterface> possibleMoves = calculateNonJumpMoves(board, playersSquares);
-        possibleMoves.addAll(calculateJumpMoves(board, playersSquares));
+        final Set<MoveInterface> possibleMoves = calculateJumpMoves(board, playersSquares);
+        if (possibleMoves.isEmpty()) {
+            possibleMoves.addAll(calculateNonJumpMoves(board, playersSquares));
+        }
         return possibleMoves;
     }
 

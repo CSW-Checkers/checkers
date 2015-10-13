@@ -2,13 +2,13 @@ package model;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
-import org.junit.Test;
 
 public class MoveGeneratorTest {
 
@@ -24,16 +24,7 @@ public class MoveGeneratorTest {
         Set<MoveInterface> expectedMoves = new HashSet<>();
 
         // expected black moves
-        expectedMoves.add(new Move(10, 6, board));
-        expectedMoves.add(new Move(10, 14, board));
-        expectedMoves.add(new Move(10, 15, board));
-        expectedMoves.add(new Move(11, 15, board));
-        expectedMoves.add(new Move(13, 17, board));
-        expectedMoves.add(new Move(25, 21, board));
-        expectedMoves.add(new Move(25, 29, board));
-        expectedMoves.add(new Move(27, 31, board));
-        expectedMoves.add(new Move(27, 32, board));
-        expectedMoves.add(new Move(30, 26, board));
+
         expectedMoves.add(new SingleJump(11, 20, board));
         expectedMoves.add(new MultiJump(10, 17, Arrays.asList(3, 12, 19, 26), board));
         expectedMoves.add(new MultiJump(10, 28, Arrays.asList(3, 12, 19), board));
@@ -44,18 +35,7 @@ public class MoveGeneratorTest {
 
         // expected white moves
         expectedMoves = new HashSet<>();
-        expectedMoves.add(new Move(1, 5, board));
-        expectedMoves.add(new Move(1, 6, board));
-        expectedMoves.add(new Move(7, 2, board));
-        expectedMoves.add(new Move(7, 3, board));
-        expectedMoves.add(new Move(8, 3, board));
-        expectedMoves.add(new Move(8, 4, board));
-        expectedMoves.add(new Move(16, 12, board));
-        expectedMoves.add(new Move(22, 17, board));
-        expectedMoves.add(new Move(23, 19, board));
-        expectedMoves.add(new Move(23, 26, board));
-        expectedMoves.add(new Move(24, 19, board));
-        expectedMoves.add(new Move(24, 20, board));
+
         expectedMoves.add(new SingleJump(23, 14, board));
         expectedMoves.add(new SingleJump(23, 32, board));
         expectedMoves.add(new MultiJump(22, 6, Arrays.asList(15), board));
@@ -75,10 +55,7 @@ public class MoveGeneratorTest {
         Set<MoveInterface> expectedMoves = new HashSet<>();
 
         // expected black moves
-        expectedMoves.add(new Move(4, 8, board));
-        expectedMoves.add(new Move(6, 10, board));
-        expectedMoves.add(new Move(19, 23, board));
-        expectedMoves.add(new Move(11, 15, board));
+
         expectedMoves.add(new SingleJump(19, 28, board));
         expectedMoves.add(new MultiJump(5, 21, Arrays.asList(14), board));
         expectedMoves.add(new MultiJump(5, 23, Arrays.asList(14), board));
@@ -88,17 +65,7 @@ public class MoveGeneratorTest {
 
         // expected white moves
         expectedMoves = new HashSet<>();
-        expectedMoves.add(new Move(7, 3, board));
-        expectedMoves.add(new Move(12, 8, board));
-        expectedMoves.add(new Move(17, 14, board));
-        expectedMoves.add(new Move(18, 14, board));
-        expectedMoves.add(new Move(18, 15, board));
-        expectedMoves.add(new Move(27, 23, board));
-        expectedMoves.add(new Move(29, 25, board));
-        expectedMoves.add(new Move(30, 25, board));
-        expectedMoves.add(new Move(30, 26, board));
-        expectedMoves.add(new Move(31, 26, board));
-        expectedMoves.add(new Move(32, 28, board));
+
         expectedMoves.add(new MultiJump(24, 8, Arrays.asList(15), board));
 
         actualMoves = MoveGenerator.getAllPossibleMoves(board, PieceColor.WHITE);

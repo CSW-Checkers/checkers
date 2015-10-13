@@ -16,20 +16,9 @@ public class ComputerPlayer implements Player {
 
     @Override
     public void makeMove(Board currentBoard) {
-        final MoveInterface moveToMake;
-        final Set<MoveInterface> jumpMoves = MoveGenerator.getJumpMoves(currentBoard,
+        final Set<MoveInterface> possibleMoves = MoveGenerator.getAllPossibleMoves(currentBoard,
                 this.getColor());
-        if (!jumpMoves.isEmpty()) {
-            moveToMake = (Jump) jumpMoves.toArray()[0]; // Select first move
-        } else {
-            final Set<MoveInterface> nonJumpMoves = MoveGenerator.getNonJumpMoves(currentBoard,
-                    this.getColor());
-            if (!nonJumpMoves.isEmpty()) {
-                moveToMake = (Move) nonJumpMoves.toArray()[0];
-            } else {
-                throw new IllegalArgumentException("No valid moves for Computer!");
-            }
-        }
+        final MoveInterface moveToMake = (MoveInterface) possibleMoves.toArray()[0];
         currentBoard.movePiece(moveToMake);
         this.printMove(moveToMake);
     }
