@@ -1,5 +1,6 @@
 package model;
 
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
@@ -8,6 +9,15 @@ import static org.junit.Assert.assertTrue;
 
 import org.junit.Before;
 import org.junit.Test;
+
+import model.Board;
+import model.Move;
+import model.MultiJump;
+import model.Piece;
+import model.PieceColor;
+import model.PieceInterface;
+import model.SingleJump;
+import model.Square;
 
 import java.util.ArrayList;
 import java.util.Arrays;

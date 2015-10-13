@@ -2,6 +2,7 @@ package controller;
 
 import model.Board;
 import model.ComputerPlayer;
+import model.HumanPlayer;
 import model.MoveGenerator;
 import model.PieceColor;
 import model.Player;
@@ -13,7 +14,7 @@ public class GameManager {
         gameManager.playGame();
     }
 
-    private final Player blackPlayer = new ComputerPlayer(PieceColor.BLACK);
+    private final Player blackPlayer = new HumanPlayer(PieceColor.BLACK);
     private final Board gameBoard = new Board();
     private final Player whitePlayer = new ComputerPlayer(PieceColor.WHITE);
 
@@ -48,23 +49,22 @@ public class GameManager {
     }
 
     private void playGame() {
-        System.out.println("Game start");
         PieceColor currentColor = PieceColor.BLACK;
         Player currentPlayer = this.blackPlayer;
+
+        System.out.println("Game start");
         while (!this.gameBoard.isEndState(currentColor)) {
             currentPlayer.makeMove(this.gameBoard);
-            // Show board view
+            // Show board here
             currentColor = currentColor.getOppositeColor();
             currentPlayer = this.getOtherPlayer(currentPlayer);
+
             try {
-                Thread.sleep(250);
+                Thread.sleep(125);
             } catch (final InterruptedException e) {
                 e.printStackTrace();
             }
-
         }
-
         this.determineWinner();
     }
-
 }
