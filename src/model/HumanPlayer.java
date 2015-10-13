@@ -22,7 +22,8 @@ public class HumanPlayer implements Player {
         final String moveString = reader.nextLine();
         try {
             final MoveInterface moveToMake = MoveBuilder.buildMove(moveString, currentBoard);
-            if (MoveValidator.isValidMove(moveToMake)) {
+            if (MoveGenerator.getAllPossibleMoves(currentBoard, this.getColor())
+                    .contains(moveToMake)) {
                 currentBoard.movePiece(moveToMake);
                 this.printMove(moveToMake);
             } else {
