@@ -27,7 +27,7 @@ public class AlphaBetaSearchTest {
         assertEquals(expectedBestMove, actualBestMove);
     }
 
-    @Test(timeout = 3000)
+    @Test(timeout = 5000)
     public void testGetBestMove_PieceCountEvaluator_ManyKingsHighBranchFactor() {
         Board board = new Board(Arrays.asList(5, 6, 7, 8), Arrays.asList(25, 26, 27, 28));
         board.getPiece(5).kingMe();
@@ -41,7 +41,7 @@ public class AlphaBetaSearchTest {
         AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK,
                 new PieceCountEvaluator(), 8);
 
-        MoveInterface actualBestMove = searcher.alphaBetaSearch();
+        searcher.alphaBetaSearch();
     }
 
     @Test
