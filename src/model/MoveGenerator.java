@@ -16,6 +16,7 @@ public final class MoveGenerator {
 
                 final SingleJump jump = new SingleJump(startingSquare.getPosition(),
                         squareOneJumpAway.getPosition(), board);
+
                 if (MoveValidator.isValidMove(jump)) {
                     final ArrayList<SingleJump> jumps = new ArrayList<>();
                     jumps.add(jump);
@@ -32,6 +33,7 @@ public final class MoveGenerator {
         final SingleJump lastJump = jumps.get(jumps.size() - 1);
 
         final Board newBoard = new Board(lastJump.getBoard());
+
         newBoard.movePiece(lastJump);
 
         final boolean oldKingStatus = lastJump.getPiece().isKing();
@@ -48,7 +50,6 @@ public final class MoveGenerator {
 
                 final SingleJump jump = new SingleJump(lastSquare.getPosition(),
                         squareOneJumpAway.getPosition(), newBoard);
-
                 if (MoveValidator.isValidMove(jump)) {
 
                     noMoreJumps = false;
@@ -106,11 +107,6 @@ public final class MoveGenerator {
         if (possibleMoves.isEmpty()) {
             possibleMoves.addAll(calculateNonJumpMoves(board, playersSquares));
         }
-        System.out.println("Possible moves for " + playersColor);
-        for (MoveInterface possibleMove : possibleMoves) {
-            System.out.println(possibleMove);
-        }
-        System.out.println("======");
 
         return possibleMoves;
     }
