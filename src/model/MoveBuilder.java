@@ -20,7 +20,7 @@ public final class MoveBuilder {
             final int endingPosition = positions.get(positionsSize - 1);
 
             if (positionsSize > 2) {
-                final List<Integer> intermediatePositions = positions.subList(1, positionsSize - 2);
+                final List<Integer> intermediatePositions = positions.subList(1, positionsSize - 1);
                 moveToReturn = new MultiJump(startingPosition, endingPosition,
                         intermediatePositions, board);
             } else {
