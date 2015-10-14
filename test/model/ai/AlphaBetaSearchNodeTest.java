@@ -1,8 +1,6 @@
 package model.ai;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
 
@@ -37,91 +35,31 @@ public class AlphaBetaSearchNodeTest {
         List<AlphaBetaSearchNode> children = searchNode.getChildren();
 
         // check correct number of children
-        assertEquals(children.size(), 13);
+        assertEquals(3, children.size());
 
         // set expected search nodes
         Set<AlphaBetaSearchNode> expectedSearchNodes = new HashSet<>();
 
-        int expectedDepth = startingDepth - 1;
+        int expectedDepth = startingDepth + 1;
         PieceColor expectedColor = startingColor.getOppositeColor();
 
-        MoveInterface move = new Move(10, 6, board);
+        MoveInterface move = new SingleJump(11, 20, board);
         Board newBoard = new Board(board);
         newBoard.movePiece(move);
         expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
-
-        move = new Move(10, 14, board);
-        newBoard = new Board(board);
-        newBoard.movePiece(move);
-        expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
-
-        move = new Move(10, 15, board);
-        newBoard = new Board(board);
-        newBoard.movePiece(move);
-        expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
-
-        move = new Move(11, 15, board);
-        newBoard = new Board(board);
-        newBoard.movePiece(move);
-        expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
-
-        move = new Move(13, 17, board);
-        newBoard = new Board(board);
-        newBoard.movePiece(move);
-        expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
-
-        move = new Move(25, 21, board);
-        newBoard = new Board(board);
-        newBoard.movePiece(move);
-        expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
-
-        move = new Move(25, 29, board);
-        newBoard = new Board(board);
-        newBoard.movePiece(move);
-        expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
-
-        move = new Move(27, 31, board);
-        newBoard = new Board(board);
-        newBoard.movePiece(move);
-        expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
-
-        move = new Move(27, 32, board);
-        newBoard = new Board(board);
-        newBoard.movePiece(move);
-        expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
-
-        move = new Move(30, 26, board);
-        newBoard = new Board(board);
-        newBoard.movePiece(move);
-        expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
-
-        move = new SingleJump(11, 20, board);
-        newBoard = new Board(board);
-        newBoard.movePiece(move);
-        expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
+                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, null));
 
         move = new MultiJump(10, 17, Arrays.asList(3, 12, 19, 26), board);
         newBoard = new Board(board);
         newBoard.movePiece(move);
         expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
+                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, null));
 
         move = new MultiJump(10, 28, Arrays.asList(3, 12, 19), board);
         newBoard = new Board(board);
         newBoard.movePiece(move);
         expectedSearchNodes
-                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
+                .add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, null));
 
         // get set of actual search nodes
         Set<AlphaBetaSearchNode> actualSearchNodes = new HashSet<>();
@@ -148,43 +86,43 @@ public class AlphaBetaSearchNodeTest {
 
         Set<AlphaBetaSearchNode> expectedNodes = new HashSet<>();
 
-        int expectedDepth = startingDepth - 1;
+        int expectedDepth = startingDepth + 1;
         PieceColor expectedColor = startingColor.getOppositeColor();
 
         MoveInterface move = new Move(9, 13, board);
         Board newBoard = new Board(board);
         newBoard.movePiece(move);
-        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
+        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, null));
 
         move = new Move(9, 14, board);
         newBoard = new Board(board);
         newBoard.movePiece(move);
-        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
+        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, null));
 
         move = new Move(10, 14, board);
         newBoard = new Board(board);
         newBoard.movePiece(move);
-        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
+        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, null));
 
         move = new Move(10, 15, board);
         newBoard = new Board(board);
         newBoard.movePiece(move);
-        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
+        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, null));
 
         move = new Move(11, 15, board);
         newBoard = new Board(board);
         newBoard.movePiece(move);
-        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
+        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, null));
 
         move = new Move(11, 16, board);
         newBoard = new Board(board);
         newBoard.movePiece(move);
-        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
+        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, null));
 
         move = new Move(12, 16, board);
         newBoard = new Board(board);
         newBoard.movePiece(move);
-        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, move));
+        expectedNodes.add(new AlphaBetaSearchNode(newBoard, expectedDepth, expectedColor, null));
 
         // create set of actual search nodes
         Set<AlphaBetaSearchNode> actualSearchNodes = new HashSet<>();
@@ -193,25 +131,4 @@ public class AlphaBetaSearchNodeTest {
         // check that expected equals actual
         assertEquals(expectedNodes, actualSearchNodes);
     }
-
-    @Test
-    public void testIsLeaf() {
-        Board board = new Board();
-        int startingDepth = 0;
-        PieceColor startingColor = PieceColor.BLACK;
-        AlphaBetaSearchNode searchNode = new AlphaBetaSearchNode(board, startingDepth,
-                startingColor);
-        assertTrue(searchNode.isLeaf());
-
-        startingDepth = 1;
-        searchNode = new AlphaBetaSearchNode(board, startingDepth, startingColor);
-        assertFalse(searchNode.isLeaf());
-
-        startingDepth = 4;
-        board = new Board(Arrays.asList(1, 2, 3, 4, 5, 6), Arrays.asList());
-        searchNode = new AlphaBetaSearchNode(board, startingDepth, startingColor);
-        assertTrue(searchNode.isLeaf());
-
-    }
-
 }

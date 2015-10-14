@@ -88,8 +88,9 @@ class AlphaBetaSearchNode {
                 this.children = childNodes;
             }
 
-            MoveGenerator moveGen = new MoveGenerator(this.board);
-            for (MoveInterface move : moveGen.getAllPossibleMoves(this.currentPlayersColor)) {
+            for (MoveInterface move : MoveGenerator.getAllPossibleMoves(this.board,
+                    this.currentPlayersColor)) {
+
                 Board childBoard = new Board(this.board);
                 childBoard.movePiece(move);
                 AlphaBetaSearchNode childNode = new AlphaBetaSearchNode(childBoard,
@@ -141,6 +142,7 @@ class AlphaBetaSearchNode {
 
     public void setMoveThatGotToThisState(MoveInterface moveThatGotToThisState) {
         this.moveThatGotToThisState = moveThatGotToThisState;
+
     }
 
     public void setValue(double value) {

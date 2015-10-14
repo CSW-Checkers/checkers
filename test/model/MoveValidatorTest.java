@@ -1,9 +1,16 @@
 package model;
 
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+
+import model.Board;
+import model.Move;
+import model.MoveValidator;
+import model.MultiJump;
+import model.SingleJump;
 
 import java.util.ArrayList;
 import java.util.Arrays;
