@@ -5,7 +5,11 @@ import model.PieceColor;
 import model.PieceInterface;
 import model.Square;
 
-public class PieceCountEvaluator implements BoardEvaluator {
+public class PawnCountEvaluator extends BoardEvaluatorDecorator {
+
+    public PawnCountEvaluator(BoardEvaluatorInterface boardEvaulator) {
+        super(boardEvaulator);
+    }
 
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {
@@ -19,7 +23,7 @@ public class PieceCountEvaluator implements BoardEvaluator {
                 value -= 1.0;
             }
         }
-        return value;
+        return this.boardEvaluator.evaluateBoard(theBoard, color) + value;
     }
 
 }
