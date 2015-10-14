@@ -1,8 +1,6 @@
 package controller;
 
 import java.util.ArrayList;
-import java.util.Scanner;
-import java.util.Set;
 
 import javafx.application.Application;
 import javafx.event.EventHandler;
@@ -10,17 +8,13 @@ import javafx.scene.Scene;
 import javafx.scene.input.MouseEvent;
 import javafx.stage.Stage;
 import model.Board;
-import model.MoveGenerator;
-import model.MoveInterface;
-import model.PieceColor;
 import view.CheckersPane;
 
-public class CheckersController extends Application implements HumanFinishedMove,
-        ComputerFinishedMove {
+public class CheckersController extends Application {
 
     /**
      * @author Will This handler continually drags the piece that the user has already clicked on.
-     *         The pieces center will be updated to be wherever the cursor's xy coords are.
+     *         The peice.s center will be updated to be wherever the cursor's xy coords are.
      */
     private class MouseDraggedHandler implements EventHandler<MouseEvent> {
         @Override
@@ -66,7 +60,7 @@ public class CheckersController extends Application implements HumanFinishedMove
                  * released the mouse on.
                  */
                 if (CheckersController.this.root.imageHasBeenSelected()) {// if the image is
-                    // selected, we might move
+                                                                          // selected, we might move
                     int row = CheckersController.this.root.getRowForY(y);
                     int col = CheckersController.this.root.getColForX(x);
                     /*
@@ -86,12 +80,10 @@ public class CheckersController extends Application implements HumanFinishedMove
     // all drawing on the canvas and repositioning of the pieces occurs through
     // this reference.
     CheckersPane root;
-    Board board;
 
-    @Override
     public void computerFinishedMove() {
         System.out.println("computer finished");
-        // this.root.setDisable(false);// enables root
+        // TODO Auto-generated method stub
 
     }
 
@@ -99,18 +91,13 @@ public class CheckersController extends Application implements HumanFinishedMove
      * When this is called, that means that the human player has finished a move and it is the
      * computer's turn to move
      */
-    @Override
     public void humanFinishedMove(ArrayList<String> moves) {
         System.out.println("human finished");
-        // this.root.setDisable(true);// disables root
 
         // let computer calculate move
         // execute the move method of the view to reflect this
         // have a handler in the view for the computer finished moving.
         // when the computer's move has finished
-        MoveGenerator mg = new MoveGenerator(this.board);
-        Set<MoveInterface> actualMoves = mg.getAllPossibleMoves(PieceColor.BLACK);
-
     }
 
     /*
@@ -124,8 +111,8 @@ public class CheckersController extends Application implements HumanFinishedMove
          */
         primaryStage.setTitle("checkers");
         // root = new CheckersPane();
-        this.board = new Board();
-        this.root = new CheckersPane(this.board);
+        Board board = new Board();
+        this.root = new CheckersPane(board);
         Scene checkersScene = new Scene(this.root);
         primaryStage.setScene(checkersScene);
         primaryStage.show();
@@ -141,19 +128,5 @@ public class CheckersController extends Application implements HumanFinishedMove
         /*
          * End of view initialization and setting of event handlers
          */
-        // human controls zerglings, computer controls stalkers
-        System.out.println("Who do you want to play as: stalkers(top) or zerglings(botoom)?(s/z)");
-        Scanner keyboard = new Scanner(System.in);
-        String response = keyboard.next();
-        if (response.equals("s")) {// computer goes first
-            this.root.setTypeOfPieceHumanPlaysWithAsBlack();
-            this.humanFinishedMove(null);
-        } else if (response.equals("z")) {// human goes first
-            this.root.setTypeOfPieceHumanPlaysWithAsWhite();
-            this.computerFinishedMove();
-        } else {
-            System.out.println("not a valid option, bye bye.");
-
-        }
     }
 }
