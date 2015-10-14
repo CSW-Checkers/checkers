@@ -1,4 +1,4 @@
-package model.ai;
+package model.ai.search;
 
 import static org.junit.Assert.assertEquals;
 
@@ -12,6 +12,9 @@ import model.MoveInterface;
 import model.MultiJump;
 import model.PieceColor;
 import model.SingleJump;
+import model.ai.evaluation.PawnCountEvaluator;
+import model.ai.evaluation.PlainBoardEvaluator;
+import model.ai.search.AlphaBetaSearch;
 
 public class AlphaBetaSearchTest {
 
@@ -54,7 +57,7 @@ public class AlphaBetaSearchTest {
         board.getPiece(14).kingMe();
 
         AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK,
-                new PawnCountEvaluator(new PlainBoardEvaluator()), 8);
+                new PawnCountEvaluator(new PlainBoardEvaluator(), 1), 8);
 
         MoveInterface expectedBestMove = new MultiJump(10, 28, Arrays.asList(19), board);
         MoveInterface actualBestMove = searcher.alphaBetaSearch();

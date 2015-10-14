@@ -1,4 +1,4 @@
-package model.ai;
+package model.ai.evaluation;
 
 import model.Board;
 import model.PieceColor;

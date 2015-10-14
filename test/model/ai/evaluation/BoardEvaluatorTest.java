@@ -1,4 +1,4 @@
-package model.ai;
+package model.ai.evaluation;
 
 import static org.junit.Assert.assertEquals;
 
@@ -8,6 +8,10 @@ import java.util.Arrays;
 
 import model.Board;
 import model.PieceColor;
+import model.ai.evaluation.BoardEvaluatorInterface;
+import model.ai.evaluation.KingCountEvaluator;
+import model.ai.evaluation.PawnCountEvaluator;
+import model.ai.evaluation.PlainBoardEvaluator;
 
 public class BoardEvaluatorTest {
 

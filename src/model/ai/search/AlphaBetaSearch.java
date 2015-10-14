@@ -1,8 +1,9 @@
-package model.ai;
+package model.ai.search;
 
 import model.Board;
 import model.MoveInterface;
 import model.PieceColor;
+import model.ai.evaluation.BoardEvaluatorInterface;
 
 public class AlphaBetaSearch {
     private int depthLimit;

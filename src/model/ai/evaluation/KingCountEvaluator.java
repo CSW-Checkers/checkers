@@ -1,4 +1,4 @@
-package model.ai;
+package model.ai.evaluation;
 
 import model.Board;
 import model.PieceColor;
@@ -9,6 +9,10 @@ public class KingCountEvaluator extends BoardEvaluatorDecorator {
 
     public KingCountEvaluator(BoardEvaluatorInterface boardEvaulator) {
         super(boardEvaulator);
+    }
+
+    public KingCountEvaluator(BoardEvaluatorInterface boardEvaulator, double weight) {
+        super(boardEvaulator, weight);
     }
 
     @Override
@@ -23,7 +27,7 @@ public class KingCountEvaluator extends BoardEvaluatorDecorator {
                 value -= 1.0;
             }
         }
-        return this.boardEvaluator.evaluateBoard(theBoard, color) + value;
+        return this.boardEvaluator.evaluateBoard(theBoard, color) + value * this.weight;
     }
 
 }
