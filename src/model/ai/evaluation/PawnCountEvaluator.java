@@ -1,11 +1,19 @@
-package model.ai;
+package model.ai.evaluation;
 
 import model.Board;
 import model.PieceColor;
 import model.PieceInterface;
 import model.Square;
 
-public class PieceCountEvaluator implements BoardEvaluator {
+public class PawnCountEvaluator extends BoardEvaluatorDecorator {
+
+    public PawnCountEvaluator(BoardEvaluatorInterface boardEvaulator) {
+        super(boardEvaulator);
+    }
+
+    public PawnCountEvaluator(BoardEvaluatorInterface boardEvaulator, double weight) {
+        super(boardEvaulator, weight);
+    }
 
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {
@@ -19,7 +27,7 @@ public class PieceCountEvaluator implements BoardEvaluator {
                 value -= 1.0;
             }
         }
-        return value;
+        return this.boardEvaluator.evaluateBoard(theBoard, color) + value * this.weight;
     }
 
 }

@@ -1,4 +1,4 @@
-package model.ai;
+package model.ai.search;
 
 import java.util.ArrayList;
 import java.util.List;

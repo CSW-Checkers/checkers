@@ -1,17 +1,18 @@
-package model.ai;
+package model.ai.search;
 
 import model.Board;
 import model.MoveInterface;
 import model.PieceColor;
+import model.ai.evaluation.BoardEvaluatorInterface;
 
 public class AlphaBetaSearch {
     private int depthLimit;
-    private BoardEvaluator evaluator;
+    private BoardEvaluatorInterface evaluator;
     private PieceColor playerMakingMove;
     private AlphaBetaSearchNode root;
 
     public AlphaBetaSearch(Board startingState, PieceColor playerMakingMove,
-            BoardEvaluator evaluator, int depthLimit) {
+            BoardEvaluatorInterface evaluator, int depthLimit) {
         this.root = new AlphaBetaSearchNode(startingState, 0, playerMakingMove);
         this.evaluator = evaluator;
         this.playerMakingMove = playerMakingMove;

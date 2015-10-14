@@ -42,6 +42,38 @@ public class Square {
         return adjacentPositions;
     }
 
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        Square other = (Square) obj;
+        if (this.adjacentPositions == null) {
+            if (other.adjacentPositions != null) {
+                return false;
+            }
+        } else if (!this.adjacentPositions.equals(other.adjacentPositions)) {
+            return false;
+        }
+        if (this.occupyingPiece == null) {
+            if (other.occupyingPiece != null) {
+                return false;
+            }
+        } else if (!this.occupyingPiece.equals(other.occupyingPiece)) {
+            return false;
+        }
+        if (this.position != other.position) {
+            return false;
+        }
+        return true;
+    }
+
     public List<Integer> getAdjacentPositions() {
         return this.adjacentPositions;
     }
@@ -138,6 +170,18 @@ public class Square {
         return (int) Math.ceil(this.position / 4.0);
     }
 
+    @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result
+                + ((this.adjacentPositions == null) ? 0 : this.adjacentPositions.hashCode());
+        result = prime * result
+                + ((this.occupyingPiece == null) ? 0 : this.occupyingPiece.hashCode());
+        result = prime * result + this.position;
+        return result;
+    }
+
     private boolean isCenterSquare() {
         List<Integer> nonCenterSquares = Arrays.asList(1, 2, 3, 4, 5, 12, 13, 20, 21, 28, 29, 30,
                 31, 32);
@@ -187,7 +231,7 @@ public class Square {
         return !this.occupyingPiece.isNull();
     }
 
-    private boolean isOnBlackEdgeOfBoard() {
+    public boolean isOnBlackEdgeOfBoard() {
         int[] topEdgePositions = { 1, 2, 3, 4 };
         for (int edgePosition : topEdgePositions) {
             if (this.position == edgePosition) {
@@ -207,7 +251,7 @@ public class Square {
         return false;
     }
 
-    private boolean isOnWhiteEdgeOfBoard() {
+    public boolean isOnWhiteEdgeOfBoard() {
         int[] bottomEdgePositions = { 29, 30, 31, 32 };
         for (int edgePosition : bottomEdgePositions) {
             if (this.position == edgePosition) {
@@ -240,49 +284,8 @@ public class Square {
     }
 
     @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((adjacentPositions == null) ? 0 : adjacentPositions.hashCode());
-        result = prime * result + ((occupyingPiece == null) ? 0 : occupyingPiece.hashCode());
-        result = prime * result + position;
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        Square other = (Square) obj;
-        if (adjacentPositions == null) {
-            if (other.adjacentPositions != null) {
-                return false;
-            }
-        } else if (!adjacentPositions.equals(other.adjacentPositions)) {
-            return false;
-        }
-        if (occupyingPiece == null) {
-            if (other.occupyingPiece != null) {
-                return false;
-            }
-        } else if (!occupyingPiece.equals(other.occupyingPiece)) {
-            return false;
-        }
-        if (position != other.position) {
-            return false;
-        }
-        return true;
-    }
-
-    @Override
     public String toString() {
-        return "Square [occupyingPiece=" + occupyingPiece + ", position=" + position + "]";
+        return "Square [occupyingPiece=" + this.occupyingPiece + ", position=" + this.position
+                + "]";
     }
 }

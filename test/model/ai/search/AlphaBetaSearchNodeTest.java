@@ -1,4 +1,4 @@
-package model.ai;
+package model.ai.search;
 
 import static org.junit.Assert.assertEquals;
 
@@ -15,6 +15,7 @@ import model.MoveInterface;
 import model.MultiJump;
 import model.PieceColor;
 import model.SingleJump;
+import model.ai.search.AlphaBetaSearchNode;
 
 public class AlphaBetaSearchNodeTest {
 
