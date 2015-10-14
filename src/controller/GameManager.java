@@ -1,5 +1,7 @@
 package controller;
 
+import java.util.Scanner;
+
 import model.Board;
 import model.ComputerPlayer;
 import model.HumanPlayer;
@@ -15,9 +17,32 @@ public class GameManager {
         gameManager.playGame();
     }
 
-    private final Player blackPlayer = new HumanPlayer(PieceColor.BLACK);
+    private Player blackPlayer;
     private final Board gameBoard = new Board();
-    private final Player whitePlayer = new ComputerPlayer(PieceColor.WHITE);
+    private Player whitePlayer;
+
+    private void choosePlayerTypes() {
+        @SuppressWarnings("resource")
+        final Scanner reader = new Scanner(System.in);
+        System.out.println("Select 1 for Computer. Select 2 for Human.");
+        for (PieceColor color : PieceColor.values()) {
+            System.out.print("Select player type for " + color + ": ");
+            int selection = reader.nextInt();
+            if (color.equals(PieceColor.BLACK)) {
+                if (selection == 1) {
+                    this.blackPlayer = new ComputerPlayer(color);
+                } else if (selection == 2) {
+                    this.blackPlayer = new HumanPlayer(color);
+                }
+            } else {
+                if (selection == 1) {
+                    this.whitePlayer = new ComputerPlayer(color);
+                } else if (selection == 2) {
+                    this.whitePlayer = new HumanPlayer(color);
+                }
+            }
+        }
+    }
 
     private void determineWinner() {
         final boolean whiteHasNoPieces = this.gameBoard.getNumberOfWhitePieces() == 0;
@@ -50,6 +75,8 @@ public class GameManager {
     }
 
     private void playGame() {
+        this.choosePlayerTypes();
+
         PieceColor currentColor = PieceColor.BLACK;
         Player currentPlayer = this.blackPlayer;
 

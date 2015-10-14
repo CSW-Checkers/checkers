@@ -107,6 +107,12 @@ public final class MoveGenerator {
         if (possibleMoves.isEmpty()) {
             possibleMoves.addAll(calculateNonJumpMoves(board, playersSquares));
         }
+        System.out.println("Possible moves for " + playersColor);
+        for (MoveInterface possibleMove : possibleMoves) {
+            System.out.println(possibleMove);
+        }
+        System.out.println("======");
+
         return possibleMoves;
     }
 

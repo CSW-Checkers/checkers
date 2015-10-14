@@ -27,11 +27,11 @@ public class HumanPlayer implements Player {
                 currentBoard.movePiece(moveToMake);
                 this.printMove(moveToMake);
             } else {
-                System.err.println("Move not found in list of possible legal moves.");
-                throw new Exception();
+                throw new Exception("Move not found in list of possible legal moves.");
             }
         } catch (final Exception e) {
-            System.err.println("Invalid move entered. Please try again.");
+            System.out.println(e);
+            System.out.println("Invalid move entered. Please try again.");
             this.makeMove(currentBoard);
         }
     }
