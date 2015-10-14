@@ -7,6 +7,7 @@ import org.junit.Test;
 import java.util.Arrays;
 
 import model.Board;
+import model.Move;
 import model.MoveInterface;
 import model.MultiJump;
 import model.PieceColor;
@@ -88,7 +89,17 @@ public class AlphaBetaSearchTest {
         MoveInterface actualBestMove = searcher.alphaBetaSearch();
 
         assertEquals(expectedBestMove, actualBestMove);
-
     }
 
+    @Test
+    public void testGetMove_baitTheTripleJump() {
+        Board board = new Board(Arrays.asList(1, 6, 9), Arrays.asList(11, 17, 19, 27));
+        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK,
+                new PieceCountEvaluator(), 3);
+
+        MoveInterface expectedBestMove = new Move(9, 14, board);
+        MoveInterface actualBestMove = searcher.alphaBetaSearch();
+
+        assertEquals(expectedBestMove, actualBestMove);
+    }
 }
