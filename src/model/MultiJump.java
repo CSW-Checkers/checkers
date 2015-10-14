@@ -27,7 +27,8 @@ public class MultiJump implements Jump {
             int endingPosition, List<Integer> intermediatePositions, Board board) {
         if (intermediatePositions.size() < 1) {
             throw new IllegalArgumentException(
-                    "Multijump must have at least one intermediate position");
+                    "Multijump must have at least one intermediate position. It has "
+                            + intermediatePositions.size());
         }
         Board tempBoard = new Board(board);
         ArrayList<SingleJump> subJumps = new ArrayList<SingleJump>();
@@ -56,6 +57,55 @@ public class MultiJump implements Jump {
         }
 
         return jumpedPositions;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+        if (obj == null) {
+            return false;
+        }
+        if (this.getClass() != obj.getClass()) {
+            return false;
+        }
+        MultiJump other = (MultiJump) obj;
+        if (this.board == null) {
+            if (other.board != null) {
+                return false;
+            }
+        } else if (!this.board.equals(other.board)) {
+            return false;
+        }
+        if (this.endingPosition != other.endingPosition) {
+            return false;
+        }
+        if (this.jumpedPositions == null) {
+            if (other.jumpedPositions != null) {
+                return false;
+            }
+        } else if (!this.jumpedPositions.equals(other.jumpedPositions)) {
+            return false;
+        }
+        if (this.piece == null) {
+            if (other.piece != null) {
+                return false;
+            }
+        } else if (!this.piece.equals(other.piece)) {
+            return false;
+        }
+        if (this.startingPosition != other.startingPosition) {
+            return false;
+        }
+        if (this.subJumps == null) {
+            if (other.subJumps != null) {
+                return false;
+            }
+        } else if (!this.subJumps.equals(other.subJumps)) {
+            return false;
+        }
+        return true;
     }
 
     @Override
@@ -108,6 +158,20 @@ public class MultiJump implements Jump {
     }
 
     @Override
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((this.board == null) ? 0 : this.board.hashCode());
+        result = prime * result + this.endingPosition;
+        result = prime * result
+                + ((this.jumpedPositions == null) ? 0 : this.jumpedPositions.hashCode());
+        result = prime * result + ((this.piece == null) ? 0 : this.piece.hashCode());
+        result = prime * result + this.startingPosition;
+        result = prime * result + ((this.subJumps == null) ? 0 : this.subJumps.hashCode());
+        return result;
+    }
+
+    @Override
     public String toString() {
         String moveNotation = "";
 
@@ -122,68 +186,6 @@ public class MultiJump implements Jump {
         moveNotation += lastJump.getEndingPosition();
 
         return moveNotation;
-    }
-
-    @Override
-    public int hashCode() {
-        final int prime = 31;
-        int result = 1;
-        result = prime * result + ((board == null) ? 0 : board.hashCode());
-        result = prime * result + endingPosition;
-        result = prime * result + ((jumpedPositions == null) ? 0 : jumpedPositions.hashCode());
-        result = prime * result + ((piece == null) ? 0 : piece.hashCode());
-        result = prime * result + startingPosition;
-        result = prime * result + ((subJumps == null) ? 0 : subJumps.hashCode());
-        return result;
-    }
-
-    @Override
-    public boolean equals(Object obj) {
-        if (this == obj) {
-            return true;
-        }
-        if (obj == null) {
-            return false;
-        }
-        if (getClass() != obj.getClass()) {
-            return false;
-        }
-        MultiJump other = (MultiJump) obj;
-        if (board == null) {
-            if (other.board != null) {
-                return false;
-            }
-        } else if (!board.equals(other.board)) {
-            return false;
-        }
-        if (endingPosition != other.endingPosition) {
-            return false;
-        }
-        if (jumpedPositions == null) {
-            if (other.jumpedPositions != null) {
-                return false;
-            }
-        } else if (!jumpedPositions.equals(other.jumpedPositions)) {
-            return false;
-        }
-        if (piece == null) {
-            if (other.piece != null) {
-                return false;
-            }
-        } else if (!piece.equals(other.piece)) {
-            return false;
-        }
-        if (startingPosition != other.startingPosition) {
-            return false;
-        }
-        if (subJumps == null) {
-            if (other.subJumps != null) {
-                return false;
-            }
-        } else if (!subJumps.equals(other.subJumps)) {
-            return false;
-        }
-        return true;
     }
 
 }
