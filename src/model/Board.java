@@ -48,6 +48,25 @@ public class Board {
         }
     }
 
+    public PieceColor determineWinner() {
+        final boolean whiteHasNoPieces = this.getNumberOfWhitePieces() == 0;
+        final boolean whiteHasNoMoves = MoveGenerator.getAllPossibleMoves(this, PieceColor.WHITE)
+                .isEmpty();
+        final boolean blackHasNoPieces = this.getNumberOfBlackPieces() == 0;
+        final boolean blackHasNoMoves = MoveGenerator.getAllPossibleMoves(this, PieceColor.BLACK)
+                .isEmpty();
+
+        final boolean whiteWins = blackHasNoPieces || blackHasNoMoves;
+        final boolean blackWins = whiteHasNoPieces || whiteHasNoMoves;
+
+        if (whiteWins) {
+            return PieceColor.WHITE;
+        } else if (blackWins) {
+            return PieceColor.BLACK;
+        }
+        return null;
+    }
+
     @Override
     public boolean equals(Object obj) {
         if (this == obj) {

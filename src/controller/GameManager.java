@@ -5,7 +5,6 @@ import java.util.Scanner;
 import model.Board;
 import model.ComputerPlayer;
 import model.HumanPlayer;
-import model.MoveGenerator;
 import model.PieceColor;
 import model.Player;
 import view.cli.CommandLineHelper;
@@ -45,23 +44,16 @@ public class GameManager {
     }
 
     private void determineWinner() {
-        final boolean whiteHasNoPieces = this.gameBoard.getNumberOfWhitePieces() == 0;
-        final boolean whiteHasNoMoves = MoveGenerator
-                .getAllPossibleMoves(this.gameBoard, PieceColor.WHITE).isEmpty();
-        final boolean blackHasNoPieces = this.gameBoard.getNumberOfBlackPieces() == 0;
-        final boolean blackHasNoMoves = MoveGenerator
-                .getAllPossibleMoves(this.gameBoard, PieceColor.BLACK).isEmpty();
+        final PieceColor winner = this.gameBoard.determineWinner();
 
-        final boolean whiteWins = blackHasNoPieces || blackHasNoMoves;
-        final boolean blackWins = whiteHasNoPieces || whiteHasNoMoves;
-
-        if (whiteWins) {
-            System.out.println("White wins");
-        } else if (blackWins) {
-            System.out.println("Black wins");
-        } else {
+        if (winner == null) {
             System.err.println("Invalid ending state!");
+        } else if (winner == PieceColor.WHITE) {
+            System.out.println("White wins");
+        } else {
+            System.out.println("Black wins");
         }
+
     }
 
     private Player getOtherPlayer(Player currentPlayer) {
