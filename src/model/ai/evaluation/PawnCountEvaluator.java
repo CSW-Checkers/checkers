@@ -5,15 +5,7 @@ import model.PieceColor;
 import model.PieceInterface;
 import model.Square;
 
-public class PawnCountEvaluator extends BoardEvaluatorDecorator {
-
-    public PawnCountEvaluator(BoardEvaluatorInterface boardEvaulator) {
-        super(boardEvaulator);
-    }
-
-    public PawnCountEvaluator(BoardEvaluatorInterface boardEvaulator, double weight) {
-        super(boardEvaulator, weight);
-    }
+public class PawnCountEvaluator extends BoardEvaluator {
 
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {
@@ -27,7 +19,7 @@ public class PawnCountEvaluator extends BoardEvaluatorDecorator {
                 value -= 1.0;
             }
         }
-        return this.boardEvaluator.evaluateBoard(theBoard, color) + value * this.weight;
+        return value * this.weight;
     }
 
 }

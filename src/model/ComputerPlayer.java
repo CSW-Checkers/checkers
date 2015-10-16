@@ -1,9 +1,9 @@
 package model;
 
-import model.ai.evaluation.BoardEvaluatorInterface;
+import model.ai.evaluation.BoardEvaluatorAggregator;
+import model.ai.evaluation.BoardEvaluatorSummator;
 import model.ai.evaluation.KingCountEvaluator;
 import model.ai.evaluation.PawnCountEvaluator;
-import model.ai.evaluation.PlainBoardEvaluator;
 import model.ai.search.AlphaBetaSearch;
 
 public class ComputerPlayer implements Player {
@@ -20,11 +20,13 @@ public class ComputerPlayer implements Player {
 
     @Override
     public void makeMove(Board currentBoard) {
-        final BoardEvaluatorInterface combinedEvaluator = new PawnCountEvaluator(
-                new KingCountEvaluator(new PlainBoardEvaluator()));
+
+        BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
+        boardAgg.addBoardEvaluator(new PawnCountEvaluator());
+        boardAgg.addBoardEvaluator(new KingCountEvaluator());
 
         final MoveInterface moveToMake = new AlphaBetaSearch(currentBoard, this.getColor(),
-                combinedEvaluator, 8).alphaBetaSearch();
+                boardAgg, 8).alphaBetaSearch();
 
         currentBoard.movePiece(moveToMake);
         this.printMove(moveToMake);

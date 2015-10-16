@@ -12,17 +12,22 @@ import model.MoveInterface;
 import model.MultiJump;
 import model.PieceColor;
 import model.SingleJump;
+import model.ai.evaluation.BoardEvaluatorAggregator;
+import model.ai.evaluation.BoardEvaluatorSummator;
+import model.ai.evaluation.KingCountEvaluator;
 import model.ai.evaluation.PawnCountEvaluator;
-import model.ai.evaluation.PlainBoardEvaluator;
-import model.ai.search.AlphaBetaSearch;
 
 public class AlphaBetaSearchTest {
 
     @Test
     public void testGetBestMove_PieceCountEvaluator_LightComplexity() {
         Board board = new Board(Arrays.asList(1, 7, 10, 11), Arrays.asList(14, 16, 22, 25));
-        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK,
-                new PawnCountEvaluator(new PlainBoardEvaluator()), 8);
+
+        BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
+        boardAgg.addBoardEvaluator(new PawnCountEvaluator());
+        boardAgg.addBoardEvaluator(new KingCountEvaluator());
+
+        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK, boardAgg, 8);
 
         MoveInterface expectedBestMove = new MultiJump(10, 26, Arrays.asList(17), board);
         MoveInterface actualBestMove = searcher.alphaBetaSearch();
@@ -41,8 +46,11 @@ public class AlphaBetaSearchTest {
         board.getPiece(26).kingMe();
         board.getPiece(27).kingMe();
         board.getPiece(28).kingMe();
-        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK,
-                new PawnCountEvaluator(new PlainBoardEvaluator()), 8);
+
+        BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
+        boardAgg.addBoardEvaluator(new PawnCountEvaluator());
+
+        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK, boardAgg, 8);
 
         searcher.alphaBetaSearch();
     }
@@ -56,8 +64,10 @@ public class AlphaBetaSearchTest {
         board.getPiece(32).kingMe();
         board.getPiece(14).kingMe();
 
-        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK,
-                new PawnCountEvaluator(new PlainBoardEvaluator(), 1), 8);
+        BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
+        boardAgg.addBoardEvaluator(new PawnCountEvaluator());
+
+        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK, boardAgg, 8);
 
         MoveInterface expectedBestMove = new MultiJump(10, 28, Arrays.asList(19), board);
         MoveInterface actualBestMove = searcher.alphaBetaSearch();
@@ -72,8 +82,10 @@ public class AlphaBetaSearchTest {
         board.getPiece(7).kingMe();
         board.getPiece(23).kingMe();
 
-        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK,
-                new PawnCountEvaluator(new PlainBoardEvaluator()), 8);
+        BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
+        boardAgg.addBoardEvaluator(new PawnCountEvaluator());
+
+        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK, boardAgg, 8);
 
         MoveInterface expectedBestMove = new MultiJump(23, 21, Arrays.asList(30), board);
         MoveInterface actualBestMove = searcher.alphaBetaSearch();
@@ -85,8 +97,11 @@ public class AlphaBetaSearchTest {
     public void testGetBestMove_PieceCountEvaluator_NoComplexity() {
 
         Board board = new Board(Arrays.asList(1, 2, 3, 4, 12), Arrays.asList(29, 30, 31, 32, 16));
-        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK,
-                new PawnCountEvaluator(new PlainBoardEvaluator()), 1);
+
+        BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
+        boardAgg.addBoardEvaluator(new PawnCountEvaluator());
+
+        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK, boardAgg, 1);
 
         MoveInterface expectedBestMove = new SingleJump(12, 19, board);
         MoveInterface actualBestMove = searcher.alphaBetaSearch();
@@ -97,8 +112,11 @@ public class AlphaBetaSearchTest {
     @Test
     public void testGetMove_baitTheTripleJump() {
         Board board = new Board(Arrays.asList(1, 6, 9), Arrays.asList(11, 17, 19, 27));
-        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK,
-                new PawnCountEvaluator(new PlainBoardEvaluator()), 3);
+
+        BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
+        boardAgg.addBoardEvaluator(new PawnCountEvaluator());
+
+        AlphaBetaSearch searcher = new AlphaBetaSearch(board, PieceColor.BLACK, boardAgg, 3);
 
         MoveInterface expectedBestMove = new Move(9, 14, board);
         MoveInterface actualBestMove = searcher.alphaBetaSearch();
