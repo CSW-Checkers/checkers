@@ -6,6 +6,13 @@ import model.PieceInterface;
 import model.Square;
 
 public class BackRowCountEvaluator extends BoardEvaluator {
+    public BackRowCountEvaluator() {
+        super();
+    }
+
+    public BackRowCountEvaluator(double weight) {
+        super(weight);
+    }
 
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {

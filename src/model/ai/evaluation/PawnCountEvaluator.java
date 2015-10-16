@@ -7,6 +7,14 @@ import model.Square;
 
 public class PawnCountEvaluator extends BoardEvaluator {
 
+    public PawnCountEvaluator() {
+        super();
+    }
+
+    public PawnCountEvaluator(double weight) {
+        super(weight);
+    }
+
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {
         double value = 0.0;

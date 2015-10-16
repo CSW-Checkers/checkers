@@ -109,6 +109,49 @@ public class BoardEvaluatorTest {
     }
 
     @Test
+    public void testGameOverAndPawnCountEvaluator() {
+        Board board1 = new Board(Arrays.asList(1, 2, 3, 4, 5, 6, 7, 8, 9, 10), Arrays.asList(32));
+
+        BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
+        BoardEvaluator gameOverEvaluator = new GameOverEvaluator(100.0);
+        BoardEvaluator pawnCounter = new PawnCountEvaluator();
+        boardAgg.addBoardEvaluator(gameOverEvaluator);
+        boardAgg.addBoardEvaluator(pawnCounter);
+
+        double epsilon = 0.0;
+
+        double expectedValue1 = 9.0;
+        double actualValue1 = boardAgg.evaluateBoard(board1, PieceColor.BLACK);
+        assertEquals(expectedValue1, actualValue1, epsilon);
+
+        Board board2 = new Board(Arrays.asList(), Arrays.asList(1));
+
+        double actualValue2 = boardAgg.evaluateBoard(board2, PieceColor.WHITE);
+        double expectedValue2 = 101.0;
+        assertEquals(expectedValue2, actualValue2, epsilon);
+    }
+
+    @Test
+    public void testGameOverEvaluator() {
+        Board board = new Board(Arrays.asList(1), Arrays.asList());
+
+        BoardEvaluator gameOverEvaluator = new GameOverEvaluator();
+
+        double epsilon = 0.0;
+
+        double expectedValue = 1.0;
+        double actualValue = gameOverEvaluator.evaluateBoard(board, PieceColor.BLACK);
+        assertEquals(expectedValue, actualValue, epsilon);
+
+        board = new Board(Arrays.asList(), Arrays.asList(15, 16, 17));
+        gameOverEvaluator.setWeight(100);
+        actualValue = gameOverEvaluator.evaluateBoard(board, PieceColor.WHITE);
+        expectedValue = 100;
+        assertEquals(expectedValue, actualValue, epsilon);
+
+    }
+
+    @Test
     public void testPawnKingAndBackRowCountEvaluator() {
         Board board = new Board();
         board.getPiece(1).kingMe();

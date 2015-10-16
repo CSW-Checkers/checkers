@@ -7,6 +7,14 @@ import model.Square;
 
 public class KingCountEvaluator extends BoardEvaluator {
 
+    public KingCountEvaluator() {
+        super();
+    }
+
+    public KingCountEvaluator(double weight) {
+        super(weight);
+    }
+
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {
         double value = 0.0;
