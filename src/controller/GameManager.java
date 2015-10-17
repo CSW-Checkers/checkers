@@ -43,17 +43,12 @@ public class GameManager {
         }
     }
 
-    private void determineWinner() {
-        final PieceColor winner = this.gameBoard.determineWinner();
-
-        if (winner == null) {
-            System.err.println("Invalid ending state!");
-        } else if (winner == PieceColor.WHITE) {
+    private void displayWinner(PieceColor winner) {
+        if (winner == PieceColor.WHITE) {
             System.out.println("White wins");
         } else {
             System.out.println("Black wins");
         }
-
     }
 
     private Player getOtherPlayer(Player currentPlayer) {
@@ -86,6 +81,6 @@ public class GameManager {
                 e.printStackTrace();
             }
         }
-        this.determineWinner();
+        this.displayWinner(currentColor.getOppositeColor());
     }
 }

@@ -15,19 +15,14 @@ public class GameOverEvaluator extends BoardEvaluator {
 
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {
-        double value = 0.0;
 
-        PieceColor winner = theBoard.determineWinner();
-
-        if (winner == null) {
-            return value;
-        }
-
-        if (winner == color) {
+        if (theBoard.isEndState(color)) {
+            return -1.0 * this.weight;
+        } else if (theBoard.isEndState(color.getOppositeColor())) {
             return 1.0 * this.weight;
+        } else {
+            return 0.0;
         }
-
-        return -1.0 * this.weight;
     }
 
 }
