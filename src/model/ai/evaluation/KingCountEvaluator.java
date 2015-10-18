@@ -5,14 +5,14 @@ import model.PieceColor;
 import model.PieceInterface;
 import model.Square;
 
-public class KingCountEvaluator extends BoardEvaluatorDecorator {
+public class KingCountEvaluator extends BoardEvaluator {
 
-    public KingCountEvaluator(BoardEvaluatorInterface boardEvaulator) {
-        super(boardEvaulator);
+    public KingCountEvaluator() {
+        super();
     }
 
-    public KingCountEvaluator(BoardEvaluatorInterface boardEvaulator, double weight) {
-        super(boardEvaulator, weight);
+    public KingCountEvaluator(double weight) {
+        super(weight);
     }
 
     @Override
@@ -27,7 +27,7 @@ public class KingCountEvaluator extends BoardEvaluatorDecorator {
                 value -= 1.0;
             }
         }
-        return this.boardEvaluator.evaluateBoard(theBoard, color) + value * this.weight;
+        return value * this.weight;
     }
 
 }

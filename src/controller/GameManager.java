@@ -5,7 +5,6 @@ import java.util.Scanner;
 import model.Board;
 import model.ComputerPlayer;
 import model.HumanPlayer;
-import model.MoveGenerator;
 import model.PieceColor;
 import model.Player;
 import view.cli.CommandLineHelper;
@@ -44,23 +43,11 @@ public class GameManager {
         }
     }
 
-    private void determineWinner() {
-        final boolean whiteHasNoPieces = this.gameBoard.getNumberOfWhitePieces() == 0;
-        final boolean whiteHasNoMoves = MoveGenerator
-                .getAllPossibleMoves(this.gameBoard, PieceColor.WHITE).isEmpty();
-        final boolean blackHasNoPieces = this.gameBoard.getNumberOfBlackPieces() == 0;
-        final boolean blackHasNoMoves = MoveGenerator
-                .getAllPossibleMoves(this.gameBoard, PieceColor.BLACK).isEmpty();
-
-        final boolean whiteWins = blackHasNoPieces || blackHasNoMoves;
-        final boolean blackWins = whiteHasNoPieces || whiteHasNoMoves;
-
-        if (whiteWins) {
+    private void displayWinner(PieceColor winner) {
+        if (winner == PieceColor.WHITE) {
             System.out.println("White wins");
-        } else if (blackWins) {
-            System.out.println("Black wins");
         } else {
-            System.err.println("Invalid ending state!");
+            System.out.println("Black wins");
         }
     }
 
@@ -94,6 +81,6 @@ public class GameManager {
                 e.printStackTrace();
             }
         }
-        this.determineWinner();
+        this.displayWinner(currentColor.getOppositeColor());
     }
 }

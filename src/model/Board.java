@@ -190,8 +190,13 @@ public class Board {
     }
 
     public boolean isEndState(PieceColor color) {
-        final boolean outOfPieces = (this.numberOfBlackPieces == 0)
-                || (this.numberOfWhitePieces == 0);
+
+        boolean outOfPieces = false;
+        if (color == PieceColor.BLACK) {
+            outOfPieces = this.numberOfBlackPieces == 0;
+        } else {
+            outOfPieces = this.numberOfWhitePieces == 0;
+        }
 
         if (outOfPieces) {
             return true;
