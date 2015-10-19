@@ -1,7 +1,9 @@
 package model;
 
-import model.ai.AlphaBetaSearch;
-import model.ai.PieceCountEvaluator;
+import model.ai.evaluation.KingCountEvaluator;
+import model.ai.evaluation.PawnCountEvaluator;
+import model.ai.evaluation.PlainBoardEvaluator;
+import model.ai.search.AlphaBetaSearch;
 
 public class ComputerPlayer implements Player {
     private final PieceColor color;
@@ -18,7 +20,8 @@ public class ComputerPlayer implements Player {
     @Override
     public void makeMove(Board currentBoard) {
         final MoveInterface moveToMake = new AlphaBetaSearch(currentBoard, this.getColor(),
-                new PieceCountEvaluator(), 8).alphaBetaSearch();
+                new KingCountEvaluator(new PawnCountEvaluator(new PlainBoardEvaluator())), 8)
+                .alphaBetaSearch();
         currentBoard.movePiece(moveToMake);
         this.printMove(moveToMake);
     }
