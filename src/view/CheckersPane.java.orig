@@ -38,8 +38,11 @@ public class CheckersPane extends Pane {
     double squareWidth = this.canvas.getWidth() / this.numberOfSquaresHorizontally;
     double squareHeight = this.canvas.getHeight() / this.numberOfSquaresHorizontally;
 
+<<<<<<< HEAD
     String typeOfPieceHumanPlaysWith;
 
+=======
+>>>>>>> viewChanges
     String zerglingString = "zergling";
     String stalkerString = "stalker";
 
@@ -73,7 +76,11 @@ public class CheckersPane extends Pane {
 
     /**
      * Note: zerglings are white, stalkers are black
+<<<<<<< HEAD
      *
+=======
+     * 
+>>>>>>> viewChanges
      * @param board
      */
     public CheckersPane(Board board) {
@@ -93,6 +100,7 @@ public class CheckersPane extends Pane {
                 int row = square.getRowNumber() - 1;
                 int col = square.getColumnNumber() - 1;
                 String position = row + "," + col;
+<<<<<<< HEAD
 
                 ImageView iv;
                 if (piece.isWhite()) {
@@ -115,6 +123,30 @@ public class CheckersPane extends Pane {
         this.listenersForComputerMove.add(cont);
     }
 
+=======
+
+                ImageView iv;
+                if (piece.isWhite()) {
+                    iv = new ImageView(zerlingImage);
+                    this.typeOfpieceAtPosition.put(position, this.zerglingString);
+                } else {
+                    iv = new ImageView(stalkerImage);
+                    this.typeOfpieceAtPosition.put(position, this.stalkerString);
+                }
+                this.positionsOfImages.put(position, iv);
+                iv.setFitWidth(this.squareWidth);
+                iv.setFitHeight(this.squareHeight);
+                this.getChildren().add(iv);
+            }
+            this.positionPieces();
+        }
+    }
+
+    public void addComputerFinishedMoveListener(CheckersController cont) {
+        this.listenersForComputerMove.add(cont);
+    }
+
+>>>>>>> viewChanges
     public void addHumanFinishedMoveListener(CheckersController cont) {
         this.listenersForHumanMove.add(cont);
     }
@@ -299,7 +331,11 @@ public class CheckersPane extends Pane {
     }
 
     /**
+<<<<<<< HEAD
      *
+=======
+     * 
+>>>>>>> viewChanges
      * @param positions
      */
     public void movePieceToPositions(ArrayList<String> positions) {
@@ -332,8 +368,11 @@ public class CheckersPane extends Pane {
         timeline.getKeyFrames().add(kf_x);
         timeline.getKeyFrames().add(kf_y);
         if (positions.size() > 2) {// if there is 1 more jump after this one...
+<<<<<<< HEAD
             // System.out.println("intermediate");
             // System.out.println("size: " + positions.size());
+=======
+>>>>>>> viewChanges
             timeline.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent arg0) {
@@ -342,8 +381,13 @@ public class CheckersPane extends Pane {
                 }
             });
         } else {// if this is the last jump
+<<<<<<< HEAD
             // System.out.println("final.");
             // System.out.println("size: " + positions.size());
+=======
+                // System.out.println("final.");
+                // System.out.println("size: " + positions.size());
+>>>>>>> viewChanges
 
             timeline.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
@@ -357,6 +401,7 @@ public class CheckersPane extends Pane {
             });
         }
         timeline.play();
+<<<<<<< HEAD
     }
 
     /**
@@ -378,7 +423,7 @@ public class CheckersPane extends Pane {
      * correct square corresponding to the x y position. Requests moving permission from the
      * controller NOTE: THIS IS FOR THE HUMAN MOVING THE PIECE. AN EVENT WILL BE FIRED SIGNALING THE
      * CONTROLLER THAT THE HUMAN HAS MOVED.
-     * 
+     *
      * @param x
      * @param y
      */
@@ -520,3 +565,130 @@ public class CheckersPane extends Pane {
  * this.positionsOfImages.put(position, iv); iv.setFitWidth(this.squareWidth);
  * iv.setFitHeight(this.squareHeight); this.getChildren().add(iv); } this.positionPieces(); } }
  */
+=======
+    }
+
+    /**
+     * Moves the selected image to the x y coords that the user specified The ImageView is only
+     * moved if it has been selected in selectImage(double x, double y)
+     * 
+     * @param x
+     * @param y
+     */
+    public void moveSelectedImageToCurrentXY(double x, double y) {
+        if (this.selectedImageView != null) {
+            this.selectedImageView.setX(x - this.selectedImageView.getFitWidth() / 2);
+            this.selectedImageView.setY(y - this.selectedImageView.getFitHeight() / 2);
+        }
+    }
+
+    /**
+     * Places the selected piece in the x, y position specified. The piece will appear in the
+     * correct square corresponding to the x y position. Requests moving permission from the
+     * controller NOTE: THIS IS FOR THE HUMAN MOVING THE PIECE. AN EVENT WILL BE FIRED SIGNALING THE
+     * CONTROLLER THAT THE HUMAN HAS MOVED.
+     * 
+     * @param x
+     * @param y
+     */
+    public void placeInSquareOfXY(double x, double y) {
+        int col = (int) x / (int) this.squareWidth;
+        int row = (int) y / (int) this.squareHeight;
+
+        final Timeline timeline = new Timeline();
+        double xDestination = this.getXPositionForColumn(col);
+        double yDestination = this.getYPositionForRow(row);
+        final KeyValue kv_x = new KeyValue(this.selectedImageView.xProperty(), xDestination);
+        final KeyValue kv_y = new KeyValue(this.selectedImageView.yProperty(), yDestination);
+        final KeyFrame kf_x = new KeyFrame(Duration.millis(200), kv_x);
+        final KeyFrame kf_y = new KeyFrame(Duration.millis(200), kv_y);
+        timeline.getKeyFrames().add(kf_x);
+        timeline.getKeyFrames().add(kf_y);
+        timeline.setOnFinished(new EventHandler<ActionEvent>() {
+            @Override
+            public void handle(ActionEvent arg0) {
+                /*
+                 * Notifying the controller that the human has made a move.
+                 */
+                ArrayList<String> moves = new ArrayList<String>();
+                moves.add("1,2: I moved");
+                CheckersPane.this.fireHumanHasMoved(moves);
+            }
+        });
+        timeline.play();
+
+        String keyToDelete = null;
+        for (String key : this.positionsOfImages.keySet()) {
+            if (this.positionsOfImages.get(key) == this.selectedImageView) {
+                keyToDelete = key;
+                break;
+            }
+        }
+        this.positionsOfImages.remove(keyToDelete);
+        String positionAsString = row + "," + col;
+        this.positionsOfImages.put(positionAsString, this.selectedImageView);
+        String piece = this.typeOfpieceAtPosition.get(keyToDelete);
+        this.typeOfpieceAtPosition.remove(keyToDelete);
+        this.typeOfpieceAtPosition.put(positionAsString, piece);
+
+    }
+
+    private void positionPieceGivenRowAndColumn(ImageView iv, int row, int col) {
+        double x = col * this.squareWidth;
+        double y = row * this.squareHeight;
+        iv.setX(x);
+        iv.setY(y);
+    }
+
+    /**
+     * uses the position keys (row/col as String) of the images to correctly position the images in
+     * the correct x, y position.
+     */
+    private void positionPieces() {
+        Enumeration<String> keys = this.positionsOfImages.keys();
+        while (keys.hasMoreElements()) {
+            String key = keys.nextElement();
+            int row = Character.getNumericValue(key.charAt(0));
+            int col = Character.getNumericValue(key.charAt(2));
+            ImageView iv = this.positionsOfImages.get(key);
+            this.positionPieceGivenRowAndColumn(iv, row, col);
+        }
+    }
+
+    public void removePiecesAtPositions(ArrayList<String> positions) {
+        for (String position : positions) {
+            ImageView imageAtPosition = this.positionsOfImages.get(position);
+
+            final Timeline timeline = new Timeline();
+            KeyValue kv = new KeyValue(imageAtPosition.opacityProperty(), 0);
+            KeyFrame kf = new KeyFrame(Duration.millis(1000), kv);
+            timeline.getKeyFrames().add(kf);
+            timeline.play();
+
+            // removing pieces from those locations on the board
+            // i.e. remove them from the positionsOfImages hashtable
+            this.positionsOfImages.remove(position);
+            this.typeOfpieceAtPosition.remove(position);
+        }
+    }
+
+    /**
+     * Code for seeing whether the clicks were on a image. If so, the Ivar selectedImageView is set
+     * to the ImageView that was pressed. The selected ImageView is moved in the method
+     * moveSelectedImageToCurrentXY(double x, double y)
+     * 
+     * @param x
+     *            : x coordinate of user's click
+     * @param y
+     *            : y coordinate of user's click
+     */
+    public void selectImage(double x, double y) {
+        for (ImageView iv : this.positionsOfImages.values()) {
+            if (iv.isPressed()) {
+                this.selectedImageView = iv;
+            }
+        }
+    }
+
+}
+>>>>>>> viewChanges
