@@ -43,6 +43,8 @@ public class CheckersPane extends Pane {
     String zerglingString = "zergling";
     String stalkerString = "stalker";
 
+    public boolean computerIsMoving = true;
+
     /**
      * deals with the event listener (the controller) regarding requesting a move
      */
@@ -159,11 +161,11 @@ public class CheckersPane extends Pane {
         }
     }
 
-    private void fireHumanHasMoved(ArrayList<String> moves) {
+    private void fireHumanHasMoved() {
         Iterator<CheckersController> it = this.listenersForHumanMove.iterator();
         while (it.hasNext()) {// but there will only be one listener
             CheckersController cont = it.next();
-            cont.humanFinishedMove(moves);
+            cont.humanFinishedMove();
         }
     }
 
@@ -302,7 +304,8 @@ public class CheckersPane extends Pane {
      *
      * @param positions
      */
-    public void movePieceToPositions(ArrayList<String> positions) {
+    public void movePieceToPositionsAndRemovePieces(ArrayList<String> positions,
+            ArrayList<String> toRemove) {
         String initialPosition = positions.get(0);
         ImageView pieceToMove = this.positionsOfImages.get(initialPosition);
         String typeOfPiece = this.typeOfpieceAtPosition.get(initialPosition);
@@ -332,19 +335,14 @@ public class CheckersPane extends Pane {
         timeline.getKeyFrames().add(kf_x);
         timeline.getKeyFrames().add(kf_y);
         if (positions.size() > 2) {// if there is 1 more jump after this one...
-            // System.out.println("intermediate");
-            // System.out.println("size: " + positions.size());
             timeline.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent arg0) {
-                    CheckersPane.this.movePieceToPositions(new ArrayList<String>(positions.subList(
-                            1, positions.size())));
+                    CheckersPane.this.movePieceToPositionsAndRemovePieces(new ArrayList<String>(
+                            positions.subList(1, positions.size())), toRemove);
                 }
             });
         } else {// if this is the last jump
-            // System.out.println("final.");
-            // System.out.println("size: " + positions.size());
-
             timeline.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent arg0) {
@@ -352,7 +350,15 @@ public class CheckersPane extends Pane {
                      * In here I signal the controller that the animation of the computer's move has
                      * finished.
                      */
-                    CheckersPane.this.fireComputerHasMoved();// EVENT FIRED TO CONTROLLER
+                    if (toRemove == null) {// if there are no pieces to remove
+                        if (CheckersPane.this.computerIsMoving) {
+                            CheckersPane.this.fireComputerHasMoved();
+                        } else {
+                            CheckersPane.this.fireHumanHasMoved();
+                        }
+                    } else {// if there are pieces to remove
+                        CheckersPane.this.removePiecesAtPositions(toRemove);
+                    }
                 }
             });
         }
@@ -378,7 +384,7 @@ public class CheckersPane extends Pane {
      * correct square corresponding to the x y position. Requests moving permission from the
      * controller NOTE: THIS IS FOR THE HUMAN MOVING THE PIECE. AN EVENT WILL BE FIRED SIGNALING THE
      * CONTROLLER THAT THE HUMAN HAS MOVED.
-     * 
+     *
      * @param x
      * @param y
      */
@@ -401,9 +407,9 @@ public class CheckersPane extends Pane {
                 /*
                  * Notifying the controller that the human has made a move.
                  */
-                ArrayList<String> moves = new ArrayList<String>();
-                moves.add("1,2: I moved");
-                CheckersPane.this.fireHumanHasMoved(moves);
+                // ArrayList<String> moves = new ArrayList<String>();
+                // moves.add("1,2: I moved");
+                // CheckersPane.this.fireHumanHasMoved(moves);
             }
         });
         timeline.play();
@@ -454,6 +460,17 @@ public class CheckersPane extends Pane {
             KeyValue kv = new KeyValue(imageAtPosition.opacityProperty(), 0);
             KeyFrame kf = new KeyFrame(Duration.millis(1000), kv);
             timeline.getKeyFrames().add(kf);
+            timeline.setOnFinished(new EventHandler<ActionEvent>() {
+
+                @Override
+                public void handle(ActionEvent arg0) {
+                    if (CheckersPane.this.computerIsMoving) {
+                        CheckersPane.this.fireComputerHasMoved();
+                    } else {
+                        CheckersPane.this.fireHumanHasMoved();
+                    }
+                }
+            });
             timeline.play();
 
             // removing pieces from those locations on the board
@@ -500,20 +517,20 @@ public class CheckersPane extends Pane {
 
 /*
  * public void showBoard(Board board) {
- * 
+ *
  * for (String key : this.positionsOfImages.keySet()) {
  * this.getChildren().remove(this.positionsOfImages.get(key)); this.positionsOfImages.remove(key); }
  * for (String key : this.typeOfpieceAtPosition.keySet()) { this.typeOfpieceAtPosition.remove(key);
  * }
- * 
+ *
  * // bottom code coppied from constructor Image zerlingImage = new Image("zergling.jpeg"); Image
  * stalkerImage = new Image("stalker.jpeg");
- * 
+ *
  * List<Square> squares = board.getGameState(); for (Square square : squares) { if
  * (square.isOccupied()) { PieceInterface piece = square.getOccupyingPiece(); // I use row-1 because
  * row in model is 1, same row in view is 0 int row = square.getRowNumber() - 1; int col =
  * square.getColumnNumber() - 1; String position = row + "," + col;
- * 
+ *
  * ImageView iv; if (piece.isWhite()) { iv = new ImageView(zerlingImage);
  * this.typeOfpieceAtPosition.put(position, this.zerglingString); } else { iv = new
  * ImageView(stalkerImage); this.typeOfpieceAtPosition.put(position, this.stalkerString); }
