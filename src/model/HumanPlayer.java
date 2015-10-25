@@ -15,15 +15,15 @@ public class HumanPlayer implements Player {
     }
 
     @Override
-    public void makeMove(Board currentBoard) {
+    public MoveInterface makeMove(Board currentBoard) {
         @SuppressWarnings("resource")
         final Scanner reader = new Scanner(System.in);
         System.out.print("Enter move: ");
         final String moveString = reader.nextLine();
+        final MoveInterface moveToMake = MoveBuilder.buildMove(moveString, currentBoard);
         try {
-            final MoveInterface moveToMake = MoveBuilder.buildMove(moveString, currentBoard);
-            if (MoveGenerator.getAllPossibleMoves(currentBoard, this.getColor())
-                    .contains(moveToMake)) {
+            if (MoveGenerator.getAllPossibleMoves(currentBoard, this.getColor()).contains(
+                    moveToMake)) {
                 currentBoard.movePiece(moveToMake);
                 this.printMove(moveToMake);
             } else {
@@ -32,8 +32,9 @@ public class HumanPlayer implements Player {
         } catch (final Exception e) {
             System.out.println(e);
             System.out.println("Invalid move entered. Please try again.");
-            this.makeMove(currentBoard);
+            return this.makeMove(currentBoard);
         }
+        return moveToMake;
     }
 
     private void printMove(MoveInterface moveToMake) {
