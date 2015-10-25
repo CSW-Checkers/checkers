@@ -24,6 +24,7 @@ import model.MoveGenerator;
 import model.MoveInterface;
 import model.MultiJump;
 import model.PieceColor;
+import model.PieceInterface;
 import model.Player;
 import model.SingleJump;
 import model.Square;
@@ -108,8 +109,13 @@ public class CheckersController extends Application {
 
                 jumpedPositions.add(row + "," + col);
             }
-            CheckersController.this.root.movePieceToPositionsAndRemovePieces(movesForView,
-                    jumpedPositions);
+            // gets piece to check if it is a king at end of turn
+            boolean isKingAtEndOfHopping = false;
+            PieceInterface piece = moveToMake.getPiece();
+            isKingAtEndOfHopping = piece.isKing() ? true : false;
+
+            CheckersController.this.root.movePieceToPositionsAndRemovePiecesAndKing(movesForView,
+                    jumpedPositions, isKingAtEndOfHopping);
         } else if (moveToMake instanceof SingleJump) {
             ArrayList<String> moveForView = new ArrayList<>();
             SingleJump sjump = (SingleJump) moveToMake;
@@ -129,8 +135,13 @@ public class CheckersController extends Application {
             ArrayList<String> jumpedPosition = new ArrayList<>();
             jumpedPosition.add(row + "," + col);
 
-            CheckersController.this.root.movePieceToPositionsAndRemovePieces(moveForView,
-                    jumpedPosition);
+            // gets piece to check if it is a king at end of turn
+            boolean isKingAtEndOfHopping = false;
+            PieceInterface piece = moveToMake.getPiece();
+            isKingAtEndOfHopping = piece.isKing() ? true : false;
+
+            CheckersController.this.root.movePieceToPositionsAndRemovePiecesAndKing(moveForView,
+                    jumpedPosition, isKingAtEndOfHopping);
         } else {// is just a move
             ArrayList<String> moveForView = new ArrayList<>();
             Square startingSquare = moveToMake.getStartingSquare();
@@ -141,12 +152,23 @@ public class CheckersController extends Application {
             int endRow = endingSquare.getRowNumber() - 1;
             int endCol = endingSquare.getColumnNumber() - 1;
             moveForView.add(endRow + "," + endCol);
-            CheckersController.this.root.movePieceToPositionsAndRemovePieces(moveForView, null);
+
+            // gets piece to check if it is a king at end of turn
+            boolean isKingAtEndOfHopping = false;
+            PieceInterface piece = moveToMake.getPiece();
+            isKingAtEndOfHopping = piece.isKing() ? true : false;
+
+            CheckersController.this.root.movePieceToPositionsAndRemovePiecesAndKing(moveForView,
+                    null, isKingAtEndOfHopping);
         }
-    }
+    }// end of animateMove()
 
     public void computerFinishedMove() {
         System.out.println("computer finished");
+        if (this.gameBoard.isEndState(this.humanPlayerColor)) {
+            this.gameText.append("\n Computer Has Won");
+            this.gameTextBox.setText(this.gameText.toString());
+        }
     }
 
     /**
@@ -155,6 +177,10 @@ public class CheckersController extends Application {
      */
     public void humanFinishedMove() {
         System.out.println("human finished");
+        if (this.gameBoard.isEndState(this.computerPlayerColor)) {
+            this.gameText.append("\n Human Has Won");
+            this.gameTextBox.setText(this.gameText.toString());
+        }
 
         MoveInterface moveToMake = this.computerPlayer.makeMove(this.gameBoard);
         CheckersController.this.gameText.append("\nComputer\'s move: " + moveToMake.toString());
@@ -163,10 +189,6 @@ public class CheckersController extends Application {
         this.root.computerIsMoving = true;
         this.animateMove(moveToMake);
 
-        // let computer calculate move
-        // execute the move method of the view to reflect this
-        // have a handler in the view for the computer finished moving.
-        // when the computer's move has finished
     }
 
     /*
@@ -183,7 +205,7 @@ public class CheckersController extends Application {
             Scanner keyboard = new Scanner(System.in);
             System.out.println("will the human play as black(top) or white(bottom)? b/w: ");
             String response = keyboard.next();
-            if (response.equalsIgnoreCase("b")) {
+            if (response.equalsIgnoreCase("b")) {// top
                 this.humanPlayerColor = PieceColor.BLACK;
                 this.computerPlayerColor = PieceColor.WHITE;
                 this.computerPlayer = new ComputerPlayer(this.computerPlayerColor);
@@ -243,5 +265,14 @@ public class CheckersController extends Application {
         /*
          * End of view initialization and setting of event handlers
          */
+        if (this.computerPlayerColor.equals(PieceColor.BLACK)) {
+            MoveInterface moveToMake = this.computerPlayer.makeMove(this.gameBoard);
+            CheckersController.this.gameText.append("\nComputer\'s move: " + moveToMake.toString());
+            CheckersController.this.gameTextBox
+            .setText(CheckersController.this.gameText.toString());
+            System.out.println(moveToMake);
+            this.root.computerIsMoving = true;
+            this.animateMove(moveToMake);
+        }
     }
 }

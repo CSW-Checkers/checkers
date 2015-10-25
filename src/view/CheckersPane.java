@@ -31,8 +31,6 @@ public class CheckersPane extends Pane {
      */
     Hashtable<String, ImageView> positionsOfImages = new Hashtable<String, ImageView>();
     Hashtable<String, String> typeOfpieceAtPosition = new Hashtable<String, String>();
-    ImageView selectedImageView = null;
-    String selectedKey = null;
 
     int numberOfSquaresHorizontally = 8;
     double squareWidth = this.canvas.getWidth() / this.numberOfSquaresHorizontally;
@@ -107,6 +105,7 @@ public class CheckersPane extends Pane {
                 this.positionsOfImages.put(position, iv);
                 iv.setFitWidth(this.squareWidth);
                 iv.setFitHeight(this.squareHeight);
+                iv.setOpacity(0.8);// SETS OPACITY!!!
                 this.getChildren().add(iv);
             }
             this.positionPieces();
@@ -139,9 +138,12 @@ public class CheckersPane extends Pane {
     }
 
     private void drawBoard(GraphicsContext gc) {
+        String[] positionsStrings = new String[] { "5", "13", "21", "29", "1", "9", "17", "25",
+                "6", "14", "22", "30", "2", "10", "18", "26", "7", "15", "23", "31", "3", "11",
+                "19", "27", "8", "16", "24", "32", "4", "12", "20", "28" };
         double squareWidth = this.canvas.getWidth() / this.numberOfSquaresHorizontally;
         double squareHeight = this.canvas.getHeight() / this.numberOfSquaresHorizontally;
-
+        int squareNumber = 0;
         for (int currentRow = 0; currentRow < this.numberOfSquaresHorizontally; currentRow++) {
             for (int currentCol = 0; currentCol < this.numberOfSquaresHorizontally; currentCol++) {
                 Color c = this.colorOfSquare(currentRow, currentCol);
@@ -149,6 +151,14 @@ public class CheckersPane extends Pane {
                 double xOffset = currentRow * squareWidth;
                 double yOffset = currentCol * squareHeight;
                 gc.fillRect(xOffset, yOffset, squareWidth, squareHeight);
+                // adding the numbers of the positions
+                gc.setFill(Color.BLACK);
+                if (currentRow % 2 == 0 && currentCol % 2 == 1 || currentRow % 2 == 1
+                        && currentCol % 2 == 0) {
+                    gc.fillText(String.valueOf(positionsStrings[squareNumber]), xOffset + 3.0,
+                            yOffset + 12.0, 50.0);
+                    squareNumber++;
+                }
             }
         }
     }
@@ -185,10 +195,6 @@ public class CheckersPane extends Pane {
 
     private double getYPositionForRow(int row) {
         return row * this.squareHeight;
-    }
-
-    public boolean imageHasBeenSelected() {
-        return this.selectedImageView != null;
     }
 
     /**
@@ -251,61 +257,12 @@ public class CheckersPane extends Pane {
         this.fireComputerHasMoved();// EVENT FIRED TO CONTROLLER
     }
 
-    public void movePieceToPositionAndKingIt(ArrayList<String> positions) {
-        String initialPosition = positions.get(0);
-        ImageView pieceToMove = this.positionsOfImages.get(initialPosition);
-        String typeOfPiece = this.typeOfpieceAtPosition.get(initialPosition);
-
-        String nextPosition = positions.get(1);
-        int row = Integer.parseInt(nextPosition.substring(0, 1));
-        int col = Integer.parseInt(nextPosition.substring(2, 3));
-
-        this.positionsOfImages.remove(initialPosition);
-        this.positionsOfImages.put(nextPosition, pieceToMove);
-        this.typeOfpieceAtPosition.remove(initialPosition);
-        if (typeOfPiece == this.stalkerString) {
-            this.typeOfpieceAtPosition.put(nextPosition, this.stalkerString);
-        } else {
-            this.typeOfpieceAtPosition.put(nextPosition, this.zerglingString);
-        }
-        /*
-         * moving animation
-         */
-        final Timeline timeline = new Timeline();
-        double x = this.getXPositionForColumn(col);
-        double y = this.getYPositionForRow(row);
-        final KeyValue kv_x = new KeyValue(pieceToMove.xProperty(), x);
-        final KeyValue kv_y = new KeyValue(pieceToMove.yProperty(), y);
-        final KeyFrame kf_x = new KeyFrame(Duration.millis(500), kv_x);
-        final KeyFrame kf_y = new KeyFrame(Duration.millis(500), kv_y);
-        timeline.getKeyFrames().add(kf_x);
-        timeline.getKeyFrames().add(kf_y);
-        if (positions.size() > 2) {// if there is 1 more jump after this one...
-            timeline.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent arg0) {
-                    CheckersPane.this.movePieceToPositionAndKingIt(new ArrayList<String>(positions
-                            .subList(1, positions.size())));
-                }
-            });
-        } else {// if this is the last jump
-            timeline.setOnFinished(new EventHandler<ActionEvent>() {
-                @Override
-                public void handle(ActionEvent arg0) {
-                    String finalPosition = positions.get(positions.size() - 1);
-                    CheckersPane.this.kingPieceAtPosition(finalPosition);
-                }
-            });
-        }
-        timeline.play();
-    }
-
     /**
      *
      * @param positions
      */
-    public void movePieceToPositionsAndRemovePieces(ArrayList<String> positions,
-            ArrayList<String> toRemove) {
+    public void movePieceToPositionsAndRemovePiecesAndKing(ArrayList<String> positions,
+            ArrayList<String> toRemove, boolean isKingAtEndOfJump) {
         String initialPosition = positions.get(0);
         ImageView pieceToMove = this.positionsOfImages.get(initialPosition);
         String typeOfPiece = this.typeOfpieceAtPosition.get(initialPosition);
@@ -338,8 +295,9 @@ public class CheckersPane extends Pane {
             timeline.setOnFinished(new EventHandler<ActionEvent>() {
                 @Override
                 public void handle(ActionEvent arg0) {
-                    CheckersPane.this.movePieceToPositionsAndRemovePieces(new ArrayList<String>(
-                            positions.subList(1, positions.size())), toRemove);
+                    CheckersPane.this.movePieceToPositionsAndRemovePiecesAndKing(
+                            new ArrayList<String>(positions.subList(1, positions.size())),
+                            toRemove, isKingAtEndOfJump);
                 }
             });
         } else {// if this is the last jump
@@ -350,6 +308,11 @@ public class CheckersPane extends Pane {
                      * In here I signal the controller that the animation of the computer's move has
                      * finished.
                      */
+                    if (isKingAtEndOfJump) {
+                        String finalPosition = positions.get(positions.size() - 1);
+                        CheckersPane.this.kingPieceAtPosition(finalPosition);
+                    }
+
                     if (toRemove == null) {// if there are no pieces to remove
                         if (CheckersPane.this.computerIsMoving) {
                             CheckersPane.this.fireComputerHasMoved();
@@ -359,75 +322,11 @@ public class CheckersPane extends Pane {
                     } else {// if there are pieces to remove
                         CheckersPane.this.removePiecesAtPositions(toRemove);
                     }
+
                 }
             });
         }
         timeline.play();
-    }
-
-    /**
-     * Moves the selected image to the x y coords that the user specified The ImageView is only
-     * moved if it has been selected in selectImage(double x, double y)
-     *
-     * @param x
-     * @param y
-     */
-    public void moveSelectedImageToCurrentXY(double x, double y) {
-        if (this.selectedImageView != null) {
-            this.selectedImageView.setX(x - this.selectedImageView.getFitWidth() / 2);
-            this.selectedImageView.setY(y - this.selectedImageView.getFitHeight() / 2);
-        }
-    }
-
-    /**
-     * Places the selected piece in the x, y position specified. The piece will appear in the
-     * correct square corresponding to the x y position. Requests moving permission from the
-     * controller NOTE: THIS IS FOR THE HUMAN MOVING THE PIECE. AN EVENT WILL BE FIRED SIGNALING THE
-     * CONTROLLER THAT THE HUMAN HAS MOVED.
-     *
-     * @param x
-     * @param y
-     */
-    public void placeInSquareOfXY(double x, double y) {
-        int col = (int) x / (int) this.squareWidth;
-        int row = (int) y / (int) this.squareHeight;
-
-        final Timeline timeline = new Timeline();
-        double xDestination = this.getXPositionForColumn(col);
-        double yDestination = this.getYPositionForRow(row);
-        final KeyValue kv_x = new KeyValue(this.selectedImageView.xProperty(), xDestination);
-        final KeyValue kv_y = new KeyValue(this.selectedImageView.yProperty(), yDestination);
-        final KeyFrame kf_x = new KeyFrame(Duration.millis(200), kv_x);
-        final KeyFrame kf_y = new KeyFrame(Duration.millis(200), kv_y);
-        timeline.getKeyFrames().add(kf_x);
-        timeline.getKeyFrames().add(kf_y);
-        timeline.setOnFinished(new EventHandler<ActionEvent>() {
-            @Override
-            public void handle(ActionEvent arg0) {
-                /*
-                 * Notifying the controller that the human has made a move.
-                 */
-                // ArrayList<String> moves = new ArrayList<String>();
-                // moves.add("1,2: I moved");
-                // CheckersPane.this.fireHumanHasMoved(moves);
-            }
-        });
-        timeline.play();
-
-        String keyToDelete = null;
-        for (String key : this.positionsOfImages.keySet()) {
-            if (this.positionsOfImages.get(key) == this.selectedImageView) {
-                keyToDelete = key;
-                break;
-            }
-        }
-        this.positionsOfImages.remove(keyToDelete);
-        String positionAsString = row + "," + col;
-        this.positionsOfImages.put(positionAsString, this.selectedImageView);
-        String piece = this.typeOfpieceAtPosition.get(keyToDelete);
-        this.typeOfpieceAtPosition.remove(keyToDelete);
-        this.typeOfpieceAtPosition.put(positionAsString, piece);
-
     }
 
     private void positionPieceGivenRowAndColumn(ImageView iv, int row, int col) {
@@ -471,6 +370,7 @@ public class CheckersPane extends Pane {
                     }
                 }
             });
+
             timeline.play();
 
             // removing pieces from those locations on the board
@@ -478,30 +378,7 @@ public class CheckersPane extends Pane {
             this.positionsOfImages.remove(position);
             this.typeOfpieceAtPosition.remove(position);
 
-            // I ADDED THIS AT NIGHT BEWARE!!!!
             this.getChildren().remove(imageAtPosition);
-        }
-    }
-
-    /**
-     * Code for seeing whether the clicks were on a image. If so, the Ivar selectedImageView is set
-     * to the ImageView that was pressed. The selected ImageView is moved in the method
-     * moveSelectedImageToCurrentXY(double x, double y)
-     *
-     * @param x
-     *            x coordinate of user's click
-     * @param y
-     *            y coordinate of user's click
-     */
-    public void selectImage(double x, double y) {
-
-        for (String key : this.positionsOfImages.keySet()) {
-            ImageView iv = this.positionsOfImages.get(key);
-            String pieceAtPosition = this.typeOfpieceAtPosition.get(key);
-            if (iv.isPressed() && pieceAtPosition.equals(this.typeOfPieceHumanPlaysWith)) {
-                this.selectedImageView = iv;
-                break;
-            }
         }
     }
 
@@ -514,26 +391,3 @@ public class CheckersPane extends Pane {
     }
 
 }
-
-/*
- * public void showBoard(Board board) {
- *
- * for (String key : this.positionsOfImages.keySet()) {
- * this.getChildren().remove(this.positionsOfImages.get(key)); this.positionsOfImages.remove(key); }
- * for (String key : this.typeOfpieceAtPosition.keySet()) { this.typeOfpieceAtPosition.remove(key);
- * }
- *
- * // bottom code coppied from constructor Image zerlingImage = new Image("zergling.jpeg"); Image
- * stalkerImage = new Image("stalker.jpeg");
- *
- * List<Square> squares = board.getGameState(); for (Square square : squares) { if
- * (square.isOccupied()) { PieceInterface piece = square.getOccupyingPiece(); // I use row-1 because
- * row in model is 1, same row in view is 0 int row = square.getRowNumber() - 1; int col =
- * square.getColumnNumber() - 1; String position = row + "," + col;
- *
- * ImageView iv; if (piece.isWhite()) { iv = new ImageView(zerlingImage);
- * this.typeOfpieceAtPosition.put(position, this.zerglingString); } else { iv = new
- * ImageView(stalkerImage); this.typeOfpieceAtPosition.put(position, this.stalkerString); }
- * this.positionsOfImages.put(position, iv); iv.setFitWidth(this.squareWidth);
- * iv.setFitHeight(this.squareHeight); this.getChildren().add(iv); } this.positionPieces(); } }
- */
