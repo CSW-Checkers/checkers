@@ -19,7 +19,7 @@ public class ComputerPlayer implements Player {
     }
 
     @Override
-    public void makeMove(Board currentBoard) {
+    public MoveInterface makeMove(Board currentBoard) {
 
         BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
         boardAgg.addBoardEvaluator(new PawnCountEvaluator());
@@ -30,6 +30,7 @@ public class ComputerPlayer implements Player {
 
         currentBoard.movePiece(moveToMake);
         this.printMove(moveToMake);
+        return moveToMake;
     }
 
     private void printMove(MoveInterface moveToMake) {
