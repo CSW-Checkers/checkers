@@ -7,6 +7,7 @@ import java.util.Set;
 
 public class Board {
     private final List<Square> gameState;
+    private int movesSinceLastCapture = 0;
     private int numberOfBlackPieces;
     private int numberOfWhitePieces;
 
@@ -189,14 +190,17 @@ public class Board {
         }
     }
 
-    public boolean isEndState(PieceColor color) {
-
-        boolean outOfPieces = false;
-        if (color == PieceColor.BLACK) {
-            outOfPieces = this.numberOfBlackPieces == 0;
+    public boolean isDrawState() {
+        if (this.movesSinceLastCapture >= 50) {
+            return true;
         } else {
-            outOfPieces = this.numberOfWhitePieces == 0;
+            return false;
         }
+    }
+
+    public boolean isEndState(PieceColor color) {
+        final boolean outOfPieces = (this.numberOfBlackPieces == 0)
+                || (this.numberOfWhitePieces == 0);
 
         if (outOfPieces) {
             return true;
@@ -213,11 +217,14 @@ public class Board {
     public void movePiece(MoveInterface move) {
         final PieceInterface pieceToMove = this.pickUpPiece(move.getStartingPosition());
         if (move instanceof Jump) {
+            this.movesSinceLastCapture = 0;
             final Jump jump = (Jump) move;
 
             for (final int position : jump.getJumpedPositions()) {
                 this.removePiece(position);
             }
+        } else {
+            this.movesSinceLastCapture++;
         }
         this.setOccupyingPiece(move.getEndingPosition(), pieceToMove);
     }
