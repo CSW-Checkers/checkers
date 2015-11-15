@@ -48,6 +48,8 @@ public class CheckersController extends Application {
                     CheckersController.this.gameText.append("\n" + e.toString());
                     CheckersController.this.gameTextBox
                             .setText(CheckersController.this.gameText.toString());
+                    CheckersController.this.botTextArea.clear();
+                    return;
                 }
 
                 if (MoveGenerator.getAllPossibleMoves(CheckersController.this.gameBoard,
