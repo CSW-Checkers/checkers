@@ -40,23 +40,31 @@ public class CheckersController extends Application {
             if (keyCode == KeyCode.ENTER) {
                 String moveString = CheckersController.this.botTextArea.getText().trim();
                 /* Now I will get the move of the human player and change board */
-                final MoveInterface moveToMake = MoveBuilder.buildMove(moveString,
-                        CheckersController.this.gameBoard);
+                MoveInterface moveToMake = null;
+                try {
+                    moveToMake = MoveBuilder.buildMove(moveString,
+                            CheckersController.this.gameBoard);
+                } catch (Exception e) {
+                    CheckersController.this.gameText.append("\n" + e.toString());
+                    CheckersController.this.gameTextBox
+                            .setText(CheckersController.this.gameText.toString());
+                }
+
                 if (MoveGenerator.getAllPossibleMoves(CheckersController.this.gameBoard,
                         CheckersController.this.humanPlayerColor).contains(moveToMake)) {
                     CheckersController.this.gameBoard.movePiece(moveToMake);
 
                     CheckersController.this.gameText.append("\nHuman\'s move: " + moveString);
-                    CheckersController.this.gameTextBox.setText(CheckersController.this.gameText
-                            .toString());
+                    CheckersController.this.gameTextBox
+                            .setText(CheckersController.this.gameText.toString());
                     /*code for animating move*/
                     CheckersController.this.root.computerIsMoving = false;
                     CheckersController.this.animateMove(moveToMake);
                 } else {// if the move is not a valid move...
                     CheckersController.this.gameText.append("\n Human\'s move " + moveString
                             + " was not found in list of possible legal moves.");
-                    CheckersController.this.gameTextBox.setText(CheckersController.this.gameText
-                            .toString());
+                    CheckersController.this.gameTextBox
+                            .setText(CheckersController.this.gameText.toString());
                 }
                 CheckersController.this.botTextArea.clear();
                 CheckersController.this.botTextArea.home();
@@ -69,19 +77,19 @@ public class CheckersController extends Application {
         launch(args);// causes start() to be called
     }
 
+    TextArea botTextArea;
+
+    private Player computerPlayer;
+    private PieceColor computerPlayerColor;
+    private final Board gameBoard = new Board();
+    StringBuffer gameText = new StringBuffer("");
+    Text gameTextBox;
+
+    private PieceColor humanPlayerColor;
     // all drawing on the canvas and repositioning of the pieces occurs through
     // this reference.
     CheckersPane root;
-
-    StringBuffer gameText = new StringBuffer("");
-    Text gameTextBox;
-    TextArea botTextArea;
     ScrollPane scrollPane;
-    private final Board gameBoard = new Board();
-
-    private Player computerPlayer;
-    private PieceColor humanPlayerColor;
-    private PieceColor computerPlayerColor;
 
     public void animateMove(MoveInterface moveToMake) {
         if (moveToMake instanceof MultiJump) {
@@ -269,7 +277,7 @@ public class CheckersController extends Application {
             MoveInterface moveToMake = this.computerPlayer.makeMove(this.gameBoard);
             CheckersController.this.gameText.append("\nComputer\'s move: " + moveToMake.toString());
             CheckersController.this.gameTextBox
-            .setText(CheckersController.this.gameText.toString());
+                    .setText(CheckersController.this.gameText.toString());
             System.out.println(moveToMake);
             this.root.computerIsMoving = true;
             this.animateMove(moveToMake);

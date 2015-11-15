@@ -20,10 +20,11 @@ public class HumanPlayer implements Player {
         final Scanner reader = new Scanner(System.in);
         System.out.print("Enter move: ");
         final String moveString = reader.nextLine();
-        final MoveInterface moveToMake = MoveBuilder.buildMove(moveString, currentBoard);
+        MoveInterface moveToMake = null;
         try {
-            if (MoveGenerator.getAllPossibleMoves(currentBoard, this.getColor()).contains(
-                    moveToMake)) {
+            moveToMake = MoveBuilder.buildMove(moveString, currentBoard);
+            if (MoveGenerator.getAllPossibleMoves(currentBoard, this.getColor())
+                    .contains(moveToMake)) {
                 currentBoard.movePiece(moveToMake);
                 this.printMove(moveToMake);
             } else {
