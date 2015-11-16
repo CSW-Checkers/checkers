@@ -3,13 +3,18 @@ package model.ai.evaluation;
 import model.Board;
 import model.PieceColor;
 
-public class BackRowCountEvaluator extends BoardEvaluator {
-    public BackRowCountEvaluator() {
-        super();
+public class BackRowCountEvaluator implements BoardEvaluatorInterface {
+    private static BoardEvaluatorInterface instance;
+
+    public static BoardEvaluatorInterface getInstance() {
+        if (instance == null) {
+            instance = new BackRowCountEvaluator();
+        }
+
+        return instance;
     }
 
-    public BackRowCountEvaluator(double weight) {
-        super(weight);
+    private BackRowCountEvaluator() {
     }
 
     @Override
@@ -40,6 +45,6 @@ public class BackRowCountEvaluator extends BoardEvaluator {
             }
         }
 
-        return value * this.weight;
+        return value;
     }
 }

@@ -3,19 +3,21 @@ package model.ai.search;
 import model.Board;
 import model.MoveInterface;
 import model.PieceColor;
-import model.ai.evaluation.BoardEvaluatorInterface;
+import model.Strategy;
+import model.ai.evaluation.BoardEvaluatorAggregator;
 
 public class AlphaBetaSearch {
+    private final BoardEvaluatorAggregator aggregator;
     private final int depthLimit;
-    private final BoardEvaluatorInterface evaluator;
     private final PieceColor playerMakingMove;
     private final AlphaBetaSearchNode root;
+    private final Strategy strategy;
 
-    public AlphaBetaSearch(Board startingState, PieceColor playerMakingMove,
-            BoardEvaluatorInterface evaluator, int depthLimit) {
-        this.root = new AlphaBetaSearchNode(startingState, 0, playerMakingMove);
-        this.evaluator = evaluator;
-        this.playerMakingMove = playerMakingMove;
+    public AlphaBetaSearch(Board startingState, Strategy strategy, int depthLimit) {
+        this.playerMakingMove = strategy.getColor();
+        this.root = new AlphaBetaSearchNode(startingState, 0, this.playerMakingMove);
+        this.strategy = strategy;
+        this.aggregator = strategy.getAggregator();
         this.depthLimit = depthLimit;
     }
 
@@ -26,7 +28,7 @@ public class AlphaBetaSearch {
     }
 
     private double evaluate(Board theBoard, PieceColor color) {
-        return this.evaluator.evaluateBoard(theBoard, color);
+        return this.aggregator.evaluateBoard(this.strategy, theBoard);
     }
 
     private MoveInterface getBestMove(double bestValue) {

@@ -3,23 +3,26 @@ package model.ai.evaluation;
 import model.Board;
 import model.PieceColor;
 
-public class GameOverEvaluator extends BoardEvaluator {
+public class GameOverEvaluator implements BoardEvaluatorInterface {
+    private static GameOverEvaluator instance = null;
 
-    public GameOverEvaluator() {
-        super();
+    public static BoardEvaluatorInterface getInstance() {
+        if (instance == null) {
+            instance = new GameOverEvaluator();
+        }
+
+        return instance;
     }
 
-    public GameOverEvaluator(double weight) {
-        super(weight);
+    private GameOverEvaluator() {
     }
 
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {
-
         if (theBoard.playerHasLost(color)) {
-            return -1.0 * this.weight;
+            return -1.0;
         } else if (theBoard.playerHasLost(color.getOppositeColor())) {
-            return 1.0 * this.weight;
+            return 1.0;
         } else {
             return 0.0;
         }

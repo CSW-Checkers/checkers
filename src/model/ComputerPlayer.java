@@ -1,16 +1,15 @@
 package model;
 
-import model.ai.evaluation.BoardEvaluatorAggregator;
 import model.ai.evaluation.BoardEvaluatorSummator;
-import model.ai.evaluation.KingCountEvaluator;
-import model.ai.evaluation.PawnCountEvaluator;
 import model.ai.search.AlphaBetaSearch;
 
 public class ComputerPlayer implements Player {
     private final PieceColor color;
+    private final Strategy strategy;
 
     public ComputerPlayer(PieceColor color) {
         this.color = color;
+        this.strategy = new Strategy(new BoardEvaluatorSummator(), color);
     }
 
     @Override
@@ -20,13 +19,8 @@ public class ComputerPlayer implements Player {
 
     @Override
     public MoveInterface makeMove(Board currentBoard) {
-
-        BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
-        boardAgg.addBoardEvaluator(new PawnCountEvaluator());
-        boardAgg.addBoardEvaluator(new KingCountEvaluator());
-
-        final MoveInterface moveToMake = new AlphaBetaSearch(currentBoard, this.getColor(),
-                boardAgg, 8).alphaBetaSearch();
+        final MoveInterface moveToMake = new AlphaBetaSearch(currentBoard, this.strategy, 8)
+                .alphaBetaSearch();
 
         currentBoard.movePiece(moveToMake);
         this.printMove(moveToMake);

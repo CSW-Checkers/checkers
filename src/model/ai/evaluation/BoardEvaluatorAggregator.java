@@ -1,21 +1,8 @@
 package model.ai.evaluation;
 
-import java.util.ArrayList;
-import java.util.List;
+import model.Board;
+import model.Strategy;
 
-public abstract class BoardEvaluatorAggregator implements BoardEvaluatorInterface {
-    List<BoardEvaluatorInterface> boardEvalutors;
-
-    public BoardEvaluatorAggregator() {
-        this.boardEvalutors = new ArrayList<>();
-    }
-
-    public BoardEvaluatorAggregator(List<BoardEvaluatorInterface> boardEvaluators) {
-        this.boardEvalutors = boardEvaluators;
-    }
-
-    public void addBoardEvaluator(BoardEvaluatorInterface boardEvaluator) {
-        this.boardEvalutors.add(boardEvaluator);
-    }
-
+public interface BoardEvaluatorAggregator {
+    public double evaluateBoard(Strategy strategy, Board theBoard);
 }

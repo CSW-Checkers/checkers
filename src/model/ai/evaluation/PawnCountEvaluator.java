@@ -5,29 +5,33 @@ import model.PieceColor;
 import model.PieceInterface;
 import model.Square;
 
-public class PawnCountEvaluator extends BoardEvaluator {
+public class PawnCountEvaluator implements BoardEvaluatorInterface {
+    private static BoardEvaluatorInterface instance = null;
 
-    public PawnCountEvaluator() {
-        super();
+    public static BoardEvaluatorInterface getInstance() {
+        if (instance == null) {
+            instance = new PawnCountEvaluator();
+        }
+
+        return instance;
     }
 
-    public PawnCountEvaluator(double weight) {
-        super(weight);
+    private PawnCountEvaluator() {
     }
 
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {
         double value = 0.0;
 
-        for (Square square : theBoard.getGameState()) {
-            PieceInterface piece = square.getOccupyingPiece();
+        for (final Square square : theBoard.getGameState()) {
+            final PieceInterface piece = square.getOccupyingPiece();
             if (piece.getColor() == color) {
                 value += 1.0;
             } else if (piece.getColor() == color.getOppositeColor()) {
                 value -= 1.0;
             }
         }
-        return value * this.weight;
+        return value;
     }
 
 }
