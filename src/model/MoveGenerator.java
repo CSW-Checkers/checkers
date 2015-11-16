@@ -1,14 +1,13 @@
 package model;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public final class MoveGenerator {
-    private static Set<MoveInterface> calculateJumpMoves(Board board, Set<Square> playersSquares) {
+    private static List<MoveInterface> calculateJumpMoves(Board board,
+            List<Square> playersSquares) {
 
-        final Set<MoveInterface> possibleMoves = new HashSet<>();
+        final List<MoveInterface> possibleMoves = new ArrayList<>();
 
         for (final Square startingSquare : playersSquares) {
             for (final Square squareOneJumpAway : board
@@ -27,8 +26,8 @@ public final class MoveGenerator {
         return possibleMoves;
     }
 
-    private static void calculateMultiJumpMoves(ArrayList<SingleJump> jumps,
-            Set<MoveInterface> possibleMoves) {
+    private static void calculateMultiJumpMoves(List<SingleJump> jumps,
+            List<MoveInterface> possibleMoves) {
 
         final SingleJump lastJump = jumps.get(jumps.size() - 1);
 
@@ -86,9 +85,9 @@ public final class MoveGenerator {
         }
     }
 
-    private static Set<MoveInterface> calculateNonJumpMoves(Board board,
-            Set<Square> playersSquares) {
-        final Set<MoveInterface> possibleNonJumpMoves = new HashSet<>();
+    private static List<MoveInterface> calculateNonJumpMoves(Board board,
+            List<Square> playersSquares) {
+        final List<MoveInterface> possibleNonJumpMoves = new ArrayList<>();
         for (final Square startingSquare : playersSquares) {
             for (final Square adjacentSquare : board.getAdjacentSquares(startingSquare)) {
                 final Move normalMove = new Move(startingSquare.getPosition(),
@@ -101,9 +100,9 @@ public final class MoveGenerator {
         return possibleNonJumpMoves;
     }
 
-    public static Set<MoveInterface> getAllPossibleMoves(Board board, PieceColor playersColor) {
-        final Set<Square> playersSquares = board.getSquaresForPlayer(playersColor);
-        final Set<MoveInterface> possibleMoves = calculateJumpMoves(board, playersSquares);
+    public static List<MoveInterface> getAllPossibleMoves(Board board, PieceColor playersColor) {
+        final List<Square> playersSquares = board.getSquaresForPlayer(playersColor);
+        final List<MoveInterface> possibleMoves = calculateJumpMoves(board, playersSquares);
         if (possibleMoves.isEmpty()) {
             possibleMoves.addAll(calculateNonJumpMoves(board, playersSquares));
         }
@@ -111,13 +110,13 @@ public final class MoveGenerator {
         return possibleMoves;
     }
 
-    public static Set<MoveInterface> getJumpMoves(Board board, PieceColor color) {
-        final Set<Square> playersSquares = board.getSquaresForPlayer(color);
+    public static List<MoveInterface> getJumpMoves(Board board, PieceColor color) {
+        final List<Square> playersSquares = board.getSquaresForPlayer(color);
         return calculateJumpMoves(board, playersSquares);
     }
 
-    public static Set<MoveInterface> getNonJumpMoves(Board board, PieceColor currentPlayersColor) {
-        final Set<Square> currentPlayersOccupiedSquares = board
+    public static List<MoveInterface> getNonJumpMoves(Board board, PieceColor currentPlayersColor) {
+        final List<Square> currentPlayersOccupiedSquares = board
                 .getSquaresForPlayer(currentPlayersColor);
         return calculateNonJumpMoves(board, currentPlayersOccupiedSquares);
     }
