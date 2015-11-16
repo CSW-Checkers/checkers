@@ -1,6 +1,5 @@
 package model;
 
-import model.ai.evaluation.BoardEvaluatorAggregator;
 import model.ai.evaluation.BoardEvaluatorSummator;
 import model.ai.search.AlphaBetaSearch;
 
@@ -10,8 +9,7 @@ public class ComputerPlayer implements Player {
 
     public ComputerPlayer(PieceColor color) {
         this.color = color;
-        final BoardEvaluatorAggregator aggregator = new BoardEvaluatorSummator();
-        this.strategy = new Strategy(aggregator, color);
+        this.strategy = new Strategy(new BoardEvaluatorSummator(), color);
     }
 
     @Override
