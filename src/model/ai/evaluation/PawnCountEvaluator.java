@@ -24,11 +24,14 @@ public class PawnCountEvaluator implements BoardEvaluatorInterface {
         double value = 0.0;
 
         for (final Square square : theBoard.getGameState()) {
+
             final PieceInterface piece = square.getOccupyingPiece();
-            if (piece.getColor() == color) {
-                value += 1.0;
-            } else if (piece.getColor() == color.getOppositeColor()) {
-                value -= 1.0;
+            if (!piece.isNull() && !piece.isKing()) {
+                if (piece.getColor() == color) {
+                    value += 1.0;
+                } else if (piece.getColor() == color.getOppositeColor()) {
+                    value -= 1.0;
+                }
             }
         }
         return value;
