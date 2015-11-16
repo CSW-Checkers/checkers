@@ -1,6 +1,7 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -10,6 +11,8 @@ public class Board {
     private int movesSinceLastCapture = 0;
     private int numberOfBlackPieces;
     private int numberOfWhitePieces;
+    private boolean repeatedStateDraw = false;
+    private final HashMap<List<Square>, Integer> stateCounter = new HashMap<>();
 
     public Board() {
         this.gameState = this.getStartingGameBoardState();
@@ -191,7 +194,7 @@ public class Board {
     }
 
     public boolean isDrawState() {
-        if (this.movesSinceLastCapture >= 50) {
+        if (this.repeatedStateDraw || (this.movesSinceLastCapture >= 50)) {
             return true;
         } else {
             return false;
@@ -227,6 +230,7 @@ public class Board {
             this.movesSinceLastCapture++;
         }
         this.setOccupyingPiece(move.getEndingPosition(), pieceToMove);
+        this.updateStateCounter();
     }
 
     private PieceInterface pickUpPiece(int position) {
@@ -243,6 +247,21 @@ public class Board {
     public void setOccupyingPiece(int position, PieceInterface pieceToSet) {
         this.getSquare(position).setOccupyingPiece(pieceToSet);
         this.incrementPieceCount(position);
+    }
+
+    private void updateStateCounter() {
+        Integer count = this.stateCounter.get(this.gameState);
+
+        if (count == null) {
+            this.stateCounter.put(this.gameState, 1);
+        } else {
+            count++;
+            this.stateCounter.put(this.gameState, count);
+            if (count >= 4) {
+                this.repeatedStateDraw = true;
+            }
+        }
+
     }
 
 }
