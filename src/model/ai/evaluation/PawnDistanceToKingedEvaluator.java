@@ -11,7 +11,7 @@ public class PawnDistanceToKingedEvaluator implements BoardEvaluatorInterface {
 
     public static BoardEvaluatorInterface getInstance() {
         if (instance == null) {
-            return new PawnDistanceToKingedEvaluator();
+            instance = new PawnDistanceToKingedEvaluator();
         }
         return instance;
     }
