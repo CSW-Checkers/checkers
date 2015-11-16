@@ -14,10 +14,10 @@ public class AlphaBetaSearch {
     private final Strategy strategy;
 
     public AlphaBetaSearch(Board startingState, Strategy strategy, int depthLimit) {
+        this.playerMakingMove = strategy.getColor();
         this.root = new AlphaBetaSearchNode(startingState, 0, this.playerMakingMove);
         this.strategy = strategy;
         this.aggregator = strategy.getAggregator();
-        this.playerMakingMove = strategy.getColor();
         this.depthLimit = depthLimit;
     }
 
