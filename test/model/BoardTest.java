@@ -7,14 +7,13 @@ import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
+import org.junit.Before;
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Set;
-
-import org.junit.Before;
-import org.junit.Test;
 
 public class BoardTest {
     private Board board;
@@ -104,14 +103,14 @@ public class BoardTest {
         List<Integer> expectedWhitePositions = Arrays.asList(21, 22, 23, 24, 25, 26, 27, 28, 29, 30,
                 31, 32);
 
-        Set<Square> actualBlackSquares = board.getSquaresForPlayer(PieceColor.BLACK);
+        List<Square> actualBlackSquares = board.getSquaresForPlayer(PieceColor.BLACK);
         assertEquals(expectedBlackPositions.size(), actualBlackSquares.size());
 
         for (final Square actualBlackSquare : actualBlackSquares) {
             assertTrue(expectedBlackPositions.contains(actualBlackSquare.getPosition()));
         }
 
-        Set<Square> actualWhiteSquares = board.getSquaresForPlayer(PieceColor.WHITE);
+        List<Square> actualWhiteSquares = board.getSquaresForPlayer(PieceColor.WHITE);
         assertEquals(expectedWhitePositions.size(), actualWhiteSquares.size());
 
         for (final Square actualWhiteSquare : actualWhiteSquares) {
