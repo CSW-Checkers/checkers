@@ -10,16 +10,16 @@ import model.PieceColor;
 public class KingCountEvaluatorTest {
     @Test
     public void testEvaluateBoard() {
-        Board board = new Board();
+        final Board board = new Board();
         board.getPiece(1).kingMe();
         board.getPiece(2).kingMe();
 
-        BoardEvaluator kingEvaluator = new KingCountEvaluator();
+        final BoardEvaluatorInterface kingEvaluator = KingCountEvaluator.getInstance();
 
-        double epsilon = 0.0;
+        final double epsilon = 0.0;
 
-        double expectedValue = 2.0;
-        double actualValue = kingEvaluator.evaluateBoard(board, PieceColor.BLACK);
+        final double expectedValue = 2.0;
+        final double actualValue = kingEvaluator.evaluateBoard(board, PieceColor.BLACK);
         assertEquals(expectedValue, actualValue, epsilon);
 
     }

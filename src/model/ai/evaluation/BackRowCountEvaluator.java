@@ -4,7 +4,15 @@ import model.Board;
 import model.PieceColor;
 
 public class BackRowCountEvaluator implements BoardEvaluatorInterface {
-    private BoardEvaluatorInterface instance;
+    private static BoardEvaluatorInterface instance;
+
+    public static BoardEvaluatorInterface getInstance() {
+        if (instance == null) {
+            instance = new BackRowCountEvaluator();
+        }
+
+        return instance;
+    }
 
     private BackRowCountEvaluator() {
     }
@@ -38,14 +46,5 @@ public class BackRowCountEvaluator implements BoardEvaluatorInterface {
         }
 
         return value;
-    }
-
-    @Override
-    public BoardEvaluatorInterface getInstance() {
-        if (this.instance == null) {
-            this.instance = new BackRowCountEvaluator();
-        }
-
-        return this.instance;
     }
 }

@@ -4,7 +4,15 @@ import model.Board;
 import model.PieceColor;
 
 public class GameOverEvaluator implements BoardEvaluatorInterface {
-    private GameOverEvaluator instance = null;
+    private static GameOverEvaluator instance = null;
+
+    public static BoardEvaluatorInterface getInstance() {
+        if (instance == null) {
+            instance = new GameOverEvaluator();
+        }
+
+        return instance;
+    }
 
     private GameOverEvaluator() {
     }
@@ -18,15 +26,6 @@ public class GameOverEvaluator implements BoardEvaluatorInterface {
         } else {
             return 0.0;
         }
-    }
-
-    @Override
-    public BoardEvaluatorInterface getInstance() {
-        if (this.instance == null) {
-            this.instance = new GameOverEvaluator();
-        }
-
-        return this.instance;
     }
 
 }

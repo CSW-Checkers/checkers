@@ -6,7 +6,15 @@ import model.PieceInterface;
 import model.Square;
 
 public class PawnCountEvaluator implements BoardEvaluatorInterface {
-    private BoardEvaluatorInterface instance = null;
+    private static BoardEvaluatorInterface instance = null;
+
+    public static BoardEvaluatorInterface getInstance() {
+        if (instance == null) {
+            instance = new PawnCountEvaluator();
+        }
+
+        return instance;
+    }
 
     private PawnCountEvaluator() {
     }
@@ -24,15 +32,6 @@ public class PawnCountEvaluator implements BoardEvaluatorInterface {
             }
         }
         return value;
-    }
-
-    @Override
-    public BoardEvaluatorInterface getInstance() {
-        if (this.instance == null) {
-            this.instance = new PawnCountEvaluator();
-        }
-
-        return this.instance;
     }
 
 }

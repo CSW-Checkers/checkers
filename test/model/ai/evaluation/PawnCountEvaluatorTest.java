@@ -10,11 +10,11 @@ import model.PieceColor;
 public class PawnCountEvaluatorTest {
     @Test
     public void testEvaluateBoard() {
-        Board board = new Board();
+        final Board board = new Board();
 
-        BoardEvaluatorInterface pawnCounter = new PawnCountEvaluator();
+        final BoardEvaluatorInterface pawnCounter = PawnCountEvaluator.getInstance();
 
-        double epsilon = 0.0;
+        final double epsilon = 0.0;
 
         double expectedValue = 0.0;
         double actualValue = pawnCounter.evaluateBoard(board, PieceColor.BLACK);

@@ -10,11 +10,11 @@ import model.PieceColor;
 public class BackRowCountEvaluatorTest {
     @Test
     public void testEvaluateBoard() {
-        Board board = new Board();
+        final Board board = new Board();
 
-        BoardEvaluatorInterface backRowEvaluator = new BackRowCountEvaluator();
+        final BoardEvaluatorInterface backRowEvaluator = BackRowCountEvaluator.getInstance();
 
-        double epsilon = 0.0;
+        final double epsilon = 0.0;
 
         double expectedValue = 0.0;
         double actualValue = backRowEvaluator.evaluateBoard(board, PieceColor.BLACK);

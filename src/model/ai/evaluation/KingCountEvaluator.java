@@ -6,7 +6,15 @@ import model.PieceInterface;
 import model.Square;
 
 public class KingCountEvaluator implements BoardEvaluatorInterface {
-    private BoardEvaluatorInterface instance;
+    private static BoardEvaluatorInterface instance;
+
+    public static BoardEvaluatorInterface getInstance() {
+        if (instance == null) {
+            instance = new KingCountEvaluator();
+        }
+
+        return instance;
+    }
 
     private KingCountEvaluator() {
     }
@@ -24,15 +32,6 @@ public class KingCountEvaluator implements BoardEvaluatorInterface {
             }
         }
         return value;
-    }
-
-    @Override
-    public BoardEvaluatorInterface getInstance() {
-        if (this.instance == null) {
-            this.instance = new KingCountEvaluator();
-        }
-
-        return this.instance;
     }
 
 }
