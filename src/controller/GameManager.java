@@ -12,7 +12,6 @@ import view.cli.CommandLineHelper;
 public class GameManager {
     public static void main(String[] args) {
         final GameManager gameManager = new GameManager();
-        // TODO Specify player types for colors
         gameManager.playGame();
     }
 
@@ -24,9 +23,9 @@ public class GameManager {
         @SuppressWarnings("resource")
         final Scanner reader = new Scanner(System.in);
         System.out.println("Select 1 for Computer. Select 2 for Human.");
-        for (PieceColor color : PieceColor.values()) {
+        for (final PieceColor color : PieceColor.values()) {
             System.out.print("Select player type for " + color + ": ");
-            int selection = reader.nextInt();
+            final int selection = reader.nextInt();
             if (color.equals(PieceColor.BLACK)) {
                 if (selection == 1) {
                     this.blackPlayer = new ComputerPlayer(color);
@@ -43,11 +42,13 @@ public class GameManager {
         }
     }
 
-    private void displayWinner(PieceColor winner) {
-        if (winner == PieceColor.WHITE) {
-            System.out.println("White wins");
-        } else {
+    private void displayWinner(Board endingBoard) {
+        if (endingBoard.isDrawState()) {
+            System.out.println("Draw");
+        } else if (endingBoard.playerHasLost(PieceColor.WHITE)) {
             System.out.println("Black wins");
+        } else {
+            System.out.println("White wins");
         }
     }
 
@@ -81,6 +82,6 @@ public class GameManager {
                 e.printStackTrace();
             }
         }
-        this.displayWinner(currentColor.getOppositeColor());
+        this.displayWinner(this.gameBoard);
     }
 }
