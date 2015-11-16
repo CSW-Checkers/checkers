@@ -16,9 +16,9 @@ public class GameOverEvaluator extends BoardEvaluator {
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {
 
-        if (theBoard.isEndState(color)) {
+        if (theBoard.playerHasLost(color)) {
             return -1.0 * this.weight;
-        } else if (theBoard.isEndState(color.getOppositeColor())) {
+        } else if (theBoard.playerHasLost(color.getOppositeColor())) {
             return 1.0 * this.weight;
         } else {
             return 0.0;

@@ -202,19 +202,7 @@ public class Board {
     }
 
     public boolean isEndState(PieceColor color) {
-        final boolean outOfPieces = (this.numberOfBlackPieces == 0)
-                || (this.numberOfWhitePieces == 0);
-
-        if (outOfPieces) {
-            return true;
-        }
-
-        final boolean noAvailableMoves = MoveGenerator.getAllPossibleMoves(this, color).isEmpty();
-        if (noAvailableMoves) {
-            return true;
-        } else {
-            return false;
-        }
+        return this.playerHasLost(color) || this.isDrawState();
     }
 
     public void movePiece(MoveInterface move) {
@@ -237,6 +225,26 @@ public class Board {
         final PieceInterface pieceToPickUp = this.getPiece(position);
         this.removePiece(position);
         return pieceToPickUp;
+    }
+
+    public boolean playerHasLost(PieceColor color) {
+        boolean outOfPieces = false;
+        if (color == PieceColor.BLACK) {
+            outOfPieces = this.numberOfBlackPieces == 0;
+        } else {
+            outOfPieces = this.numberOfWhitePieces == 0;
+        }
+
+        if (outOfPieces) {
+            return true;
+        }
+
+        final boolean noAvailableMoves = MoveGenerator.getAllPossibleMoves(this, color).isEmpty();
+        if (noAvailableMoves) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     public void removePiece(int position) {
