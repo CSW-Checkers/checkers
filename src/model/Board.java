@@ -2,9 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 
 public class Board {
     private final List<Square> gameState;
@@ -123,8 +121,8 @@ public class Board {
         return squares;
     }
 
-    public Set<Square> getSquaresForPlayer(PieceColor color) {
-        final Set<Square> playersSquares = new HashSet<>();
+    public List<Square> getSquaresForPlayer(PieceColor color) {
+        final List<Square> playersSquares = new ArrayList<>();
         for (final Square square : this.getGameState()) {
             if (square.isOccupied()) {
                 if (square.getOccupyingPiece().getColor() == color) {
