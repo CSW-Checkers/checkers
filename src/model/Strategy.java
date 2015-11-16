@@ -8,6 +8,7 @@ import model.ai.evaluation.BoardEvaluatorInterface;
 import model.ai.evaluation.GameOverEvaluator;
 import model.ai.evaluation.KingCountEvaluator;
 import model.ai.evaluation.PawnCountEvaluator;
+import model.ai.evaluation.PawnDistanceToKingedEvaluator;
 
 public class Strategy {
     private final BoardEvaluatorAggregator aggregator;
@@ -23,6 +24,7 @@ public class Strategy {
         this.evaluatorWeightMap.put(KingCountEvaluator.getInstance(), 4.0);
         this.evaluatorWeightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
         this.evaluatorWeightMap.put(GameOverEvaluator.getInstance(), 1000.0);
+        this.evaluatorWeightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 0.25);
 
     }
 

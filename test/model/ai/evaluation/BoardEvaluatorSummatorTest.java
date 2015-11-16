@@ -2,10 +2,10 @@ package model.ai.evaluation;
 
 import static org.junit.Assert.assertEquals;
 
+import org.junit.Test;
+
 import java.util.Arrays;
 import java.util.HashMap;
-
-import org.junit.Test;
 
 import model.Board;
 import model.PieceColor;
@@ -31,7 +31,7 @@ public class BoardEvaluatorSummatorTest {
         final double actualValue1 = boardAgg.evaluateBoard(strategy, board1);
         assertEquals(expectedValue1, actualValue1, epsilon);
 
-        final Board board2 = new Board(Arrays.asList(), Arrays.asList(1));
+        final Board board2 = new Board(Arrays.asList(), Arrays.asList(8));
 
         final double actualValue2 = boardAgg.evaluateBoard(strategy, board2);
         final double expectedValue2 = -101.0;
@@ -53,7 +53,7 @@ public class BoardEvaluatorSummatorTest {
 
         final double epsilon = 0.0;
 
-        final double expectedValue = 5.0;
+        final double expectedValue = 3.0;
         final double actualValue = boardAgg.evaluateBoard(strategy, board);
         assertEquals(expectedValue, actualValue, epsilon);
 
@@ -68,7 +68,7 @@ public class BoardEvaluatorSummatorTest {
 
         final BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
         HashMap<BoardEvaluatorInterface, Double> evaluatorWeightMap = new HashMap<>();
-        evaluatorWeightMap.put(KingCountEvaluator.getInstance(), 1.0);
+        evaluatorWeightMap.put(KingCountEvaluator.getInstance(), 2.0);
         evaluatorWeightMap.put(PawnCountEvaluator.getInstance(), 1.0);
         evaluatorWeightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
 
@@ -82,13 +82,13 @@ public class BoardEvaluatorSummatorTest {
 
         // change weights
         evaluatorWeightMap = new HashMap<>();
-        evaluatorWeightMap.put(KingCountEvaluator.getInstance(), 2.0);
+        evaluatorWeightMap.put(KingCountEvaluator.getInstance(), 1.5);
         evaluatorWeightMap.put(PawnCountEvaluator.getInstance(), 0.75);
         evaluatorWeightMap.put(BackRowCountEvaluator.getInstance(), 0.5);
 
         strategy = new Strategy(boardAgg, PieceColor.BLACK, evaluatorWeightMap);
 
-        expectedValue = 5.25;
+        expectedValue = 2.75;
         actualValue = boardAgg.evaluateBoard(strategy, board);
         assertEquals(expectedValue, actualValue, epsilon);
 
