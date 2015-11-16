@@ -6,10 +6,10 @@ import model.PieceColor;
 import model.ai.evaluation.BoardEvaluatorInterface;
 
 public class AlphaBetaSearch {
-    private int depthLimit;
-    private BoardEvaluatorInterface evaluator;
-    private PieceColor playerMakingMove;
-    private AlphaBetaSearchNode root;
+    private final int depthLimit;
+    private final BoardEvaluatorInterface evaluator;
+    private final PieceColor playerMakingMove;
+    private final AlphaBetaSearchNode root;
 
     public AlphaBetaSearch(Board startingState, PieceColor playerMakingMove,
             BoardEvaluatorInterface evaluator, int depthLimit) {
@@ -20,7 +20,7 @@ public class AlphaBetaSearch {
     }
 
     public MoveInterface alphaBetaSearch() {
-        double bestValue = this.maxValue(this.root, Double.NEGATIVE_INFINITY,
+        final double bestValue = this.maxValue(this.root, Double.NEGATIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
         return this.getBestMove(bestValue);
     }
@@ -32,8 +32,8 @@ public class AlphaBetaSearch {
     private MoveInterface getBestMove(double bestValue) {
         MoveInterface bestMove = null;
 
-        for (AlphaBetaSearchNode node : this.root.getChildren()) {
-            if (node != null && node.getValue() == bestValue) {
+        for (final AlphaBetaSearchNode node : this.root.getChildren()) {
+            if ((node != null) && (node.getValue() == bestValue)) {
                 bestMove = node.getMoveThatGotToThisState();
                 break;
             }
@@ -42,14 +42,14 @@ public class AlphaBetaSearch {
     }
 
     public double maxValue(AlphaBetaSearchNode node, double alpha, double beta) {
-        if (node.getDepthLevel() == this.depthLimit
-                || node.getBoard().isEndState(node.getCurrentPlayersColor())) {
-            double value = this.evaluate(node.getBoard(), this.playerMakingMove);
+        if ((node.getDepthLevel() == this.depthLimit)
+                || node.getBoard().playerHasLost(node.getCurrentPlayersColor())) {
+            final double value = this.evaluate(node.getBoard(), this.playerMakingMove);
             node.setValue(value);
             return value;
         }
         node.setValue(Double.NEGATIVE_INFINITY);
-        for (AlphaBetaSearchNode childNode : node.getChildren()) {
+        for (final AlphaBetaSearchNode childNode : node.getChildren()) {
             node.setValue(Math.max(node.getValue(), this.minValue(childNode, alpha, beta)));
             if (node.getValue() >= beta) {
                 return node.getValue();
@@ -60,14 +60,14 @@ public class AlphaBetaSearch {
     }
 
     private double minValue(AlphaBetaSearchNode node, double alpha, double beta) {
-        if (node.getDepthLevel() == this.depthLimit
-                || node.getBoard().isEndState(node.getCurrentPlayersColor())) {
-            double value = this.evaluate(node.getBoard(), this.playerMakingMove);
+        if ((node.getDepthLevel() == this.depthLimit)
+                || node.getBoard().playerHasLost(node.getCurrentPlayersColor())) {
+            final double value = this.evaluate(node.getBoard(), this.playerMakingMove);
             node.setValue(value);
             return value;
         }
         node.setValue(Double.POSITIVE_INFINITY);
-        for (AlphaBetaSearchNode childNode : node.getChildren()) {
+        for (final AlphaBetaSearchNode childNode : node.getChildren()) {
             node.setValue(Math.min(node.getValue(), this.maxValue(childNode, alpha, beta)));
             if (node.getValue() <= alpha) {
                 return node.getValue();

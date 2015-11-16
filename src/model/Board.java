@@ -1,14 +1,18 @@
 package model;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
 public class Board {
     private final List<Square> gameState;
+    private int movesSinceLastCapture = 0;
     private int numberOfBlackPieces;
     private int numberOfWhitePieces;
+    private boolean repeatedStateDraw = false;
+    private final HashMap<List<Square>, Integer> stateCounter = new HashMap<>();
 
     public Board() {
         this.gameState = this.getStartingGameBoardState();
@@ -189,8 +193,41 @@ public class Board {
         }
     }
 
-    public boolean isEndState(PieceColor color) {
+    public boolean isDrawState() {
+        if (this.repeatedStateDraw || (this.movesSinceLastCapture >= 50)) {
+            return true;
+        } else {
+            return false;
+        }
+    }
 
+    public boolean isEndState(PieceColor color) {
+        return this.playerHasLost(color) || this.isDrawState();
+    }
+
+    public void movePiece(MoveInterface move) {
+        final PieceInterface pieceToMove = this.pickUpPiece(move.getStartingPosition());
+        if (move instanceof Jump) {
+            this.movesSinceLastCapture = 0;
+            final Jump jump = (Jump) move;
+
+            for (final int position : jump.getJumpedPositions()) {
+                this.removePiece(position);
+            }
+        } else {
+            this.movesSinceLastCapture++;
+        }
+        this.setOccupyingPiece(move.getEndingPosition(), pieceToMove);
+        this.updateStateCounter();
+    }
+
+    private PieceInterface pickUpPiece(int position) {
+        final PieceInterface pieceToPickUp = this.getPiece(position);
+        this.removePiece(position);
+        return pieceToPickUp;
+    }
+
+    public boolean playerHasLost(PieceColor color) {
         boolean outOfPieces = false;
         if (color == PieceColor.BLACK) {
             outOfPieces = this.numberOfBlackPieces == 0;
@@ -210,24 +247,6 @@ public class Board {
         }
     }
 
-    public void movePiece(MoveInterface move) {
-        final PieceInterface pieceToMove = this.pickUpPiece(move.getStartingPosition());
-        if (move instanceof Jump) {
-            final Jump jump = (Jump) move;
-
-            for (final int position : jump.getJumpedPositions()) {
-                this.removePiece(position);
-            }
-        }
-        this.setOccupyingPiece(move.getEndingPosition(), pieceToMove);
-    }
-
-    private PieceInterface pickUpPiece(int position) {
-        final PieceInterface pieceToPickUp = this.getPiece(position);
-        this.removePiece(position);
-        return pieceToPickUp;
-    }
-
     public void removePiece(int position) {
         this.decrementPieceCount(position);
         this.getSquare(position).removeOccupyingPiece();
@@ -236,6 +255,21 @@ public class Board {
     public void setOccupyingPiece(int position, PieceInterface pieceToSet) {
         this.getSquare(position).setOccupyingPiece(pieceToSet);
         this.incrementPieceCount(position);
+    }
+
+    private void updateStateCounter() {
+        Integer count = this.stateCounter.get(this.gameState);
+
+        if (count == null) {
+            this.stateCounter.put(this.gameState, 1);
+        } else {
+            count++;
+            this.stateCounter.put(this.gameState, count);
+            if (count >= 4) {
+                this.repeatedStateDraw = true;
+            }
+        }
+
     }
 
 }
