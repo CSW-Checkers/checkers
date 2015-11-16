@@ -132,20 +132,20 @@ public class MoveValidator {
         return true;
     }
 
-    public static void verifyStartAndEndPositionsAreOnBoard(int startingPosition,
-            int endingPosition) {
-        if (!MoveValidator.isOnBoard(startingPosition)) {
-            throw new IllegalArgumentException("Starting position is invalid: " + startingPosition);
-        } else if (!MoveValidator.isOnBoard(endingPosition)) {
-            throw new IllegalArgumentException("Ending position is invalid: " + startingPosition);
-        }
-    }
-
     public static void verifyStartAndEndPositionAreNotTheSame(int startingPosition,
             int endingPosition) {
         if (startingPosition == endingPosition) {
             throw new IllegalArgumentException(
                     "Starting position cannot be equal to the ending position.");
+        }
+    }
+
+    public static void verifyStartAndEndPositionsAreOnBoard(int startingPosition,
+            int endingPosition) {
+        if (!MoveValidator.isOnBoard(startingPosition)) {
+            throw new IllegalArgumentException("Starting position is invalid: " + startingPosition);
+        } else if (!MoveValidator.isOnBoard(endingPosition)) {
+            throw new IllegalArgumentException("Ending position is invalid: " + endingPosition);
         }
     }
 }
