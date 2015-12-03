@@ -10,18 +10,3 @@ public class CheckersScene extends Scene{
 	}
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
