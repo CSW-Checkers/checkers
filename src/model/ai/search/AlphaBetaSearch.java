@@ -45,7 +45,7 @@ public class AlphaBetaSearch {
 
     public double maxValue(AlphaBetaSearchNode node, double alpha, double beta) {
         if ((node.getDepthLevel() == this.depthLimit)
-                || node.getBoard().playerHasLost(node.getCurrentPlayersColor())) {
+                || node.getBoard().isEndState(node.getCurrentPlayersColor())) {
             final double value = this.evaluate(node.getBoard(), this.playerMakingMove);
             node.setValue(value);
             return value;
@@ -63,7 +63,7 @@ public class AlphaBetaSearch {
 
     private double minValue(AlphaBetaSearchNode node, double alpha, double beta) {
         if ((node.getDepthLevel() == this.depthLimit)
-                || node.getBoard().playerHasLost(node.getCurrentPlayersColor())) {
+                || node.getBoard().isEndState(node.getCurrentPlayersColor())) {
             final double value = this.evaluate(node.getBoard(), this.playerMakingMove);
             node.setValue(value);
             return value;

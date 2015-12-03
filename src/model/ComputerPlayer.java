@@ -12,6 +12,11 @@ public class ComputerPlayer implements Player {
         this.strategy = new Strategy(new BoardEvaluatorSummator(), color);
     }
 
+    public ComputerPlayer(PieceColor color, Strategy strategy) {
+        this.color = color;
+        this.strategy = strategy;
+    }
+
     @Override
     public PieceColor getColor() {
         return this.color;

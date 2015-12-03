@@ -192,7 +192,8 @@ public class Board {
     }
 
     public boolean isDrawState() {
-        if (this.repeatedStateDraw || (this.movesSinceLastCapture >= 50)) {
+        // if (this.repeatedStateDraw || (this.movesSinceLastCapture >= 50)) {
+        if (this.movesSinceLastCapture >= 50) {
             return true;
         } else {
             return false;
