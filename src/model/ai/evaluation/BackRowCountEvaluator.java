@@ -24,7 +24,7 @@ public class BackRowCountEvaluator implements BoardEvaluatorInterface {
         for (int i = 1; i <= 4; i++) {
 
             // if black piece is on black edge of board
-            if (theBoard.getPiece(i).getColor() == PieceColor.BLACK) {
+            if (theBoard.getPiece(i).isBlack()) {
                 if (color == PieceColor.BLACK) {
                     value += 1.0;
                 } else {
@@ -36,7 +36,7 @@ public class BackRowCountEvaluator implements BoardEvaluatorInterface {
         for (int i = 29; i <= 32; i++) {
 
             // if white piece is on white edge of board
-            if (theBoard.getPiece(i).getColor() == PieceColor.WHITE) {
+            if (theBoard.getPiece(i).isWhite()) {
                 if (color == PieceColor.WHITE) {
                     value += 1.0;
                 } else {

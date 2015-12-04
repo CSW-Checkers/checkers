@@ -6,9 +6,9 @@ import java.util.List;
 
 public class Board {
     private final List<Square> gameState;
+    private HashMap<PieceColor, Integer> kingCountMap = new HashMap<>();
     private int movesSinceLastCapture = 0;
     private HashMap<PieceColor, Integer> pawnCountMap = new HashMap<>();
-    private HashMap<PieceColor, Integer> kingCountMap = new HashMap<>();
     private boolean repeatedStateDraw = false;
     private final HashMap<List<Square>, Integer> stateCounter = new HashMap<>();
 
@@ -17,11 +17,6 @@ public class Board {
         this.pawnCountMap.put(PieceColor.BLACK, 12);
         this.pawnCountMap.put(PieceColor.WHITE, 12);
         initializeEmptyKingCountMap();
-    }
-
-    private void initializeEmptyKingCountMap() {
-        this.kingCountMap.put(PieceColor.BLACK, 0);
-        this.kingCountMap.put(PieceColor.WHITE, 0);
     }
 
     public Board(Board otherBoard) {
@@ -36,30 +31,6 @@ public class Board {
 
         this.kingCountMap.put(PieceColor.BLACK, otherBoard.getNumberOfBlackKings());
         this.kingCountMap.put(PieceColor.WHITE, otherBoard.getNumberOfWhiteKings());
-    }
-
-    public int getNumberOfWhiteKings() {
-        return this.kingCountMap.get(PieceColor.WHITE);
-    }
-
-    public int getNumberOfBlackKings() {
-        return this.kingCountMap.get(PieceColor.BLACK);
-    }
-
-    public int getNumberOfWhitePawns() {
-        return this.pawnCountMap.get(PieceColor.WHITE);
-    }
-
-    public int getNumberOfBlackPawns() {
-        return this.pawnCountMap.get(PieceColor.BLACK);
-    }
-
-    public int getKingCount(PieceColor color) {
-        return this.kingCountMap.get(color);
-    }
-
-    public int getPawnCount(PieceColor color) {
-        return this.pawnCountMap.get(color);
     }
 
     public Board(List<Integer> blackPositions, List<Integer> whitePositions) {
@@ -77,37 +48,6 @@ public class Board {
                 this.setOccupyingPiece(position, new Piece(PieceColor.WHITE));
             }
         }
-    }
-    
-    public void updateCountsInMaps() {
-        int whitePawnCount = 0;
-        int whiteKingCount = 0;
-        int blackPawnCount = 0;
-        int blackKingCount = 0;
-        
-        for (Square square : this.getGameState()) {
-            PieceInterface piece = square.getOccupyingPiece();
-            
-            if (piece.isWhite()) {
-                if (piece.isKing()) {
-                    whiteKingCount++;
-                } else {
-                    whitePawnCount++;
-                }
-            } else if (piece.isBlack()) {
-                if (piece.isKing()) {
-                    blackKingCount++;
-                } else {
-                    blackPawnCount++;
-                }
-            }
-        }
-        
-        this.pawnCountMap.replace(PieceColor.WHITE, whitePawnCount);
-        this.pawnCountMap.replace(PieceColor.BLACK, blackPawnCount);
-        
-        this.kingCountMap.replace(PieceColor.WHITE, whiteKingCount);
-        this.kingCountMap.replace(PieceColor.BLACK, blackKingCount);
     }
 
     private void decrementPieceCount(int position) {
@@ -163,12 +103,32 @@ public class Board {
         return this.gameState;
     }
 
-    public int getTotalNumberOfBlackPieces() {
-        return this.getNumberOfBlackPawns() + this.getNumberOfBlackKings();
+    public int getKingCount(PieceColor color) {
+        return this.kingCountMap.get(color);
     }
 
-    public int getTotalNumberOfWhitePieces() {
-        return this.getNumberOfWhitePawns() + this.getNumberOfWhiteKings();
+    public int getNumberOfBlackKings() {
+        return this.kingCountMap.get(PieceColor.BLACK);
+    }
+
+    public int getNumberOfBlackPawns() {
+        return this.pawnCountMap.get(PieceColor.BLACK);
+    }
+
+    public int getNumberOfPawns(PieceColor color) {
+        return this.pawnCountMap.get(color);
+    }
+
+    public int getNumberOfWhiteKings() {
+        return this.kingCountMap.get(PieceColor.WHITE);
+    }
+
+    public int getNumberOfWhitePawns() {
+        return this.pawnCountMap.get(PieceColor.WHITE);
+    }
+
+    public int getPawnCount(PieceColor color) {
+        return this.pawnCountMap.get(color);
     }
 
     public PieceInterface getPiece(int position) {
@@ -249,6 +209,14 @@ public class Board {
         return startingGameBoard;
     }
 
+    public int getTotalNumberOfBlackPieces() {
+        return this.getNumberOfBlackPawns() + this.getNumberOfBlackKings();
+    }
+
+    public int getTotalNumberOfWhitePieces() {
+        return this.getNumberOfWhitePawns() + this.getNumberOfWhiteKings();
+    }
+
     @Override
     public int hashCode() {
         final int prime = 31;
@@ -275,13 +243,14 @@ public class Board {
         mapToIncrement.replace(pieceColor, currentCount);
     }
 
+    private void initializeEmptyKingCountMap() {
+        this.kingCountMap.put(PieceColor.BLACK, 0);
+        this.kingCountMap.put(PieceColor.WHITE, 0);
+    }
+    
     public boolean isDrawState() {
-        // if (this.repeatedStateDraw || (this.movesSinceLastCapture >= 50)) {
-        if (this.movesSinceLastCapture >= 50) {
-            return true;
-        } else {
-            return false;
-        }
+        return (this.repeatedStateDraw || (this.movesSinceLastCapture >= 50));
+        // return this.movesSinceLastCapture >= 50;
     }
 
     public boolean isEndState(PieceColor color) {
@@ -338,6 +307,37 @@ public class Board {
     public void setOccupyingPiece(int position, PieceInterface pieceToSet) {
         this.getSquare(position).setOccupyingPiece(pieceToSet);
         this.incrementPieceCount(position);
+    }
+
+    public void updateCountsInMaps() {
+        int whitePawnCount = 0;
+        int whiteKingCount = 0;
+        int blackPawnCount = 0;
+        int blackKingCount = 0;
+
+        for (Square square : this.getGameState()) {
+            PieceInterface piece = square.getOccupyingPiece();
+
+            if (piece.isWhite()) {
+                if (piece.isKing()) {
+                    whiteKingCount++;
+                } else {
+                    whitePawnCount++;
+                }
+            } else if (piece.isBlack()) {
+                if (piece.isKing()) {
+                    blackKingCount++;
+                } else {
+                    blackPawnCount++;
+                }
+            }
+        }
+
+        this.pawnCountMap.replace(PieceColor.WHITE, whitePawnCount);
+        this.pawnCountMap.replace(PieceColor.BLACK, blackPawnCount);
+
+        this.kingCountMap.replace(PieceColor.WHITE, whiteKingCount);
+        this.kingCountMap.replace(PieceColor.BLACK, blackKingCount);
     }
 
     private void updateStateCounter() {

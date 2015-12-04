@@ -39,16 +39,16 @@ public class GameManager {
         
         if (color.equals(PieceColor.BLACK)) {
             weightMap.put(PawnCountEvaluator.getInstance(), 1.0);
-            weightMap.put(KingCountEvaluator.getInstance(), 1.0);
-            weightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
-            weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
-            weightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 1.0);
+            weightMap.put(KingCountEvaluator.getInstance(), 1.4);
+//            weightMap.put(BackRowCountEvaluator.getInstance(), 0.25);
+//            weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
+//            weightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 0.125);
         } else {
-            weightMap.put(PawnCountEvaluator.getInstance(), 2.0);
-            weightMap.put(KingCountEvaluator.getInstance(), 4.0);
-            weightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
-            weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
-            weightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 0.25);
+            weightMap.put(PawnCountEvaluator.getInstance(), 1.0);
+            weightMap.put(KingCountEvaluator.getInstance(), 10.0);
+//            weightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
+//            weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
+//            weightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 0.25);
         }
         
         return new Strategy(new BoardEvaluatorSummator(), color, weightMap);
@@ -73,8 +73,6 @@ public class GameManager {
         for (int i = 0; i < 100; i++) {
             playGame();
             updateWeights();
-            System.out.println(BoardEvaluatorSummator.count);
-            System.exit(0); //TODO Remove
         }
     }
     
@@ -101,7 +99,7 @@ public class GameManager {
         int moveCount = 0;
         while (!this.gameBoard.isEndState(currentColor)) {
             moveCount++;
-            System.out.println(currentPlayer.makeMove(this.gameBoard).toString()); //TODO remove sysout
+            currentPlayer.makeMove(this.gameBoard);
             currentColor = currentColor.getOppositeColor();
             currentPlayer = this.getOtherPlayer(currentPlayer);
         }
