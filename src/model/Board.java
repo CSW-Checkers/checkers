@@ -278,14 +278,19 @@ public class Board {
         this.removePiece(position);
         return pieceToPickUp;
     }
+    
+    public int getTotalNumberOfPieces(PieceColor color) {
+        return this.getNumberOfPawns(color) + this.getNumberOfKings(color);
+    }
+    
+    public int getNumberOfKings(PieceColor color) {
+        return this.kingCountMap.get(color);
+    }
 
     public boolean playerHasLost(PieceColor color) {
         boolean outOfPieces = false;
-        if (color == PieceColor.BLACK) {
-            outOfPieces = this.getTotalNumberOfBlackPieces() == 0;
-        } else {
-            outOfPieces = this.getTotalNumberOfWhitePieces() == 0;
-        }
+        
+        outOfPieces = this.getTotalNumberOfPieces(color) == 0;
 
         if (outOfPieces) {
             return true;
