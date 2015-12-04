@@ -26,6 +26,7 @@ public class Board {
 
     public Board(Board otherBoard) {
         this.gameState = new ArrayList<Square>();
+        initializeEmptyKingCountMap();
         for (final Square square : otherBoard.getGameState()) {
             this.gameState.add(new Square(square));
         }
@@ -64,6 +65,7 @@ public class Board {
     public Board(List<Integer> blackPositions, List<Integer> whitePositions) {
         this.pawnCountMap.put(PieceColor.WHITE, 0);
         this.pawnCountMap.put(PieceColor.BLACK, 0);
+        initializeEmptyKingCountMap();
 
         this.gameState = new ArrayList<Square>(32);
 
@@ -75,6 +77,37 @@ public class Board {
                 this.setOccupyingPiece(position, new Piece(PieceColor.WHITE));
             }
         }
+    }
+    
+    public void updateCountsInMaps() {
+        int whitePawnCount = 0;
+        int whiteKingCount = 0;
+        int blackPawnCount = 0;
+        int blackKingCount = 0;
+        
+        for (Square square : this.getGameState()) {
+            PieceInterface piece = square.getOccupyingPiece();
+            
+            if (piece.isWhite()) {
+                if (piece.isKing()) {
+                    whiteKingCount++;
+                } else {
+                    whitePawnCount++;
+                }
+            } else if (piece.isBlack()) {
+                if (piece.isKing()) {
+                    blackKingCount++;
+                } else {
+                    blackPawnCount++;
+                }
+            }
+        }
+        
+        this.pawnCountMap.replace(PieceColor.WHITE, whitePawnCount);
+        this.pawnCountMap.replace(PieceColor.BLACK, blackPawnCount);
+        
+        this.kingCountMap.replace(PieceColor.WHITE, whiteKingCount);
+        this.kingCountMap.replace(PieceColor.BLACK, blackKingCount);
     }
 
     private void decrementPieceCount(int position) {

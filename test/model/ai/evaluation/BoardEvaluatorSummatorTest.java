@@ -65,6 +65,7 @@ public class BoardEvaluatorSummatorTest {
         board.getPiece(1).kingMe();
         board.getPiece(2).kingMe();
         board.removePiece(32);
+        board.updateCountsInMaps();
 
         final BoardEvaluatorAggregator boardAgg = new BoardEvaluatorSummator();
         HashMap<BoardEvaluatorInterface, Double> evaluatorWeightMap = new HashMap<>();

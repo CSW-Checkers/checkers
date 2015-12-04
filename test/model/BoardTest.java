@@ -188,11 +188,11 @@ public class BoardTest {
         assertTrue(this.board.isDrawState());
     }
 
-    @Test
-    public void testIsDrawState_RepeatedStateDraw() throws Exception {
-        ReflectionTestHelper.changePrivateFieldOnObject(this.board, "repeatedStateDraw", true);
-        assertTrue(this.board.isDrawState());
-    }
+//    @Test
+//    public void testIsDrawState_RepeatedStateDraw() throws Exception {
+//        ReflectionTestHelper.changePrivateFieldOnObject(this.board, "repeatedStateDraw", true);
+//        assertTrue(this.board.isDrawState());
+//    }
 
     @Test
     public void testMovePiece_JumpMove() {
