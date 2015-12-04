@@ -20,3 +20,4 @@ import model.ai.search.AlphaBetaSearchTest;
 
 public class ModelSuite {
 }
+

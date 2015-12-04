@@ -5,7 +5,7 @@ import model.ai.search.AlphaBetaSearch;
 
 public class ComputerPlayer implements Player {
     private final PieceColor color;
-    private final Strategy strategy;
+    private Strategy strategy;
 
     public ComputerPlayer(PieceColor color) {
         this.color = color;
@@ -21,6 +21,14 @@ public class ComputerPlayer implements Player {
     public PieceColor getColor() {
         return this.color;
     }
+    
+    public Strategy getStrategy() {
+        return strategy;
+    }
+    
+    public void setStrategy(Strategy strategy) {
+        this.strategy = strategy;
+    }
 
     @Override
     public MoveInterface makeMove(Board currentBoard) {
@@ -28,12 +36,7 @@ public class ComputerPlayer implements Player {
                 .alphaBetaSearch();
 
         currentBoard.movePiece(moveToMake);
-        this.printMove(moveToMake);
         return moveToMake;
-    }
-
-    private void printMove(MoveInterface moveToMake) {
-        System.out.println(this.color.toString() + ": " + moveToMake);
     }
 
 }

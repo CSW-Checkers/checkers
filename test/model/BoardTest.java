@@ -25,9 +25,11 @@ public class BoardTest {
 
     @Test
     public void testBoard() {
-        final int expectedStartingPieceCounts = 12;
-        assertEquals(expectedStartingPieceCounts, this.board.getNumberOfBlackPieces());
-        assertEquals(expectedStartingPieceCounts, this.board.getNumberOfWhitePieces());
+        final int expectedStartingPawnCount = 12;
+        assertEquals(expectedStartingPawnCount, this.board.getNumberOfBlackPawns());
+        assertEquals(expectedStartingPawnCount, this.board.getNumberOfWhitePawns());
+        assertEquals(0, this.board.getNumberOfBlackKings());
+        assertEquals(0, this.board.getNumberOfWhiteKings());
         assertNotNull(this.board.getGameState());
 
         for (int position = 1; position <= 32; position++) {
@@ -312,14 +314,14 @@ public class BoardTest {
         assertFalse(this.board.getPiece(blackPiecePosition).isNull());
         this.board.removePiece(blackPiecePosition);
         assertTrue(this.board.getPiece(blackPiecePosition).isNull());
-        assertEquals(12, this.board.getNumberOfWhitePieces());
-        assertEquals(11, this.board.getNumberOfBlackPieces());
+        assertEquals(12, this.board.getNumberOfWhitePawns());
+        assertEquals(11, this.board.getNumberOfBlackPawns());
 
         final int whitePiecePosition = 27;
         this.board.removePiece(whitePiecePosition);
         assertTrue(this.board.getPiece(whitePiecePosition).isNull());
-        assertEquals(11, this.board.getNumberOfWhitePieces());
-        assertEquals(11, this.board.getNumberOfBlackPieces());
+        assertEquals(11, this.board.getNumberOfWhitePawns());
+        assertEquals(11, this.board.getNumberOfBlackPawns());
     }
 
     @Test

@@ -19,58 +19,40 @@ import view.cli.CommandLineHelper;
 public class GameManager {
     public static void main(String[] args) {
         final GameManager gameManager = new GameManager();
-        gameManager.playGame();
+        gameManager.refineStrategy();
     }
 
     private Player blackPlayer;
-    private final Board gameBoard = new Board();
+    private Board gameBoard;
     private Player whitePlayer;
 
-    private void choosePlayerTypes() {
-        // @SuppressWarnings("resource")
-        // final Scanner reader = new Scanner(System.in);
-        // System.out.println("Select 1 for Computer. Select 2 for Human.");
-        // for (final PieceColor color : PieceColor.values()) {
-        // System.out.print("Select player type for " + color + ": ");
-        // final int selection = reader.nextInt();
-        // if (color.equals(PieceColor.BLACK)) {
-        // if (selection == 1) {
-        // this.blackPlayer = new ComputerPlayer(color);
-        // } else if (selection == 2) {
-        // this.blackPlayer = new HumanPlayer(color);
-        // }
-        // } else {
-        // if (selection == 1) {
-        // this.whitePlayer = new ComputerPlayer(color);
-        // } else if (selection == 2) {
-        // this.whitePlayer = new HumanPlayer(color);
-        // }
-        // }
-        // }
-
-        final HashMap<BoardEvaluatorInterface, Double> blackWeightMap = new HashMap<BoardEvaluatorInterface, Double>();
-        blackWeightMap.put(PawnCountEvaluator.getInstance(), 1.0);
-        blackWeightMap.put(KingCountEvaluator.getInstance(), 1.0);
-        blackWeightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
-        blackWeightMap.put(GameOverEvaluator.getInstance(), 1000.0);
-        blackWeightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 1.0);
-
-        final HashMap<BoardEvaluatorInterface, Double> whiteWeightMap = new HashMap<BoardEvaluatorInterface, Double>();
-        whiteWeightMap.put(PawnCountEvaluator.getInstance(), 2.0);
-        whiteWeightMap.put(KingCountEvaluator.getInstance(), 4.0);
-        whiteWeightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
-        whiteWeightMap.put(GameOverEvaluator.getInstance(), 1000.0);
-        whiteWeightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 0.25);
-
-        final Strategy blackStrategy = new Strategy(new BoardEvaluatorSummator(), PieceColor.BLACK,
-                blackWeightMap);
-        final Strategy whiteStrategy = new Strategy(new BoardEvaluatorSummator(), PieceColor.WHITE,
-                whiteWeightMap);
+    private void initializeComputerPlayers() {
+        final Strategy blackStrategy = getStartingStrategy(PieceColor.BLACK);
+        final Strategy whiteStrategy = getStartingStrategy(PieceColor.WHITE);
 
         this.blackPlayer = new ComputerPlayer(PieceColor.BLACK, blackStrategy);
         this.whitePlayer = new ComputerPlayer(PieceColor.WHITE, whiteStrategy);
     }
 
+    private Strategy getStartingStrategy(PieceColor color) {
+        final HashMap<BoardEvaluatorInterface, Double> weightMap = new HashMap<BoardEvaluatorInterface, Double>();
+        
+        if (color.equals(PieceColor.BLACK)) {
+            weightMap.put(PawnCountEvaluator.getInstance(), 1.0);
+            weightMap.put(KingCountEvaluator.getInstance(), 1.0);
+            weightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
+            weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
+            weightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 1.0);
+        } else {
+            weightMap.put(PawnCountEvaluator.getInstance(), 2.0);
+            weightMap.put(KingCountEvaluator.getInstance(), 4.0);
+            weightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
+            weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
+            weightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 0.25);
+        }
+        
+        return new Strategy(new BoardEvaluatorSummator(), color, weightMap);
+    }
     private void displayWinner(Board endingBoard) {
         if (endingBoard.isDrawState()) {
             System.out.println("Draw");
@@ -80,9 +62,25 @@ public class GameManager {
             System.out.println("White wins");
         }
 
-        System.out.println("White pieces: " + endingBoard.getNumberOfWhitePieces());
-        System.out.println("Black pieces: " + endingBoard.getNumberOfBlackPieces());
+        System.out.println("White pieces: " + endingBoard.getTotalNumberOfWhitePieces());
+        System.out.println("Black pieces: " + endingBoard.getTotalNumberOfBlackPieces());
         CommandLineHelper.printBoard(endingBoard);
+    }
+
+    private void refineStrategy() {
+        this.initializeComputerPlayers();
+        
+        for (int i = 0; i < 100; i++) {
+            playGame();
+            updateWeights();
+            System.out.println(BoardEvaluatorSummator.count);
+            System.exit(0); //TODO Remove
+        }
+    }
+    
+    private void updateWeights() {
+        // TODO Auto-generated method stub
+        
     }
 
     private Player getOtherPlayer(Player currentPlayer) {
@@ -96,25 +94,18 @@ public class GameManager {
     }
 
     private void playGame() {
-        this.choosePlayerTypes();
-
+        this.gameBoard = new Board();
+        
         PieceColor currentColor = PieceColor.BLACK;
         Player currentPlayer = this.blackPlayer;
-
-        System.out.println("Game start");
-        // CommandLineHelper.printBoard(this.gameBoard);
+        int moveCount = 0;
         while (!this.gameBoard.isEndState(currentColor)) {
-            currentPlayer.makeMove(this.gameBoard);
-            // CommandLineHelper.printBoard(this.gameBoard);
+            moveCount++;
+            System.out.println(currentPlayer.makeMove(this.gameBoard).toString()); //TODO remove sysout
             currentColor = currentColor.getOppositeColor();
             currentPlayer = this.getOtherPlayer(currentPlayer);
-
-            // try {
-            // Thread.sleep(500);
-            // } catch (final InterruptedException e) {
-            // e.printStackTrace();
-            // }
         }
+        System.out.println("Moves: " + moveCount);
         this.displayWinner(this.gameBoard);
     }
 }
