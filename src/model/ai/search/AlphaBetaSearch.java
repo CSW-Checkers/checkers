@@ -24,6 +24,7 @@ public class AlphaBetaSearch {
     public MoveInterface alphaBetaSearch() {
         final double bestValue = this.maxValue(this.root, Double.NEGATIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
+//        System.out.println(playerMakingMove + ": " + bestValue);
         return this.getBestMove(bestValue);
     }
 

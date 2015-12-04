@@ -13,6 +13,7 @@ public class KingCountEvaluatorTest {
         final Board board = new Board();
         board.getPiece(1).kingMe();
         board.getPiece(2).kingMe();
+        board.updateCountsInMaps();
 
         final BoardEvaluatorInterface kingEvaluator = KingCountEvaluator.getInstance();
 

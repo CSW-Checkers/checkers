@@ -8,6 +8,7 @@ import model.PieceColor;
 import model.Strategy;
 
 public class BoardEvaluatorSummator implements BoardEvaluatorAggregator {
+    public static int count = 0;
 
     @Override
     public double evaluateBoard(Strategy strategy, Board theBoard) {
@@ -19,6 +20,7 @@ public class BoardEvaluatorSummator implements BoardEvaluatorAggregator {
             final BoardEvaluatorInterface evaluator = entry.getKey();
             final double weight = entry.getValue().doubleValue();
             value += evaluator.evaluateBoard(theBoard, color) * weight;
+            count++;
         }
 
         return value;
