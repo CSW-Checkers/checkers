@@ -4,6 +4,11 @@ import model.Board;
 import model.PieceColor;
 
 public class KingCountEvaluator implements BoardEvaluatorInterface {
+    @Override
+    public String toString() {
+        return "KingCountEvaluator";
+    }
+
     private static BoardEvaluatorInterface instance;
 
     public static BoardEvaluatorInterface getInstance() {

@@ -1,7 +1,7 @@
 package controller;
 
+import java.util.Random;
 import java.util.HashMap;
-
 import model.Board;
 import model.ComputerPlayer;
 import model.PieceColor;
@@ -25,6 +25,7 @@ public class GameManager {
     private Player blackPlayer;
     private Board gameBoard;
     private Player whitePlayer;
+    private Random randGauss = new Random();
 
     private void initializeComputerPlayers() {
         final Strategy blackStrategy = getStartingStrategy(PieceColor.BLACK);
@@ -64,21 +65,70 @@ public class GameManager {
 
         System.out.println("White pieces: " + endingBoard.getTotalNumberOfWhitePieces());
         System.out.println("Black pieces: " + endingBoard.getTotalNumberOfBlackPieces());
-        CommandLineHelper.printBoard(endingBoard);
+        //CommandLineHelper.printBoard(endingBoard);
     }
 
     private void refineStrategy() {
         this.initializeComputerPlayers();
         
-        for (int i = 0; i < 100; i++) {
+        for (int i = 0; i < 4; i++) {
+            System.out.println("GAME #: " + (i + 1));
             playGame();
             updateWeights();
+            System.out.println("##-- Updated Weights After Game --##");
+            printWeightsOfPlayer((ComputerPlayer)whitePlayer);
+            printWeightsOfPlayer((ComputerPlayer)blackPlayer);
         }
     }
     
     private void updateWeights() {
-        // TODO Auto-generated method stub
-        
+        ComputerPlayer player = null;
+        if (this.gameBoard.isDrawState()) {
+            //calculate how good each player did            
+            int whitePieces = gameBoard.getTotalNumberOfWhitePieces();
+            int blackPieces = gameBoard.getTotalNumberOfBlackPieces();
+            if(whitePieces > blackPieces){
+                player = (ComputerPlayer)this.blackPlayer;
+            }else if (whitePieces < blackPieces){
+                player = (ComputerPlayer)this.whitePlayer;
+            }else{
+                //MUST DECIDE WHAT TO DO IN A DRAW
+                //right now I just jitter white's weights, but we'll want to do something different
+                player = (ComputerPlayer)this.whitePlayer;//just so it doesn't crash later
+                System.out.println("true tie");
+            }
+        } else if (this.gameBoard.playerHasLost(PieceColor.WHITE)) {
+            // jitter white player's weights
+            player = (ComputerPlayer)this.whitePlayer;
+        } else {
+            // jitter black player's weights
+            player = (ComputerPlayer)this.blackPlayer;
+        }
+        Strategy strategy = player.getStrategy();
+        HashMap<BoardEvaluatorInterface, Double> weightMapToPerturb = strategy.getEvaluatorWeightMap();
+        for (BoardEvaluatorInterface evalInterface : weightMapToPerturb.keySet()) {
+            Double weightToPerturbe = weightMapToPerturb.get(evalInterface);
+            // mean of 0.0, stdev of 0.5
+            double gaussian = randGauss.nextGaussian() * 5.0;// get Gaussian random number
+            weightToPerturbe += gaussian;
+            if (weightToPerturbe < 0.0) {// if it becomes negative
+                weightToPerturbe = Math.abs(weightToPerturbe);// just make is small
+            }
+            weightMapToPerturb.replace(evalInterface, weightToPerturbe);
+        }
+    }
+    
+    private void printWeightsOfPlayer(ComputerPlayer cp){
+        if(cp.getColor() == PieceColor.BLACK){
+            System.out.println("Black's weights: ");
+        }else{
+            System.out.println("White's weights: ");
+        }
+        Strategy stg = cp.getStrategy();
+        HashMap<BoardEvaluatorInterface, Double> weightMapToPrint = stg.getEvaluatorWeightMap();
+        for (BoardEvaluatorInterface evalInterface : weightMapToPrint.keySet()) {
+            System.out.println(evalInterface.toString() + ": " + weightMapToPrint.get(evalInterface));
+        }
     }
 
     private Player getOtherPlayer(Player currentPlayer) {
