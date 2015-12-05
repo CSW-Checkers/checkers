@@ -47,8 +47,4 @@ public class Strategy {
         return this.evaluatorWeightMap;
     }
 
-    public void setEvaluatorWeightMap(HashMap<BoardEvaluatorInterface, Double> evaluatorWeightMap) {
-        this.evaluatorWeightMap = evaluatorWeightMap;
-    }
-
 }
