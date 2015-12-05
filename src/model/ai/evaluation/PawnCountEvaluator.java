@@ -4,10 +4,6 @@ import model.Board;
 import model.PieceColor;
 
 public class PawnCountEvaluator implements BoardEvaluatorInterface {
-    public String toString() {
-        return "PawnCountEvaluator";
-    }
-
     private static BoardEvaluatorInterface instance = null;
 
     public static BoardEvaluatorInterface getInstance() {
