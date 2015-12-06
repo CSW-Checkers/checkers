@@ -11,9 +11,9 @@ import model.Strategy;
 import model.ai.evaluation.BoardEvaluatorInterface;
 import model.ai.evaluation.BoardEvaluatorSummator;
 import model.ai.evaluation.BoardPositionEvaluator;
+import model.ai.evaluation.GameOverEvaluator;
 import model.ai.evaluation.KingCountEvaluator;
 import model.ai.evaluation.PawnCountEvaluator;
-import model.ai.evaluation.TradePieceEvaluator;
 import view.cli.CommandLineHelper;
 
 public class GameManager {
@@ -42,15 +42,16 @@ public class GameManager {
             weightMap.put(PawnCountEvaluator.getInstance(), 10.0);
             weightMap.put(KingCountEvaluator.getInstance(), 15.0);
             // weightMap.put(BackRowCountEvaluator.getInstance(), 0.25);
-            // weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
+            weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
             // weightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 0.1);
-            weightMap.put(TradePieceEvaluator.getInstance(), 500.0);
+            // weightMap.put(TradePieceEvaluator.getInstance(), 500.0);
             weightMap.put(BoardPositionEvaluator.getInstance(), 0.1);
+
         } else {
             weightMap.put(PawnCountEvaluator.getInstance(), 1.0);
             weightMap.put(KingCountEvaluator.getInstance(), 1.5);
             // weightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
-            // weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
+            weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
             // weightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 1.0);
         }
 

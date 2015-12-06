@@ -4,14 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 
 public class Board {
     private List<Square> gameState = new ArrayList<>();
     private HashMap<PieceColor, Integer> kingCountMap = new HashMap<>();
     private int movesSinceLastCapture = 0;
     private HashMap<PieceColor, Integer> pawnCountMap = new HashMap<>();
-    private boolean repeatedStateDraw = false;
-    private final HashMap<List<Square>, Integer> stateCounter = new HashMap<>();
+    // private boolean repeatedStateDraw = false;
+    // private final HashMap<List<Square>, Integer> stateCounter = new HashMap<>();
     private final HashMap<PieceColor, HashSet<Integer>> colorPositionMap = new HashMap<>();
 
     public Board() {
@@ -27,6 +28,23 @@ public class Board {
         initializeEmptyKingCountMap();
         for (final Square square : otherBoard.getGameState()) {
             this.gameState.add(new Square(square));
+        }
+
+        this.movesSinceLastCapture = otherBoard.movesSinceLastCapture;
+        // this.repeatedStateDraw = otherBoard.repeatedStateDraw;
+
+        // for (Map.Entry<List<Square>, Integer> entry : otherBoard.stateCounter.entrySet()) {
+        // this.stateCounter.put(entry.getKey(), entry.getValue());
+        // }
+
+        for (Map.Entry<PieceColor, HashSet<Integer>> entry : otherBoard.colorPositionMap
+                .entrySet()) {
+            HashSet<Integer> hashSet = new HashSet<>();
+            for (Integer position : entry.getValue()) {
+                hashSet.add(position);
+            }
+
+            this.colorPositionMap.put(entry.getKey(), hashSet);
         }
 
         this.pawnCountMap.put(PieceColor.BLACK, otherBoard.getNumberOfBlackPawns());
@@ -279,8 +297,8 @@ public class Board {
     }
 
     public boolean isDrawState() {
-        return (this.repeatedStateDraw || (this.movesSinceLastCapture >= 100));
-        // return this.movesSinceLastCapture >= 50;
+        // return (this.repeatedStateDraw || (this.movesSinceLastCapture >= 100));
+        return this.movesSinceLastCapture >= 50;
     }
 
     public boolean isEndState(PieceColor color) {
@@ -300,7 +318,7 @@ public class Board {
             this.movesSinceLastCapture++;
         }
         this.setOccupyingPiece(move.getEndingPosition(), pieceToMove);
-        this.updateStateCounter();
+        // this.updateStateCounter();
     }
 
     private PieceInterface pickUpPiece(int position) {
@@ -381,19 +399,19 @@ public class Board {
         this.kingCountMap.replace(PieceColor.BLACK, blackKingCount);
     }
 
-    private void updateStateCounter() {
-        Integer count = this.stateCounter.get(this.gameState);
-
-        if (count == null) {
-            this.stateCounter.put(this.gameState, 1);
-        } else {
-            count++;
-            this.stateCounter.put(this.gameState, count);
-            if (count >= 10) {
-                this.repeatedStateDraw = true;
-            }
-        }
-
-    }
+    // private void updateStateCounter() {
+    // Integer count = this.stateCounter.get(this.gameState);
+    //
+    // if (count == null) {
+    // this.stateCounter.put(this.gameState, 1);
+    // } else {
+    // count++;
+    // this.stateCounter.put(this.gameState, count);
+    // if (count >= 10) {
+    // this.repeatedStateDraw = true;
+    // }
+    // }
+    //
+    // }
 
 }
