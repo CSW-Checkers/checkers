@@ -1,8 +1,12 @@
 package view.cli;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map.Entry;
 
 import model.Board;
+import model.PieceColor;
 import model.PieceInterface;
 
 public final class CommandLineHelper {
@@ -105,5 +109,12 @@ public final class CommandLineHelper {
 
     private static void printRowDivider() {
         System.out.println("||======================================================||");
+    }
+
+    public static void printFinalPositions(Board theBoard) {
+        HashMap<PieceColor, HashSet<Integer>> colorPositionMap = theBoard.getColorPositionMap();
+        for (Entry<PieceColor, HashSet<Integer>> colorWithPositions : colorPositionMap.entrySet()) {
+            System.out.println(colorWithPositions);
+        }
     }
 }

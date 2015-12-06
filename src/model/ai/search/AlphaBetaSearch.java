@@ -1,5 +1,8 @@
 package model.ai.search;
 
+import java.util.ArrayList;
+import java.util.Random;
+
 import model.Board;
 import model.MoveInterface;
 import model.PieceColor;
@@ -24,7 +27,7 @@ public class AlphaBetaSearch {
     public MoveInterface alphaBetaSearch() {
         final double bestValue = this.maxValue(this.root, Double.NEGATIVE_INFINITY,
                 Double.POSITIVE_INFINITY);
-//        System.out.println(playerMakingMove + ": " + bestValue);
+        // System.out.println(playerMakingMove + ": " + bestValue);
         return this.getBestMove(bestValue);
     }
 
@@ -33,15 +36,14 @@ public class AlphaBetaSearch {
     }
 
     private MoveInterface getBestMove(double bestValue) {
-        MoveInterface bestMove = null;
+        final ArrayList<MoveInterface> bestMoves = new ArrayList<>();
 
         for (final AlphaBetaSearchNode node : this.root.getChildren()) {
             if ((node != null) && (node.getValue() == bestValue)) {
-                bestMove = node.getMoveThatGotToThisState();
-                break;
+                bestMoves.add(node.getMoveThatGotToThisState());
             }
         }
-        return bestMove;
+        return bestMoves.get(new Random().nextInt(bestMoves.size()));
     }
 
     public double maxValue(AlphaBetaSearchNode node, double alpha, double beta) {

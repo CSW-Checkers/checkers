@@ -1,9 +1,11 @@
 package model.ai.evaluation;
 
+import java.util.HashMap;
+import java.util.HashSet;
+
 import model.Board;
 import model.PieceColor;
 import model.PieceInterface;
-import model.Square;
 
 public class PawnDistanceToKingedEvaluator implements BoardEvaluatorInterface {
 
@@ -23,29 +25,34 @@ public class PawnDistanceToKingedEvaluator implements BoardEvaluatorInterface {
     public double evaluateBoard(Board theBoard, PieceColor color) {
         double score = 0.0;
 
-        for (final Square square : theBoard.getGameState()) {
+        HashMap<PieceColor, HashSet<Integer>> positionColorMap = theBoard.getColorPositionMap();
 
-            if (square.isOccupied()) {
-                final PieceInterface piece = square.getOccupyingPiece();
+        HashSet<Integer> blackPositions = positionColorMap.get(PieceColor.BLACK);
+        double blackValue = 0.0;
+        for (Integer position : blackPositions) {
+            PieceInterface piece = theBoard.getPiece(position);
 
-                // if (!piece.isKing()) { TODO Figure out how to get pieces kinged and let them off back row
-                final int rowNumber = square.getRowNumber();
-                int distanceToOtherSide = 0;
-
-                if (piece.getColor() == PieceColor.BLACK) {
-                    distanceToOtherSide = 8 - rowNumber;
-                } else {
-                    distanceToOtherSide = rowNumber - 1;
-                }
-
-                final double value = 8 - distanceToOtherSide;
-                if (piece.getColor() == color) {
-                    score += value;
-                } else {
-                    score -= value;
-                }
-                // }
+            if (!piece.isKing()) {
+                blackValue += theBoard.getSquare(position).getRowNumber();
             }
+        }
+
+        HashSet<Integer> whitePositions = positionColorMap.get(PieceColor.WHITE);
+        double whiteValue = 0.0;
+        for (Integer position : whitePositions) {
+            PieceInterface piece = theBoard.getPiece(position);
+
+            if (!piece.isKing()) {
+                whiteValue += 9 - theBoard.getSquare(position).getRowNumber();
+            }
+        }
+
+        if (color == PieceColor.BLACK) {
+            score += blackValue;
+            score -= whiteValue;
+        } else {
+            score += whiteValue;
+            score -= blackValue;
         }
 
         return score;
