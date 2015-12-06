@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.List;
 
 public class Board {
-    private final List<Square> gameState;
+    private List<Square> gameState = new ArrayList<>();
     private HashMap<PieceColor, Integer> kingCountMap = new HashMap<>();
     private int movesSinceLastCapture = 0;
     private HashMap<PieceColor, Integer> pawnCountMap = new HashMap<>();
@@ -34,7 +34,7 @@ public class Board {
 
         this.kingCountMap.put(PieceColor.BLACK, otherBoard.getNumberOfBlackKings());
         this.kingCountMap.put(PieceColor.WHITE, otherBoard.getNumberOfWhiteKings());
-        
+
         updatePositionMap();
     }
 
@@ -42,6 +42,7 @@ public class Board {
         this.pawnCountMap.put(PieceColor.WHITE, 0);
         this.pawnCountMap.put(PieceColor.BLACK, 0);
         initializeEmptyKingCountMap();
+        updatePositionMap();
 
         this.gameState = new ArrayList<Square>(32);
 
@@ -148,7 +149,7 @@ public class Board {
 
         return pieces;
     }
-    
+
     public HashMap<PieceColor, HashSet<Integer>> getColorPositionMap() {
         return this.colorPositionMap;
     }
@@ -217,11 +218,11 @@ public class Board {
 
         return startingGameBoard;
     }
-    
+
     private void updatePositionMap() {
         HashSet<Integer> blackPositions = new HashSet<>();
         HashSet<Integer> whitePositions = new HashSet<>();
-        
+
         for (Square square : this.getGameState()) {
             if (square.isOccupied()) {
                 int currentPosition = square.getPosition();
@@ -233,7 +234,7 @@ public class Board {
                 }
             }
         }
-        
+
         this.colorPositionMap.put(PieceColor.BLACK, blackPositions);
         this.colorPositionMap.put(PieceColor.WHITE, whitePositions);
     }
@@ -276,9 +277,9 @@ public class Board {
         this.kingCountMap.put(PieceColor.BLACK, 0);
         this.kingCountMap.put(PieceColor.WHITE, 0);
     }
-    
+
     public boolean isDrawState() {
-        return (this.repeatedStateDraw || (this.movesSinceLastCapture >= 50));
+        return (this.repeatedStateDraw || (this.movesSinceLastCapture >= 100));
         // return this.movesSinceLastCapture >= 50;
     }
 
@@ -307,18 +308,18 @@ public class Board {
         this.removePiece(position);
         return pieceToPickUp;
     }
-    
+
     public int getTotalNumberOfPieces(PieceColor color) {
         return this.getNumberOfPawns(color) + this.getNumberOfKings(color);
     }
-    
+
     public int getNumberOfKings(PieceColor color) {
         return this.kingCountMap.get(color);
     }
 
     public boolean playerHasLost(PieceColor color) {
         boolean outOfPieces = false;
-        
+
         outOfPieces = this.getTotalNumberOfPieces(color) == 0;
 
         if (outOfPieces) {
@@ -344,7 +345,7 @@ public class Board {
     public void setOccupyingPiece(int position, PieceInterface pieceToSet) {
         this.getSquare(position).setOccupyingPiece(pieceToSet);
         this.incrementPieceCount(position);
-        
+
         // Update colorPositionMap with new position
         this.colorPositionMap.get(pieceToSet.getColor()).add(position);
     }
@@ -388,7 +389,7 @@ public class Board {
         } else {
             count++;
             this.stateCounter.put(this.gameState, count);
-            if (count >= 4) {
+            if (count >= 10) {
                 this.repeatedStateDraw = true;
             }
         }
