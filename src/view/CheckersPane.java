@@ -38,8 +38,13 @@ public class CheckersPane extends Pane {
 
     String typeOfPieceHumanPlaysWith;
 
-    String zerglingString = "zergling";
-    String stalkerString = "stalker";
+    String redString = "red";
+    String blackString = "black";
+    
+    Image redImage = new Image("red.png");
+    Image blackImage = new Image("black.png");
+    Image redKingImage = new Image("redKing.png");
+    Image blackKingImage = new Image("blackKing.png");
 
     public boolean computerIsMoving = true;
 
@@ -82,9 +87,6 @@ public class CheckersPane extends Pane {
         this.getChildren().add(this.canvas);
         this.drawBoard(gc);
 
-        Image zerlingImage = new Image("zergling.jpeg");
-        Image stalkerImage = new Image("stalker.jpeg");
-
         List<Square> squares = board.getGameState();
         for (Square square : squares) {
             if (square.isOccupied()) {
@@ -96,16 +98,15 @@ public class CheckersPane extends Pane {
 
                 ImageView iv;
                 if (piece.isWhite()) {
-                    iv = new ImageView(zerlingImage);
-                    this.typeOfpieceAtPosition.put(position, this.zerglingString);
+                    iv = new ImageView(redImage);
+                    this.typeOfpieceAtPosition.put(position, this.redString);
                 } else {
-                    iv = new ImageView(stalkerImage);
-                    this.typeOfpieceAtPosition.put(position, this.stalkerString);
+                    iv = new ImageView(blackImage);
+                    this.typeOfpieceAtPosition.put(position, this.blackString);
                 }
                 this.positionsOfImages.put(position, iv);
                 iv.setFitWidth(this.squareWidth);
                 iv.setFitHeight(this.squareHeight);
-                iv.setOpacity(0.8);// SETS OPACITY!!!
                 this.getChildren().add(iv);
             }
             this.positionPieces();
@@ -207,38 +208,35 @@ public class CheckersPane extends Pane {
         String[] positionsOfStalkers = { "0,1", "0,3", "0,5", "0,7", "1,0", "1,2", "1,4", "1,6",
                 "2,1", "2,3", "2,5", "2,7" };
         /*
-         * bottom pieces are zerglings
+         * bottom pieces are red
          */
-        Image image = new Image("zergling.jpeg");
         for (int i = 0; i < positionsOfZerglings.length; i++) {
-            ImageView imageView = new ImageView(image);
+            ImageView imageView = new ImageView(redImage);
             imageView.setFitWidth(this.squareWidth);
             imageView.setFitHeight(this.squareHeight);
             this.positionsOfImages.put(positionsOfZerglings[i], imageView);
-            this.typeOfpieceAtPosition.put(positionsOfZerglings[i], this.zerglingString);
+            this.typeOfpieceAtPosition.put(positionsOfZerglings[i], this.redString);
         }
 
         /*
-         * top pieces are stalkers
+         * top pieces are black
          */
-        image = new Image("stalker.jpeg");
         for (int i = 0; i < positionsOfStalkers.length; i++) {
-            ImageView imageView = new ImageView(image);
+            ImageView imageView = new ImageView(blackImage);
             imageView.setFitWidth(this.squareWidth);
             imageView.setFitHeight(this.squareHeight);
             this.positionsOfImages.put(positionsOfStalkers[i], imageView);
-            this.typeOfpieceAtPosition.put(positionsOfStalkers[i], this.stalkerString);
+            this.typeOfpieceAtPosition.put(positionsOfStalkers[i], this.blackString);
         }
     }
 
     public void kingPieceAtPosition(String position) {
         System.out.println("kinged");
-        String nameOfPiece = this.typeOfpieceAtPosition.get(position) == this.stalkerString ? this.stalkerString
-                : this.zerglingString;
+        String nameOfPiece = this.typeOfpieceAtPosition.get(position) == this.blackString ? this.blackString
+                : this.redString;
         ImageView imageToBeReplaced = this.positionsOfImages.get(position);
-        Image image;
-        image = (nameOfPiece == this.stalkerString) ? new Image("stalkerKing.jpg") : new Image(
-                "zerglingKing.jpg");
+        
+        Image image = (nameOfPiece == this.blackString) ? blackKingImage : redKingImage;
         ImageView iv = new ImageView(image);
         this.positionsOfImages.put(position, iv);
         iv.setFitWidth(this.squareWidth);
@@ -274,10 +272,10 @@ public class CheckersPane extends Pane {
         this.positionsOfImages.remove(initialPosition);
         this.positionsOfImages.put(nextPosition, pieceToMove);
         this.typeOfpieceAtPosition.remove(initialPosition);
-        if (typeOfPiece == this.stalkerString) {
-            this.typeOfpieceAtPosition.put(nextPosition, this.stalkerString);
+        if (typeOfPiece == this.blackString) {
+            this.typeOfpieceAtPosition.put(nextPosition, this.blackString);
         } else {
-            this.typeOfpieceAtPosition.put(nextPosition, this.zerglingString);
+            this.typeOfpieceAtPosition.put(nextPosition, this.redString);
         }
         /*
          * moving animation
