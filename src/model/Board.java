@@ -2,6 +2,7 @@ package model;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 
 public class Board {
@@ -11,12 +12,14 @@ public class Board {
     private HashMap<PieceColor, Integer> pawnCountMap = new HashMap<>();
     private boolean repeatedStateDraw = false;
     private final HashMap<List<Square>, Integer> stateCounter = new HashMap<>();
+    private final HashMap<PieceColor, HashSet<Integer>> colorPositionMap = new HashMap<>();
 
     public Board() {
         this.gameState = this.getStartingGameBoardState();
         this.pawnCountMap.put(PieceColor.BLACK, 12);
         this.pawnCountMap.put(PieceColor.WHITE, 12);
         initializeEmptyKingCountMap();
+        updatePositionMap();
     }
 
     public Board(Board otherBoard) {
@@ -31,6 +34,8 @@ public class Board {
 
         this.kingCountMap.put(PieceColor.BLACK, otherBoard.getNumberOfBlackKings());
         this.kingCountMap.put(PieceColor.WHITE, otherBoard.getNumberOfWhiteKings());
+        
+        updatePositionMap();
     }
 
     public Board(List<Integer> blackPositions, List<Integer> whitePositions) {
@@ -143,6 +148,10 @@ public class Board {
 
         return pieces;
     }
+    
+    public HashMap<PieceColor, HashSet<Integer>> getColorPositionMap() {
+        return this.colorPositionMap;
+    }
 
     public Square getSquare(int position) {
         return this.gameState.get(position - 1);
@@ -207,6 +216,26 @@ public class Board {
         }
 
         return startingGameBoard;
+    }
+    
+    private void updatePositionMap() {
+        HashSet<Integer> blackPositions = new HashSet<>();
+        HashSet<Integer> whitePositions = new HashSet<>();
+        
+        for (Square square : this.getGameState()) {
+            if (square.isOccupied()) {
+                int currentPosition = square.getPosition();
+                PieceInterface piece = square.getOccupyingPiece();
+                if (piece.isBlack()) {
+                    blackPositions.add(currentPosition);
+                } else if (piece.isWhite()) {
+                    whitePositions.add(currentPosition);
+                }
+            }
+        }
+        
+        this.colorPositionMap.put(PieceColor.BLACK, blackPositions);
+        this.colorPositionMap.put(PieceColor.WHITE, whitePositions);
     }
 
     public int getTotalNumberOfBlackPieces() {
@@ -305,13 +334,19 @@ public class Board {
     }
 
     public void removePiece(int position) {
+        Square square = this.getSquare(position);
+        PieceColor oldPieceColor = square.getOccupyingPiece().getColor();
+        this.colorPositionMap.get(oldPieceColor).remove(position);
         this.decrementPieceCount(position);
-        this.getSquare(position).removeOccupyingPiece();
+        square.removeOccupyingPiece();
     }
 
     public void setOccupyingPiece(int position, PieceInterface pieceToSet) {
         this.getSquare(position).setOccupyingPiece(pieceToSet);
         this.incrementPieceCount(position);
+        
+        // Update colorPositionMap with new position
+        this.colorPositionMap.get(pieceToSet.getColor()).add(position);
     }
 
     public void updateCountsInMaps() {

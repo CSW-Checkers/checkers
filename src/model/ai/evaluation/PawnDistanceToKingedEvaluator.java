@@ -28,23 +28,24 @@ public class PawnDistanceToKingedEvaluator implements BoardEvaluatorInterface {
             if (square.isOccupied()) {
                 final PieceInterface piece = square.getOccupyingPiece();
 
-                // if (!piece.isKing()) { TODO Figure out how to get pieces kinged and let them off back row
-                final int rowNumber = square.getRowNumber();
-                int distanceToOtherSide = 0;
+                if (!piece.isKing()) { // TODO Figure out how to get pieces kinged and let them off
+                                       // back row
+                    final int rowNumber = square.getRowNumber();
+                    int distanceToOtherSide = 0;
 
-                if (piece.getColor() == PieceColor.BLACK) {
-                    distanceToOtherSide = 8 - rowNumber;
-                } else {
-                    distanceToOtherSide = rowNumber - 1;
-                }
+                    if (piece.getColor() == PieceColor.BLACK) {
+                        distanceToOtherSide = 8 - rowNumber;
+                    } else {
+                        distanceToOtherSide = rowNumber - 1;
+                    }
 
-                final double value = 8 - distanceToOtherSide;
-                if (piece.getColor() == color) {
-                    score += value;
-                } else {
-                    score -= value;
+                    final double value = 8 - distanceToOtherSide;
+                    if (piece.getColor() == color) {
+                        score += value;
+                    } else {
+                        score -= value;
+                    }
                 }
-                // }
             }
         }
 
