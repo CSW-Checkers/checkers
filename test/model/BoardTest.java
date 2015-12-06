@@ -4,16 +4,14 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-
-import org.junit.Before;
-import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
 
 public class BoardTest {
     private Board board;
@@ -188,11 +186,11 @@ public class BoardTest {
         assertTrue(this.board.isDrawState());
     }
 
-//    @Test
-//    public void testIsDrawState_RepeatedStateDraw() throws Exception {
-//        ReflectionTestHelper.changePrivateFieldOnObject(this.board, "repeatedStateDraw", true);
-//        assertTrue(this.board.isDrawState());
-//    }
+    // @Test
+    // public void testIsDrawState_RepeatedStateDraw() throws Exception {
+    // ReflectionTestHelper.changePrivateFieldOnObject(this.board, "repeatedStateDraw", true);
+    // assertTrue(this.board.isDrawState());
+    // }
 
     @Test
     public void testMovePiece_JumpMove() {
@@ -288,21 +286,22 @@ public class BoardTest {
         assertFalse(startingPositionPiece.isNull());
         assertTrue(endingPositionPiece.isNull());
 
-        @SuppressWarnings("unchecked")
-        final HashMap<List<Square>, Integer> stateCounter = (HashMap<List<Square>, Integer>) ReflectionTestHelper
-                .getPrivateFieldValue(this.board, "stateCounter");
+        // @SuppressWarnings("unchecked")
+        // final HashMap<List<Square>, Integer> stateCounter = (HashMap<List<Square>, Integer>)
+        // ReflectionTestHelper
+        // .getPrivateFieldValue(this.board, "stateCounter");
 
-        Integer stateCounterValue = stateCounter.get(this.board.getGameState());
-        assertNull(stateCounterValue);
+        // Integer stateCounterValue = stateCounter.get(this.board.getGameState());
+        // assertNull(stateCounterValue);
 
         final Move testMove = new Move(startingPosition, endingPosition, this.board);
         this.board.movePiece(testMove);
 
         startingPositionPiece = this.board.getPiece(startingPosition);
         endingPositionPiece = this.board.getPiece(endingPosition);
-        stateCounterValue = stateCounter.get(this.board.getGameState());
+        // stateCounterValue = stateCounter.get(this.board.getGameState());
 
-        assertEquals(1, stateCounterValue.intValue());
+        // assertEquals(1, stateCounterValue.intValue());
         assertTrue(startingPositionPiece.isNull());
         assertFalse(endingPositionPiece.isNull());
         assertTrue(endingPositionPiece.isBlack());
