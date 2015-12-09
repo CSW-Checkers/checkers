@@ -13,27 +13,28 @@ public class TradePieceEvaluator implements BoardEvaluatorInterface {
         return instance;
     }
 
+    private final double KING_WEIGHT = 1.5;
+    private final double PAWN_WEIGHT = 1.0;
+
     private TradePieceEvaluator() {
     }
 
     @Override
     public double evaluateBoard(Board theBoard, PieceColor color) {
-        double friendlyMaterialValue = (theBoard.getKingCount(color) * 1.5)
-                + (theBoard.getPawnCount(color) * 1.0);
+        double friendlyMaterialValue = (theBoard.getKingCount(color) * this.KING_WEIGHT)
+                + (theBoard.getNumberOfPawns(color) * this.PAWN_WEIGHT);
 
         PieceColor foeColor = color.getOppositeColor();
-        double foeMaterialValue = (theBoard.getKingCount(foeColor) * 1.5)
-                + (theBoard.getPawnCount(foeColor) * 1.0);
+        double foeMaterialValue = (theBoard.getKingCount(foeColor) * this.KING_WEIGHT)
+                + (theBoard.getNumberOfPawns(foeColor) * this.PAWN_WEIGHT);
 
         double score = 0.0;
         if (friendlyMaterialValue > foeMaterialValue) {
             // Do stuff when material advantage
-            score += 1 / (theBoard.getTotalNumberOfBlackPieces()
-                    + theBoard.getTotalNumberOfWhitePieces());
-        } else {
+            score += 100 / (theBoard.getTotalNumberOfPieces(foeColor) + 1);
+        } else if (friendlyMaterialValue < foeMaterialValue) {
             // Do stuff if anything when not material advantage
-            score -= 1 / (theBoard.getTotalNumberOfBlackPieces()
-                    + theBoard.getTotalNumberOfWhitePieces());
+            score -= 100 / (theBoard.getTotalNumberOfPieces(color) + 1);
         }
 
         return score;

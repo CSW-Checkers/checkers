@@ -21,8 +21,8 @@ public class PawnCountEvaluator implements BoardEvaluatorInterface {
     public double evaluateBoard(Board theBoard, PieceColor color) {
         double value = 0.0;
         
-        value += theBoard.getPawnCount(color);
-        value -= theBoard.getPawnCount(color.getOppositeColor());
+        value += theBoard.getNumberOfPawns(color);
+        value -= theBoard.getNumberOfPawns(color.getOppositeColor());
 
         return value;
     }

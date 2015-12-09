@@ -23,8 +23,8 @@ public class GameOverEvaluator implements BoardEvaluatorInterface {
             return -1.0;
         } else if (theBoard.playerHasLost(color.getOppositeColor())) {
             return 1.0;
-        } else if (theBoard.isDrawState()){
-            return -0.5;
+            // } else if (theBoard.isDrawState()) {
+            // return -0.5;
         } else {
             return 0.0;
         }

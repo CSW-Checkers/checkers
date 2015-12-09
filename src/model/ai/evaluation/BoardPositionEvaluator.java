@@ -9,9 +9,6 @@ import model.PieceInterface;
 
 public class BoardPositionEvaluator implements BoardEvaluatorInterface {
     private static BoardEvaluatorInterface instance = null;
-    private static HashMap<Integer, Double> kingPositionValueMap;
-    private static HashMap<Integer, Double> whitePositionValueMap;
-    private static HashMap<Integer, Double> blackPositionValueMap;
 
     public static BoardEvaluatorInterface getInstance() {
         if (instance == null) {
@@ -20,118 +17,15 @@ public class BoardPositionEvaluator implements BoardEvaluatorInterface {
         return instance;
     }
 
+    private HashMap<Integer, Double> kingPositionValueMap;
+    private HashMap<Integer, Double> whitePositionValueMap;
+    private HashMap<Integer, Double> blackPositionValueMap;
+    // private HashMap<Integer, Integer> basicTrapPositionMap;
+
     private BoardPositionEvaluator() {
-        initializeKingPositionValueMap();
-        initializeBlackPositionValueMap();
-        initializeWhitePositionValueMap();
-    }
-
-    private void initializeKingPositionValueMap() {
-        kingPositionValueMap = new HashMap<>();
-        kingPositionValueMap.put(1, 0.0);
-        kingPositionValueMap.put(2, 0.0);
-        kingPositionValueMap.put(3, 0.0);
-        kingPositionValueMap.put(4, 0.0);
-        kingPositionValueMap.put(5, 0.0);
-        kingPositionValueMap.put(6, 1.0);
-        kingPositionValueMap.put(7, 1.0);
-        kingPositionValueMap.put(8, 1.0);
-        kingPositionValueMap.put(9, 1.0);
-        kingPositionValueMap.put(10, 2.0);
-        kingPositionValueMap.put(11, 2.0);
-        kingPositionValueMap.put(12, 0.0);
-        kingPositionValueMap.put(13, 0.0);
-        kingPositionValueMap.put(14, 2.0);
-        kingPositionValueMap.put(15, 4.0);
-        kingPositionValueMap.put(16, 1.0);
-        kingPositionValueMap.put(17, 1.0);
-        kingPositionValueMap.put(18, 4.0);
-        kingPositionValueMap.put(19, 2.0);
-        kingPositionValueMap.put(20, 0.0);
-        kingPositionValueMap.put(21, 0.0);
-        kingPositionValueMap.put(22, 2.0);
-        kingPositionValueMap.put(23, 2.0);
-        kingPositionValueMap.put(24, 1.0);
-        kingPositionValueMap.put(25, 1.0);
-        kingPositionValueMap.put(26, 1.0);
-        kingPositionValueMap.put(27, 1.0);
-        kingPositionValueMap.put(28, 0.0);
-        kingPositionValueMap.put(29, 0.0);
-        kingPositionValueMap.put(30, 0.0);
-        kingPositionValueMap.put(31, 0.0);
-        kingPositionValueMap.put(32, 0.0);
-    }
-
-    private void initializeBlackPositionValueMap() {
-        blackPositionValueMap = new HashMap<>();
-        blackPositionValueMap.put(1, 3.0);
-        blackPositionValueMap.put(2, 3.0);
-        blackPositionValueMap.put(3, 3.0);
-        blackPositionValueMap.put(4, 3.0);
-        blackPositionValueMap.put(5, 1.0);
-        blackPositionValueMap.put(6, 0.0);
-        blackPositionValueMap.put(7, 0.0);
-        blackPositionValueMap.put(8, 0.0);
-        blackPositionValueMap.put(9, 1.0);
-        blackPositionValueMap.put(10, 1.0);
-        blackPositionValueMap.put(11, 1.0);
-        blackPositionValueMap.put(12, 2.0);
-        blackPositionValueMap.put(13, 3.0);
-        blackPositionValueMap.put(14, 2.0);
-        blackPositionValueMap.put(15, 2.0);
-        blackPositionValueMap.put(16, 2.0);
-        blackPositionValueMap.put(17, 3.0);
-        blackPositionValueMap.put(18, 3.0);
-        blackPositionValueMap.put(19, 3.0);
-        blackPositionValueMap.put(20, 4.0);
-        blackPositionValueMap.put(21, 5.0);
-        blackPositionValueMap.put(22, 4.0);
-        blackPositionValueMap.put(23, 4.0);
-        blackPositionValueMap.put(24, 4.0);
-        blackPositionValueMap.put(25, 5.0);
-        blackPositionValueMap.put(26, 5.0);
-        blackPositionValueMap.put(27, 5.0);
-        blackPositionValueMap.put(28, 6.0);
-        blackPositionValueMap.put(29, 0.0);
-        blackPositionValueMap.put(30, 0.0);
-        blackPositionValueMap.put(31, 0.0);
-        blackPositionValueMap.put(32, 0.0);
-    }
-
-    private void initializeWhitePositionValueMap() {
-        whitePositionValueMap = new HashMap<>();
-        whitePositionValueMap.put(1, 0.0);
-        whitePositionValueMap.put(2, 0.0);
-        whitePositionValueMap.put(3, 0.0);
-        whitePositionValueMap.put(4, 0.0);
-        whitePositionValueMap.put(5, 6.0);
-        whitePositionValueMap.put(6, 5.0);
-        whitePositionValueMap.put(7, 5.0);
-        whitePositionValueMap.put(8, 5.0);
-        whitePositionValueMap.put(9, 4.0);
-        whitePositionValueMap.put(10, 4.0);
-        whitePositionValueMap.put(11, 4.0);
-        whitePositionValueMap.put(12, 5.0);
-        whitePositionValueMap.put(13, 4.0);
-        whitePositionValueMap.put(14, 3.0);
-        whitePositionValueMap.put(15, 3.0);
-        whitePositionValueMap.put(16, 3.0);
-        whitePositionValueMap.put(17, 2.0);
-        whitePositionValueMap.put(18, 2.0);
-        whitePositionValueMap.put(19, 2.0);
-        whitePositionValueMap.put(20, 3.0);
-        whitePositionValueMap.put(21, 2.0);
-        whitePositionValueMap.put(22, 1.0);
-        whitePositionValueMap.put(23, 1.0);
-        whitePositionValueMap.put(24, 1.0);
-        whitePositionValueMap.put(25, 0.0);
-        whitePositionValueMap.put(26, 0.0);
-        whitePositionValueMap.put(27, 0.0);
-        whitePositionValueMap.put(28, 1.0);
-        whitePositionValueMap.put(29, 3.0);
-        whitePositionValueMap.put(30, 3.0);
-        whitePositionValueMap.put(31, 3.0);
-        whitePositionValueMap.put(32, 3.0);
+        this.initializeKingPositionValueMap();
+        this.initializeBlackPositionValueMap();
+        this.initializeWhitePositionValueMap();
     }
 
     @Override
@@ -146,9 +40,9 @@ public class BoardPositionEvaluator implements BoardEvaluatorInterface {
             PieceInterface piece = theBoard.getPiece(position);
 
             if (piece.isKing()) {
-                blackValue += kingPositionValueMap.get(position);
+                blackValue += this.kingPositionValueMap.get(position);
             } else {
-                blackValue += blackPositionValueMap.get(position);
+                blackValue += this.blackPositionValueMap.get(position);
             }
         }
 
@@ -158,9 +52,9 @@ public class BoardPositionEvaluator implements BoardEvaluatorInterface {
             PieceInterface piece = theBoard.getPiece(position);
 
             if (piece.isKing()) {
-                whiteValue += kingPositionValueMap.get(position);
+                whiteValue += this.kingPositionValueMap.get(position);
             } else {
-                whiteValue += whitePositionValueMap.get(position);
+                whiteValue += this.whitePositionValueMap.get(position);
             }
         }
 
@@ -173,6 +67,120 @@ public class BoardPositionEvaluator implements BoardEvaluatorInterface {
         }
 
         return score;
+    }
+
+    private void initializeBlackPositionValueMap() {
+        this.blackPositionValueMap = new HashMap<>();
+        this.blackPositionValueMap.put(1, 4.0);
+        this.blackPositionValueMap.put(2, 4.0);
+        this.blackPositionValueMap.put(3, 4.0);
+        this.blackPositionValueMap.put(4, 4.0);
+        this.blackPositionValueMap.put(5, 1.0);
+        this.blackPositionValueMap.put(6, 0.0);
+        this.blackPositionValueMap.put(7, 0.0);
+        this.blackPositionValueMap.put(8, 0.0);
+        this.blackPositionValueMap.put(9, 1.0);
+        this.blackPositionValueMap.put(10, 1.0);
+        this.blackPositionValueMap.put(11, 1.0);
+        this.blackPositionValueMap.put(12, 2.0);
+        this.blackPositionValueMap.put(13, 3.0);
+        this.blackPositionValueMap.put(14, 2.0);
+        this.blackPositionValueMap.put(15, 2.0);
+        this.blackPositionValueMap.put(16, 2.0);
+        this.blackPositionValueMap.put(17, 3.0);
+        this.blackPositionValueMap.put(18, 3.0);
+        this.blackPositionValueMap.put(19, 3.0);
+        this.blackPositionValueMap.put(20, 4.0);
+        this.blackPositionValueMap.put(21, 5.0);
+        this.blackPositionValueMap.put(22, 4.0);
+        this.blackPositionValueMap.put(23, 4.0);
+        this.blackPositionValueMap.put(24, 4.0);
+        this.blackPositionValueMap.put(25, 5.0);
+        this.blackPositionValueMap.put(26, 5.0);
+        this.blackPositionValueMap.put(27, 5.0);
+        this.blackPositionValueMap.put(28, 6.0);
+        this.blackPositionValueMap.put(29, 7.0);
+        this.blackPositionValueMap.put(30, 7.0);
+        this.blackPositionValueMap.put(31, 7.0);
+        this.blackPositionValueMap.put(32, 7.0);
+    }
+
+    private void initializeKingPositionValueMap() {
+        this.kingPositionValueMap = new HashMap<>();
+        this.kingPositionValueMap.put(1, 5.0);
+        this.kingPositionValueMap.put(2, 4.0);
+        this.kingPositionValueMap.put(3, 3.0);
+        this.kingPositionValueMap.put(4, -1.0);
+        this.kingPositionValueMap.put(5, 5.0);
+        this.kingPositionValueMap.put(6, 2.0);
+        this.kingPositionValueMap.put(7, 2.0);
+        this.kingPositionValueMap.put(8, 2.0);
+        this.kingPositionValueMap.put(9, 2.0);
+        this.kingPositionValueMap.put(10, 1.0);
+        this.kingPositionValueMap.put(11, 1.0);
+        this.kingPositionValueMap.put(12, 3.0);
+        this.kingPositionValueMap.put(13, 4.0);
+        this.kingPositionValueMap.put(14, 1.0);
+        this.kingPositionValueMap.put(15, 0.0);
+        this.kingPositionValueMap.put(16, 2.0);
+        this.kingPositionValueMap.put(17, 2.0);
+        this.kingPositionValueMap.put(18, 0.0);
+        this.kingPositionValueMap.put(19, 1.0);
+        this.kingPositionValueMap.put(20, 4.0);
+        this.kingPositionValueMap.put(21, 3.0);
+        this.kingPositionValueMap.put(22, 1.0);
+        this.kingPositionValueMap.put(23, 1.0);
+        this.kingPositionValueMap.put(24, 2.0);
+        this.kingPositionValueMap.put(25, 2.0);
+        this.kingPositionValueMap.put(26, 2.0);
+        this.kingPositionValueMap.put(27, 2.0);
+        this.kingPositionValueMap.put(28, 5.0);
+        this.kingPositionValueMap.put(29, -1.0);
+        this.kingPositionValueMap.put(30, 3.0);
+        this.kingPositionValueMap.put(31, 4.0);
+        this.kingPositionValueMap.put(32, 5.0);
+    }
+
+    // private void initializePawnTrapMap() {
+    // this.basicTrapPositionMap = new HashMap<>();
+    // this.basicTrapPositionMap.put(1, 10);
+    // this.basicTrapPositionMap.put(28, 19);
+    // }
+
+    private void initializeWhitePositionValueMap() {
+        this.whitePositionValueMap = new HashMap<>();
+        this.whitePositionValueMap.put(1, 7.0);
+        this.whitePositionValueMap.put(2, 7.0);
+        this.whitePositionValueMap.put(3, 7.0);
+        this.whitePositionValueMap.put(4, 7.0);
+        this.whitePositionValueMap.put(5, 6.0);
+        this.whitePositionValueMap.put(6, 5.0);
+        this.whitePositionValueMap.put(7, 5.0);
+        this.whitePositionValueMap.put(8, 5.0);
+        this.whitePositionValueMap.put(9, 4.0);
+        this.whitePositionValueMap.put(10, 4.0);
+        this.whitePositionValueMap.put(11, 4.0);
+        this.whitePositionValueMap.put(12, 5.0);
+        this.whitePositionValueMap.put(13, 4.0);
+        this.whitePositionValueMap.put(14, 3.0);
+        this.whitePositionValueMap.put(15, 3.0);
+        this.whitePositionValueMap.put(16, 3.0);
+        this.whitePositionValueMap.put(17, 2.0);
+        this.whitePositionValueMap.put(18, 2.0);
+        this.whitePositionValueMap.put(19, 2.0);
+        this.whitePositionValueMap.put(20, 3.0);
+        this.whitePositionValueMap.put(21, 2.0);
+        this.whitePositionValueMap.put(22, 1.0);
+        this.whitePositionValueMap.put(23, 1.0);
+        this.whitePositionValueMap.put(24, 1.0);
+        this.whitePositionValueMap.put(25, 0.0);
+        this.whitePositionValueMap.put(26, 0.0);
+        this.whitePositionValueMap.put(27, 0.0);
+        this.whitePositionValueMap.put(28, 1.0);
+        this.whitePositionValueMap.put(29, 4.0);
+        this.whitePositionValueMap.put(30, 4.0);
+        this.whitePositionValueMap.put(31, 4.0);
+        this.whitePositionValueMap.put(32, 4.0);
     }
 
 }

@@ -19,23 +19,18 @@ public class Board {
         this.gameState = this.getStartingGameBoardState();
         this.pawnCountMap.put(PieceColor.BLACK, 12);
         this.pawnCountMap.put(PieceColor.WHITE, 12);
-        initializeEmptyKingCountMap();
-        updatePositionMap();
+        this.initializeEmptyKingCountMap();
+        this.updatePositionMap();
     }
 
     public Board(Board otherBoard) {
         this.gameState = new ArrayList<Square>();
-        initializeEmptyKingCountMap();
+        this.initializeEmptyKingCountMap();
         for (final Square square : otherBoard.getGameState()) {
             this.gameState.add(new Square(square));
         }
 
         this.movesSinceLastCapture = otherBoard.movesSinceLastCapture;
-        // this.repeatedStateDraw = otherBoard.repeatedStateDraw;
-
-        // for (Map.Entry<List<Square>, Integer> entry : otherBoard.stateCounter.entrySet()) {
-        // this.stateCounter.put(entry.getKey(), entry.getValue());
-        // }
 
         for (Map.Entry<PieceColor, HashSet<Integer>> entry : otherBoard.colorPositionMap
                 .entrySet()) {
@@ -52,15 +47,13 @@ public class Board {
 
         this.kingCountMap.put(PieceColor.BLACK, otherBoard.getNumberOfBlackKings());
         this.kingCountMap.put(PieceColor.WHITE, otherBoard.getNumberOfWhiteKings());
-
-        updatePositionMap();
     }
 
     public Board(List<Integer> blackPositions, List<Integer> whitePositions) {
         this.pawnCountMap.put(PieceColor.WHITE, 0);
         this.pawnCountMap.put(PieceColor.BLACK, 0);
-        initializeEmptyKingCountMap();
-        updatePositionMap();
+        this.initializeEmptyKingCountMap();
+        this.updatePositionMap();
 
         this.gameState = new ArrayList<Square>(32);
 
@@ -123,6 +116,10 @@ public class Board {
         return this.getSquares((ArrayList<Integer>) squareNumbers);
     }
 
+    public HashMap<PieceColor, HashSet<Integer>> getColorPositionMap() {
+        return this.colorPositionMap;
+    }
+
     public List<Square> getGameState() {
         return this.gameState;
     }
@@ -139,6 +136,10 @@ public class Board {
         return this.pawnCountMap.get(PieceColor.BLACK);
     }
 
+    public int getNumberOfKings(PieceColor color) {
+        return this.kingCountMap.get(color);
+    }
+
     public int getNumberOfPawns(PieceColor color) {
         return this.pawnCountMap.get(color);
     }
@@ -149,10 +150,6 @@ public class Board {
 
     public int getNumberOfWhitePawns() {
         return this.pawnCountMap.get(PieceColor.WHITE);
-    }
-
-    public int getPawnCount(PieceColor color) {
-        return this.pawnCountMap.get(color);
     }
 
     public PieceInterface getPiece(int position) {
@@ -166,10 +163,6 @@ public class Board {
         }
 
         return pieces;
-    }
-
-    public HashMap<PieceColor, HashSet<Integer>> getColorPositionMap() {
-        return this.colorPositionMap;
     }
 
     public Square getSquare(int position) {
@@ -187,13 +180,11 @@ public class Board {
 
     public List<Square> getSquaresForPlayer(PieceColor color) {
         final List<Square> playersSquares = new ArrayList<>();
-        for (final Square square : this.getGameState()) {
-            if (square.isOccupied()) {
-                if (square.getOccupyingPiece().getColor() == color) {
-                    playersSquares.add(square);
-                }
-            }
+
+        for (Integer position : this.colorPositionMap.get(color)) {
+            playersSquares.add(this.getSquare(position));
         }
+
         return playersSquares;
     }
 
@@ -237,28 +228,12 @@ public class Board {
         return startingGameBoard;
     }
 
-    private void updatePositionMap() {
-        HashSet<Integer> blackPositions = new HashSet<>();
-        HashSet<Integer> whitePositions = new HashSet<>();
-
-        for (Square square : this.getGameState()) {
-            if (square.isOccupied()) {
-                int currentPosition = square.getPosition();
-                PieceInterface piece = square.getOccupyingPiece();
-                if (piece.isBlack()) {
-                    blackPositions.add(currentPosition);
-                } else if (piece.isWhite()) {
-                    whitePositions.add(currentPosition);
-                }
-            }
-        }
-
-        this.colorPositionMap.put(PieceColor.BLACK, blackPositions);
-        this.colorPositionMap.put(PieceColor.WHITE, whitePositions);
-    }
-
     public int getTotalNumberOfBlackPieces() {
         return this.getNumberOfBlackPawns() + this.getNumberOfBlackKings();
+    }
+
+    public int getTotalNumberOfPieces(PieceColor color) {
+        return this.getNumberOfPawns(color) + this.getNumberOfKings(color);
     }
 
     public int getTotalNumberOfWhitePieces() {
@@ -327,14 +302,6 @@ public class Board {
         return pieceToPickUp;
     }
 
-    public int getTotalNumberOfPieces(PieceColor color) {
-        return this.getNumberOfPawns(color) + this.getNumberOfKings(color);
-    }
-
-    public int getNumberOfKings(PieceColor color) {
-        return this.kingCountMap.get(color);
-    }
-
     public boolean playerHasLost(PieceColor color) {
         boolean outOfPieces = false;
 
@@ -397,6 +364,26 @@ public class Board {
 
         this.kingCountMap.replace(PieceColor.WHITE, whiteKingCount);
         this.kingCountMap.replace(PieceColor.BLACK, blackKingCount);
+    }
+
+    private void updatePositionMap() {
+        HashSet<Integer> blackPositions = new HashSet<>();
+        HashSet<Integer> whitePositions = new HashSet<>();
+
+        for (Square square : this.getGameState()) {
+            if (square.isOccupied()) {
+                int currentPosition = square.getPosition();
+                PieceInterface piece = square.getOccupyingPiece();
+                if (piece.isBlack()) {
+                    blackPositions.add(currentPosition);
+                } else if (piece.isWhite()) {
+                    whitePositions.add(currentPosition);
+                }
+            }
+        }
+
+        this.colorPositionMap.put(PieceColor.BLACK, blackPositions);
+        this.colorPositionMap.put(PieceColor.WHITE, whitePositions);
     }
 
     // private void updateStateCounter() {
