@@ -28,16 +28,10 @@ public class TradePieceEvaluator implements BoardEvaluatorInterface {
         double foeMaterialValue = (theBoard.getKingCount(foeColor) * this.KING_WEIGHT)
                 + (theBoard.getNumberOfPawns(foeColor) * this.PAWN_WEIGHT);
 
-        double score = 0.0;
-        if (friendlyMaterialValue > foeMaterialValue) {
-            // Do stuff when material advantage
-            score += 100 / (theBoard.getTotalNumberOfPieces(foeColor) + 1);
-        } else if (friendlyMaterialValue < foeMaterialValue) {
-            // Do stuff if anything when not material advantage
-            score -= 100 / (theBoard.getTotalNumberOfPieces(color) + 1);
-        }
+        double materialDifference = friendlyMaterialValue - foeMaterialValue;
+        double totalMaterial = friendlyMaterialValue + foeMaterialValue;
 
-        return score;
+        return materialDifference / totalMaterial;
     }
 
 }

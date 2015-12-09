@@ -79,7 +79,7 @@ public class GameManager {
             // weightMap.put(BackRowCountEvaluator.getInstance(), 0.25);
             weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
             // weightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 0.1);
-            weightMap.put(TradePieceEvaluator.getInstance(), 0.1);
+            weightMap.put(TradePieceEvaluator.getInstance(), 20.0);
             weightMap.put(BoardPositionEvaluator.getInstance(), 0.1);
 
         } else {

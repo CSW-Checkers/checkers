@@ -11,8 +11,6 @@ public class Board {
     private HashMap<PieceColor, Integer> kingCountMap = new HashMap<>();
     private int movesSinceLastCapture = 0;
     private HashMap<PieceColor, Integer> pawnCountMap = new HashMap<>();
-    // private boolean repeatedStateDraw = false;
-    // private final HashMap<List<Square>, Integer> stateCounter = new HashMap<>();
     private final HashMap<PieceColor, HashSet<Integer>> colorPositionMap = new HashMap<>();
 
     public Board() {
@@ -272,7 +270,6 @@ public class Board {
     }
 
     public boolean isDrawState() {
-        // return (this.repeatedStateDraw || (this.movesSinceLastCapture >= 100));
         return this.movesSinceLastCapture >= 50;
     }
 
@@ -293,7 +290,6 @@ public class Board {
             this.movesSinceLastCapture++;
         }
         this.setOccupyingPiece(move.getEndingPosition(), pieceToMove);
-        // this.updateStateCounter();
     }
 
     private PieceInterface pickUpPiece(int position) {
@@ -385,20 +381,4 @@ public class Board {
         this.colorPositionMap.put(PieceColor.BLACK, blackPositions);
         this.colorPositionMap.put(PieceColor.WHITE, whitePositions);
     }
-
-    // private void updateStateCounter() {
-    // Integer count = this.stateCounter.get(this.gameState);
-    //
-    // if (count == null) {
-    // this.stateCounter.put(this.gameState, 1);
-    // } else {
-    // count++;
-    // this.stateCounter.put(this.gameState, count);
-    // if (count >= 10) {
-    // this.repeatedStateDraw = true;
-    // }
-    // }
-    //
-    // }
-
 }

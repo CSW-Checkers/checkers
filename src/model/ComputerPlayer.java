@@ -21,13 +21,9 @@ public class ComputerPlayer implements Player {
     public PieceColor getColor() {
         return this.color;
     }
-    
+
     public Strategy getStrategy() {
-        return strategy;
-    }
-    
-    public void setStrategy(Strategy strategy) {
-        this.strategy = strategy;
+        return this.strategy;
     }
 
     @Override
@@ -37,6 +33,10 @@ public class ComputerPlayer implements Player {
 
         currentBoard.movePiece(moveToMake);
         return moveToMake;
+    }
+
+    public void setStrategy(Strategy strategy) {
+        this.strategy = strategy;
     }
 
 }
