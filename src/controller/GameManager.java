@@ -14,7 +14,7 @@ import model.ai.evaluation.BoardPositionEvaluator;
 import model.ai.evaluation.GameOverEvaluator;
 import model.ai.evaluation.KingCountEvaluator;
 import model.ai.evaluation.PawnCountEvaluator;
-import view.cli.CommandLineHelper;
+import model.ai.evaluation.TradePieceEvaluator;
 
 public class GameManager {
     public static void main(String[] args) {
@@ -26,13 +26,48 @@ public class GameManager {
     private Board gameBoard;
     private Player whitePlayer;
     private Random randGauss = new Random();
+    private int drawCount = 0;
+    private int whiteWins = 0;
+    private int blackWins = 0;
 
-    private void initializeComputerPlayers() {
-        final Strategy blackStrategy = getStartingStrategy(PieceColor.BLACK);
-        final Strategy whiteStrategy = getStartingStrategy(PieceColor.WHITE);
+    private void displayWinner(Board endingBoard) {
+        Player losingPlayer = this.getLosingPlayer(endingBoard);
 
-        this.blackPlayer = new ComputerPlayer(PieceColor.BLACK, blackStrategy);
-        this.whitePlayer = new ComputerPlayer(PieceColor.WHITE, whiteStrategy);
+        if (losingPlayer == null) {
+            this.drawCount++;
+            System.out.print("Draw");
+        } else {
+            Player winningPlayer = this.getOtherPlayer(losingPlayer);
+            System.out.print(winningPlayer.getColor() + " wins");
+            if (winningPlayer.getColor() == PieceColor.WHITE) {
+                this.whiteWins++;
+            } else {
+                this.blackWins++;
+            }
+        }
+
+        System.out.print(" White pieces: " + endingBoard.getTotalNumberOfWhitePieces());
+        System.out.println(" Black pieces: " + endingBoard.getTotalNumberOfBlackPieces());
+    }
+
+    private Player getLosingPlayer(Board endingBoard) {
+        if (endingBoard.isDrawState()) {
+            return null;
+        } else if (endingBoard.playerHasLost(PieceColor.WHITE)) {
+            return this.whitePlayer;
+        } else {
+            return this.blackPlayer;
+        }
+    }
+
+    private Player getOtherPlayer(Player currentPlayer) {
+        Player playerToReturn;
+        if (currentPlayer.getColor().equals(PieceColor.BLACK)) {
+            playerToReturn = this.whitePlayer;
+        } else {
+            playerToReturn = this.blackPlayer;
+        }
+        return playerToReturn;
     }
 
     private Strategy getStartingStrategy(PieceColor color) {
@@ -44,7 +79,7 @@ public class GameManager {
             // weightMap.put(BackRowCountEvaluator.getInstance(), 0.25);
             weightMap.put(GameOverEvaluator.getInstance(), 1000.0);
             // weightMap.put(PawnDistanceToKingedEvaluator.getInstance(), 0.1);
-            // weightMap.put(TradePieceEvaluator.getInstance(), 500.0);
+            weightMap.put(TradePieceEvaluator.getInstance(), 20.0);
             weightMap.put(BoardPositionEvaluator.getInstance(), 0.1);
 
         } else {
@@ -58,83 +93,12 @@ public class GameManager {
         return new Strategy(new BoardEvaluatorSummator(), color, weightMap);
     }
 
-    private void displayWinner(Board endingBoard) {
-        Player losingPlayer = getLosingPlayer(endingBoard);
+    private void initializeComputerPlayers() {
+        final Strategy blackStrategy = this.getStartingStrategy(PieceColor.BLACK);
+        final Strategy whiteStrategy = this.getStartingStrategy(PieceColor.WHITE);
 
-        if (losingPlayer == null) {
-            System.out.println("Draw");
-        } else {
-            Player winningPlayer = getOtherPlayer(losingPlayer);
-            System.out.println(winningPlayer.getColor() + " wins");
-        }
-
-        System.out.println("White pieces: " + endingBoard.getTotalNumberOfWhitePieces());
-        System.out.println("Black pieces: " + endingBoard.getTotalNumberOfBlackPieces());
-    }
-
-    private Player getLosingPlayer(Board endingBoard) {
-        if (endingBoard.isDrawState()) {
-            return null;
-        } else if (endingBoard.playerHasLost(PieceColor.WHITE)) {
-            return this.whitePlayer;
-        } else {
-            return this.blackPlayer;
-        }
-    }
-
-    private void refineStrategy() {
-        this.initializeComputerPlayers();
-
-        for (int i = 1; i < 50; i++) {
-            System.out.println("GAME #: " + i);
-            playGame();
-            CommandLineHelper.printBoard(this.gameBoard);
-            CommandLineHelper.printFinalPositions(this.gameBoard);
-            // updateWeights();
-            // printWeights();
-            System.exit(0);
-        }
-    }
-
-    private void printWeights() {
-        System.out.println("##-- Updated Weights After Game --##");
-        printWeightsOfPlayer((ComputerPlayer) whitePlayer);
-        printWeightsOfPlayer((ComputerPlayer) blackPlayer);
-    }
-
-    private void updateWeights() {
-        ComputerPlayer losingPlayer = (ComputerPlayer) getLosingPlayer(this.gameBoard);
-
-        if (losingPlayer == null) {
-            // Draw state
-
-            // Determine superior player in draw
-            int whitePieces = gameBoard.getTotalNumberOfWhitePieces();
-            int blackPieces = gameBoard.getTotalNumberOfBlackPieces();
-
-            if (whitePieces > blackPieces) {
-                losingPlayer = (ComputerPlayer) this.blackPlayer;
-            } else if (whitePieces < blackPieces) {
-                losingPlayer = (ComputerPlayer) this.whitePlayer;
-            } else {
-                losingPlayer = (ComputerPlayer) pickRandomPlayer();
-                System.out.println("true tie");
-            }
-        }
-
-        Strategy strategy = losingPlayer.getStrategy();
-        HashMap<BoardEvaluatorInterface, Double> startingWeightMap = strategy
-                .getEvaluatorWeightMap();
-
-        for (BoardEvaluatorInterface evaluatorKey : startingWeightMap.keySet()) {
-            Double weightToPerturb = startingWeightMap.get(evaluatorKey);
-
-            // mean of 0.0, stdev of 1.0
-            double gaussian = randGauss.nextGaussian();
-            weightToPerturb = Math.abs(weightToPerturb + gaussian);
-
-            startingWeightMap.replace(evaluatorKey, weightToPerturb);
-        }
+        this.blackPlayer = new ComputerPlayer(PieceColor.BLACK, blackStrategy);
+        this.whitePlayer = new ComputerPlayer(PieceColor.WHITE, whiteStrategy);
     }
 
     private Player pickRandomPlayer() {
@@ -148,6 +112,41 @@ public class GameManager {
         }
 
         return randomPlayer;
+    }
+
+    private void playGame() {
+        this.gameBoard = new Board();
+        // CommandLineHelper.printFinalPositions(this.gameBoard);
+
+        PieceColor currentColor = PieceColor.BLACK;
+        Player currentPlayer = this.blackPlayer;
+        int moveCount = 0;
+        while (!this.gameBoard.isEndState(currentColor)) {
+            moveCount++;
+            currentPlayer.makeMove(this.gameBoard);
+            // System.out.print(currentPlayer.makeMove(this.gameBoard).toString());
+            // System.out.print(" White Kings: " + this.gameBoard.getNumberOfWhiteKings());
+            // System.out.print(" White Pawns: " + this.gameBoard.getNumberOfWhitePawns());
+            // System.out.print(" Black Kings: " + this.gameBoard.getNumberOfBlackKings());
+            // System.out.println(" Black Pawns: " + this.gameBoard.getNumberOfBlackPawns());
+            // CommandLineHelper.printBoard(this.gameBoard);
+            currentColor = currentColor.getOppositeColor();
+            currentPlayer = this.getOtherPlayer(currentPlayer);
+        }
+        System.out.println("Moves: " + moveCount);
+        this.displayWinner(this.gameBoard);
+    }
+
+    private void printStats() {
+        System.out.println("White Wins: " + this.whiteWins + " Black Wins: " + this.blackWins
+                + " Draws: " + this.drawCount);
+
+    }
+
+    private void printWeights() {
+        System.out.println("##-- Updated Weights After Game --##");
+        this.printWeightsOfPlayer((ComputerPlayer) this.whitePlayer);
+        this.printWeightsOfPlayer((ComputerPlayer) this.blackPlayer);
     }
 
     private void printWeightsOfPlayer(ComputerPlayer computerPlayer) {
@@ -164,31 +163,54 @@ public class GameManager {
         System.out.println(); // Blank line
     }
 
-    private Player getOtherPlayer(Player currentPlayer) {
-        Player playerToReturn;
-        if (currentPlayer.getColor().equals(PieceColor.BLACK)) {
-            playerToReturn = this.whitePlayer;
-        } else {
-            playerToReturn = this.blackPlayer;
+    private void refineStrategy() {
+        this.initializeComputerPlayers();
+
+        for (int i = 1; i <= 50; i++) {
+            System.out.println("GAME #: " + i);
+            this.playGame();
+            // CommandLineHelper.printBoard(this.gameBoard);
+            // CommandLineHelper.printFinalPositions(this.gameBoard);
+            // updateWeights();
+            // printWeights();
+            // System.exit(0);
         }
-        return playerToReturn;
+
+        this.printStats();
     }
 
-    private void playGame() {
-        this.gameBoard = new Board();
-        CommandLineHelper.printFinalPositions(this.gameBoard);
+    private void updateWeights() {
+        ComputerPlayer losingPlayer = (ComputerPlayer) this.getLosingPlayer(this.gameBoard);
 
-        PieceColor currentColor = PieceColor.BLACK;
-        Player currentPlayer = this.blackPlayer;
-        int moveCount = 0;
-        while (!this.gameBoard.isEndState(currentColor)) {
-            moveCount++;
-            currentPlayer.makeMove(this.gameBoard);
-            CommandLineHelper.printBoard(this.gameBoard);
-            currentColor = currentColor.getOppositeColor();
-            currentPlayer = this.getOtherPlayer(currentPlayer);
+        if (losingPlayer == null) {
+            // Draw state
+
+            // Determine superior player in draw
+            int whitePieces = this.gameBoard.getTotalNumberOfWhitePieces();
+            int blackPieces = this.gameBoard.getTotalNumberOfBlackPieces();
+
+            if (whitePieces > blackPieces) {
+                losingPlayer = (ComputerPlayer) this.blackPlayer;
+            } else if (whitePieces < blackPieces) {
+                losingPlayer = (ComputerPlayer) this.whitePlayer;
+            } else {
+                losingPlayer = (ComputerPlayer) this.pickRandomPlayer();
+                System.out.println("true tie");
+            }
         }
-        System.out.println("Moves: " + moveCount);
-        this.displayWinner(this.gameBoard);
+
+        Strategy strategy = losingPlayer.getStrategy();
+        HashMap<BoardEvaluatorInterface, Double> startingWeightMap = strategy
+                .getEvaluatorWeightMap();
+
+        for (BoardEvaluatorInterface evaluatorKey : startingWeightMap.keySet()) {
+            Double weightToPerturb = startingWeightMap.get(evaluatorKey);
+
+            // mean of 0.0, stdev of 1.0
+            double gaussian = this.randGauss.nextGaussian();
+            weightToPerturb = Math.abs(weightToPerturb + gaussian);
+
+            startingWeightMap.replace(evaluatorKey, weightToPerturb);
+        }
     }
 }

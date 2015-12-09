@@ -8,6 +8,7 @@ import model.ai.evaluation.BoardPositionEvaluator;
 import model.ai.evaluation.GameOverEvaluator;
 import model.ai.evaluation.KingCountEvaluator;
 import model.ai.evaluation.PawnCountEvaluator;
+import model.ai.evaluation.TradePieceEvaluator;
 
 public class Strategy {
     private final BoardEvaluatorAggregator aggregator;
@@ -21,8 +22,8 @@ public class Strategy {
         // Placeholder initialization
         this.evaluatorWeightMap.put(PawnCountEvaluator.getInstance(), 10.0);
         this.evaluatorWeightMap.put(KingCountEvaluator.getInstance(), 15.0);
-        // this.evaluatorWeightMap.put(BackRowCountEvaluator.getInstance(), 1.0);
         this.evaluatorWeightMap.put(GameOverEvaluator.getInstance(), 1000.0);
+        this.evaluatorWeightMap.put(TradePieceEvaluator.getInstance(), 20.0);
         this.evaluatorWeightMap.put(BoardPositionEvaluator.getInstance(), 0.1);
 
     }

@@ -26,8 +26,7 @@ public class Square {
         } else {
             this.occupyingPiece = new Piece(otherSquare.getOccupyingPiece());
         }
-        this.adjacentPositions = new ArrayList<Integer>();
-        this.adjacentPositions.addAll(otherSquare.getAdjacentPositions());
+        this.adjacentPositions = otherSquare.getAdjacentPositions();
     }
 
     private List<Integer> determineAdjacentSquares() {

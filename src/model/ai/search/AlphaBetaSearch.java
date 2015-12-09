@@ -43,6 +43,9 @@ public class AlphaBetaSearch {
                 bestMoves.add(node.getMoveThatGotToThisState());
             }
         }
+        // if (bestMoves.size() > 1) {
+        // System.out.println("Possible best moves: " + bestMoves.size() + " Score: " + bestValue);
+        // }
         return bestMoves.get(new Random().nextInt(bestMoves.size()));
     }
 
